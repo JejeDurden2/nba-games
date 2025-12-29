@@ -52,11 +52,12 @@ class GameApiClient {
 
   async startGame(
     playerName: string,
-    excludeCharacterIds: string[] = []
+    excludeCharacterIds: string[] = [],
+    difficulty?: number
   ): Promise<StartGameResponse> {
     return this.fetch<StartGameResponse>('/api/game/start', {
       method: 'POST',
-      body: JSON.stringify({ playerName, excludeCharacterIds }),
+      body: JSON.stringify({ playerName, excludeCharacterIds, difficulty }),
     });
   }
 

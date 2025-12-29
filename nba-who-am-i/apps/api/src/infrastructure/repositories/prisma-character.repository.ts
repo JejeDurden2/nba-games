@@ -15,22 +15,35 @@ export class PrismaCharacterRepository implements ICharacterRepository {
     return d ? CharacterEntity.fromPersistence(d) : null;
   }
 
-  async findRandom(excludeIds: string[] = []): Promise<CharacterEntity> {
-    const where = excludeIds.length ? { id: { notIn: excludeIds } } : undefined;
+  async findRandom(
+    excludeIds: string[] = [],
+    difficulty?: number
+  ): Promise<CharacterEntity> {
+    // Build where clause with exclusions and optional difficulty filter
+    const where: { id?: { notIn: string[] }; difficulty?: number } = {};
+    if (excludeIds.length > 0) {
+      where.id = { notIn: excludeIds };
+    }
+    if (difficulty !== undefined) {
+      where.difficulty = difficulty;
+    }
 
     // Récupérer tous les IDs disponibles
     const availableCharacters = await this.prisma.character.findMany({
-      where,
+      where: Object.keys(where).length > 0 ? where : undefined,
       select: { id: true },
     });
 
     if (availableCharacters.length === 0) {
-      // Si tous exclus, on prend n'importe lequel
+      // Si tous exclus, on prend n'importe lequel avec la même difficulté si spécifiée
+      const fallbackWhere =
+        difficulty !== undefined ? { difficulty } : undefined;
       const allCharacters = await this.prisma.character.findMany({
+        where: fallbackWhere,
         select: { id: true },
       });
       if (allCharacters.length === 0)
-        throw new Error('No characters in database');
+        throw new Error('No characters in database for this difficulty');
 
       const randomIndex = Math.floor(Math.random() * allCharacters.length);
       const randomId = allCharacters[randomIndex].id;

@@ -359,6 +359,9 @@ function PlayingScreen({
   round,
   streak,
   totalScore,
+  failuresThisRound,
+  difficulty,
+  questionsAtDifficulty,
 }: {
   displayedText: string;
   timeLeft: number;
@@ -373,6 +376,9 @@ function PlayingScreen({
   round: number;
   streak: number;
   totalScore: number;
+  failuresThisRound: number;
+  difficulty: number;
+  questionsAtDifficulty: number;
 }) {
   const isMobile = useMediaQuery(`(max-width: ${BREAKPOINTS.mobile}px)`);
   const timerColor =
@@ -416,6 +422,28 @@ function PlayingScreen({
           <span>
             Score{' '}
             <b style={{ color: tokens.colors.accent.cyan }}>{totalScore}</b>
+          </span>
+          <span>
+            Niveau{' '}
+            <b style={{ color: tokens.colors.accent.yellow }}>{difficulty}</b>{' '}
+            <span style={{ fontSize: '10px', color: tokens.colors.dark[500] }}>
+              ({questionsAtDifficulty}/5)
+            </span>
+          </span>
+          <span>
+            Essais{' '}
+            <b
+              style={{
+                color:
+                  failuresThisRound === 0
+                    ? tokens.colors.accent.green
+                    : failuresThisRound === 1
+                      ? tokens.colors.accent.yellow
+                      : tokens.colors.rim[500],
+              }}
+            >
+              {3 - failuresThisRound}/3
+            </b>
           </span>
         </div>
         <button
@@ -870,6 +898,9 @@ export default function App() {
     answerName,
     error,
     isGameOver,
+    failuresThisRound,
+    difficulty,
+    questionsAtDifficulty,
     setGuess,
     setPlayerName,
     startGame,
@@ -1005,6 +1036,9 @@ export default function App() {
             round={round}
             streak={streak}
             totalScore={totalScore}
+            failuresThisRound={failuresThisRound}
+            difficulty={difficulty}
+            questionsAtDifficulty={questionsAtDifficulty}
           />
         )}
 
@@ -1024,7 +1058,7 @@ export default function App() {
             totalScore={totalScore}
             round={round}
             maxStreak={maxStreak}
-            isTimeout={timeLeft === 0}
+            isTimeout={timeLeft === 0 && failuresThisRound < 3}
             startGame={startGame}
             resetToMenu={resetToMenu}
           />

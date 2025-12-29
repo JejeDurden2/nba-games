@@ -24,6 +24,9 @@ interface UseGameReturn {
   error: string | null;
   isGameOver: boolean;
   usedCharacterIds: string[];
+  failuresThisRound: number;
+  difficulty: number;
+  questionsAtDifficulty: number;
 
   // Actions
   setGuess: (guess: string) => void;
@@ -57,6 +60,9 @@ export function useGame(): UseGameReturn {
   const [answerName, setAnswerName] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isGameOver, setIsGameOver] = useState(false);
+  const [failuresThisRound, setFailuresThisRound] = useState(0);
+  const [difficulty, setDifficulty] = useState(1);
+  const [questionsAtDifficulty, setQuestionsAtDifficulty] = useState(0);
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const textIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -160,15 +166,19 @@ export function useGame(): UseGameReturn {
       const prefetchedCharacter = nextCharacterRef.current;
       nextCharacterRef.current = null;
 
+      // Clear any existing timers before setting new character
+      clearTimers();
+
       setSessionId(crypto.randomUUID());
+      setDisplayedText('');
       setCharacter(prefetchedCharacter);
       setUsedCharacterIds((prev) => [...prev, prefetchedCharacter.id]);
-      setDisplayedText('');
       setTimeLeft(30);
       setScore(0);
       setGuess('');
       setRound((r) => r + 1);
       setIsGameOver(false);
+      setFailuresThisRound(0);
       startTimeRef.current = Date.now();
       setGameState('playing');
       return;
@@ -187,7 +197,8 @@ export function useGame(): UseGameReturn {
 
       const response = await gameApi.startGame(
         playerName || 'Anonymous',
-        idsToExclude
+        idsToExclude,
+        difficulty
       );
 
       setSessionId(response.sessionId);
@@ -199,6 +210,7 @@ export function useGame(): UseGameReturn {
       setGuess('');
       setRound((r) => r + 1);
       setIsGameOver(false);
+      setFailuresThisRound(0);
       startTimeRef.current = Date.now();
       setGameState('playing');
     } catch (err) {
@@ -206,7 +218,7 @@ export function useGame(): UseGameReturn {
       setGameState('menu');
       console.error(err);
     }
-  }, [playerName, usedCharacterIds]);
+  }, [playerName, usedCharacterIds, clearTimers, difficulty]);
 
   const submitGuess = useCallback(async () => {
     if (!guess.trim() || gameState !== 'playing' || !character || !sessionId)
@@ -218,7 +230,22 @@ export function useGame(): UseGameReturn {
     const isCorrect = fuzzyMatch(guess.trim(), character.name);
 
     if (!isCorrect) {
-      // Wrong answer - immediate feedback, no API call needed
+      // Wrong answer - increment failure count
+      const newFailures = failuresThisRound + 1;
+      setFailuresThisRound(newFailures);
+
+      // Check if 3 strikes = game over
+      if (newFailures >= 3) {
+        clearTimers();
+        setMaxStreak((ms) => Math.max(ms, streak));
+        setStreak(0);
+        setIsGameOver(true);
+        setAnswerName(character.name);
+        setGameState('lost');
+        return;
+      }
+
+      // Otherwise show wrong answer feedback
       setGuess('');
       setTimeLeft((t) => Math.max(0, t - 3));
       setWrongGuess(true);
@@ -229,6 +256,19 @@ export function useGame(): UseGameReturn {
     // Correct answer - show success immediately (optimistic UI)
     clearTimers();
     setAnswerName(character.name);
+
+    // Reset failure count for next round
+    setFailuresThisRound(0);
+
+    // Check difficulty progression (5 questions per difficulty level)
+    const newQuestionsAtDifficulty = questionsAtDifficulty + 1;
+    setQuestionsAtDifficulty(newQuestionsAtDifficulty);
+
+    // Level up after 5 questions at current difficulty (max difficulty is 5)
+    if (newQuestionsAtDifficulty >= 5 && difficulty < 5) {
+      setDifficulty(difficulty + 1);
+      setQuestionsAtDifficulty(0);
+    }
 
     // Calculate estimated score based on time
     const estimatedScore = calculatePotentialScore(30 - timeSpent);
@@ -259,9 +299,15 @@ export function useGame(): UseGameReturn {
         // Prefetch next character in background
         (async () => {
           const idsToExclude = [...usedCharacterIds, character.id];
+          // Use the updated difficulty after level up
+          const nextDifficulty =
+            newQuestionsAtDifficulty >= 5 && difficulty < 5
+              ? difficulty + 1
+              : difficulty;
           const nextResponse = await gameApi.startGame(
             playerName || 'Anonymous',
-            idsToExclude
+            idsToExclude,
+            nextDifficulty
           );
           nextCharacterRef.current = nextResponse.character;
         })(),
@@ -292,6 +338,9 @@ export function useGame(): UseGameReturn {
     streak,
     totalScore,
     usedCharacterIds,
+    failuresThisRound,
+    questionsAtDifficulty,
+    difficulty,
   ]);
 
   const resetToMenu = useCallback(() => {
@@ -305,6 +354,9 @@ export function useGame(): UseGameReturn {
     setCharacter(null);
     setSessionId(null);
     setIsGameOver(false);
+    setFailuresThisRound(0);
+    setDifficulty(1);
+    setQuestionsAtDifficulty(0);
     refreshLeaderboard();
   }, [clearTimers, refreshLeaderboard]);
 
@@ -334,6 +386,9 @@ export function useGame(): UseGameReturn {
     error,
     isGameOver,
     usedCharacterIds,
+    failuresThisRound,
+    difficulty,
+    questionsAtDifficulty,
     setGuess,
     setPlayerName,
     setShowLeaderboard,

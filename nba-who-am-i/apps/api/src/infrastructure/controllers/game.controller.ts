@@ -12,7 +12,14 @@ export class GameController {
   ) {}
 
   @Post('start')
-  start(@Body() req: { playerName: string; excludeCharacterIds?: string[] }) {
+  start(
+    @Body()
+    req: {
+      playerName: string;
+      excludeCharacterIds?: string[];
+      difficulty?: number;
+    }
+  ) {
     return this.startGame.execute(req);
   }
 

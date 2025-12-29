@@ -10,8 +10,15 @@ export class StartGameUseCase {
     @Inject(CHARACTER_REPOSITORY) private readonly repo: ICharacterRepository
   ) {}
 
-  async execute(req: { playerName: string; excludeCharacterIds?: string[] }) {
-    const character = await this.repo.findRandom(req.excludeCharacterIds);
+  async execute(req: {
+    playerName: string;
+    excludeCharacterIds?: string[];
+    difficulty?: number;
+  }) {
+    const character = await this.repo.findRandom(
+      req.excludeCharacterIds,
+      req.difficulty
+    );
     return {
       sessionId: crypto.randomUUID(),
       character: character.toResponse(),
