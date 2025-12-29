@@ -229,15 +229,14 @@ function MenuScreen({
   error: string | null;
   isLoading: boolean;
 }) {
-  const isDesktop = useMediaQuery(`(min-width: ${BREAKPOINTS.tablet}px)`);
   const isMobile = useMediaQuery(`(max-width: ${BREAKPOINTS.mobile}px)`);
 
   return (
     <div
       style={{
-        display: 'grid',
-        gridTemplateColumns: isDesktop ? '1fr 1fr' : '1fr',
-        gap: isDesktop ? '24px' : '20px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '32px',
       }}
     >
       <GlassCard
