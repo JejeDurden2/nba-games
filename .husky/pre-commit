@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+# Run lint-staged in the nba-who-am-i directory
+cd "$(dirname "$0")/../nba-who-am-i" || exit 1
+pnpm exec lint-staged
