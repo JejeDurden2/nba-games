@@ -61,6 +61,7 @@ export function useGame(): UseGameReturn {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const textIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const startTimeRef = useRef<number>(0);
+  const nextCharacterRef = useRef<GameCharacter | null>(null);
 
   const calculatePotentialScore = useCallback((time: number): number => {
     if (time > 25) return 1000;
@@ -152,6 +153,28 @@ export function useGame(): UseGameReturn {
 
   const startGame = useCallback(async () => {
     setError(null);
+
+    // Check if we have a prefetched character
+    if (nextCharacterRef.current) {
+      // Use prefetched character - instant transition!
+      const prefetchedCharacter = nextCharacterRef.current;
+      nextCharacterRef.current = null;
+
+      setSessionId(crypto.randomUUID());
+      setCharacter(prefetchedCharacter);
+      setUsedCharacterIds((prev) => [...prev, prefetchedCharacter.id]);
+      setDisplayedText('');
+      setTimeLeft(30);
+      setScore(0);
+      setGuess('');
+      setRound((r) => r + 1);
+      setIsGameOver(false);
+      startTimeRef.current = Date.now();
+      setGameState('playing');
+      return;
+    }
+
+    // No prefetched character - show loading and fetch
     setGameState('loading');
 
     try {
@@ -223,14 +246,26 @@ export function useGame(): UseGameReturn {
     setGameState('won');
 
     // Submit to backend in background to get real score and update leaderboard
+    // Also prefetch next character for instant transition
     try {
-      const response = await gameApi.submitAnswer({
-        sessionId,
-        characterId: character.id,
-        guess: guess.trim(),
-        timeSpent,
-        playerName: playerName || 'Anonymous',
-      });
+      const [response] = await Promise.all([
+        gameApi.submitAnswer({
+          sessionId,
+          characterId: character.id,
+          guess: guess.trim(),
+          timeSpent,
+          playerName: playerName || 'Anonymous',
+        }),
+        // Prefetch next character in background
+        (async () => {
+          const idsToExclude = [...usedCharacterIds, character.id];
+          const nextResponse = await gameApi.startGame(
+            playerName || 'Anonymous',
+            idsToExclude
+          );
+          nextCharacterRef.current = nextResponse.character;
+        })(),
+      ]);
 
       // Update with real values from backend (usually same as estimate)
       setScore(response.score);
@@ -241,7 +276,7 @@ export function useGame(): UseGameReturn {
       // Refresh leaderboard
       refreshLeaderboard();
     } catch (err) {
-      console.error('Failed to submit score:', err);
+      console.error('Failed to submit score or prefetch next:', err);
       // Keep the optimistic values, just log the error
       // The game continues normally even if the API fails
     }
@@ -256,6 +291,7 @@ export function useGame(): UseGameReturn {
     calculatePotentialScore,
     streak,
     totalScore,
+    usedCharacterIds,
   ]);
 
   const resetToMenu = useCallback(() => {
