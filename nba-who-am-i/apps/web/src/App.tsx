@@ -266,7 +266,7 @@ function MenuScreen({
             color: 'white',
             fontSize: '15px',
             textAlign: 'center',
-            marginBottom: '20px',
+            marginBottom: '32px',
             outline: 'none',
           }}
         />
