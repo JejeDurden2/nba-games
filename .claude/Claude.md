@@ -33,24 +33,60 @@ src/
 - Les Repositories implémentent les Ports définis dans `application/ports/`
 - Injection via tokens NestJS : `@Inject('CharacterRepository')`
 
-### Frontend (apps/web)
+### Frontend (apps/web) - Component-Based Architecture
+
+Architecture inspirée des patterns Next.js avec séparation claire des responsabilités :
 
 ```
 src/
-  features/       # Feature-based structure
-  components/ui/  # Design system
-  hooks/          # Custom hooks
-  lib/            # Utils, API client
+  components/
+    screens/          # Composants full-page (MenuScreen, PlayingScreen, WonScreen, GameOverScreen)
+    game/             # Composants spécifiques au jeu (Timer, GuessInput, AchievementBadge, ShareCard)
+    ui/               # Design system primitives (Button, Card, Leaderboard, BackgroundEffects)
+  hooks/              # Custom hooks (useGame, useMediaQuery)
+  lib/
+    design-system/    # Design tokens et utilitaires (tokens.ts, utils.ts)
+    api/              # API client
+    utils/            # Utilitaires partagés (fuzzy-match, share-utils)
+  api/                # Client API REST
 ```
+
+**Principes d'architecture :**
+- **Composants Screens** : Orchestration, pas de logique métier, composition de composants
+- **Composants Game** : Spécifiques au domaine, réutilisables dans les screens
+- **Composants UI** : Primitives génériques, aucune logique métier
+- **Hooks** : Encapsulation de la logique d'état et des effets
+- **Design System** : Tokens centralisés (couleurs, gradients, breakpoints), Tailwind CSS
+
+**Hiérarchie des composants :**
+1. **App.tsx** (≈150 lignes) : Router de l'état du jeu, gestion du focus
+2. **Screens** (60-120 lignes) : Composition de composants, props drilling minimal
+3. **Game components** (40-80 lignes) : Logique spécifique, props typées
+4. **UI components** (40-100 lignes) : Primitives réutilisables, variants
+
+**Design Tokens (tokens.ts) :**
+- Colors : ball, rim, nba, dark, accent
+- Gradients : fire, ocean, gold, purple, green, achievementGradients (5 niveaux)
+- Breakpoints : mobile (640px), tablet (768px), desktop (1024px)
+- Character type configs : gradient, glow, label, emoji par type
 
 ## Conventions de code
 
 ### Naming
+
+**Backend :**
 - Entités : `character.entity.ts` → `Character`
 - Value Objects : `score.value-object.ts` → `Score`
 - Use Cases : `start-game.use-case.ts` → `StartGameUseCase`
 - Ports : `character.repository.port.ts` → `ICharacterRepository`
 - Adapters : `prisma-character.repository.ts` → `PrismaCharacterRepository`
+
+**Frontend :**
+- Screens : `MenuScreen.tsx`, `PlayingScreen.tsx`, `GameOverScreen.tsx`
+- Game components : `Timer.tsx`, `GuessInput.tsx`, `AchievementBadge.tsx`
+- UI components : `Button.tsx`, `Card.tsx`, `Leaderboard.tsx`
+- Hooks : `useGame.ts`, `useMediaQuery.ts`
+- Utils : `share-utils.ts`, `fuzzy-match.ts`
 
 ### TypeScript
 - `strict: true` obligatoire
@@ -111,18 +147,94 @@ export class Character {
 }
 ```
 
-### React component
+### React component pattern
 ```typescript
-export const GameCard = ({ character, onGuess }: GameCardProps) => {
+// Ordre strict : props interface → component → hooks → handlers → render
+export interface GameCardProps {
+  character: GameCharacter;
+  onGuess: (guess: string) => void;
+}
+
+export function GameCard({ character, onGuess }: GameCardProps) {
+  // 1. Hooks (state, effects, custom hooks)
   const [guess, setGuess] = useState('');
-  // Hooks first, then handlers, then render
-};
+  const isMobile = useIsMobile();
+
+  // 2. Handlers
+  const handleSubmit = () => {
+    onGuess(guess);
+    setGuess('');
+  };
+
+  // 3. Render avec Tailwind classes
+  return (
+    <Card className={cn('p-6', isMobile && 'p-4')}>
+      {/* JSX */}
+    </Card>
+  );
+}
 ```
+
+### Design System - Tailwind CSS
+
+**Utilisation des tokens :**
+```typescript
+import { cn } from '../../lib/design-system/utils';
+import { achievementLevelConfig } from '../../lib/design-system/tokens';
+
+const config = achievementLevelConfig[level];
+const gradient = unlocked ? config.gradient : config.locked;
+
+<div
+  className={cn('rounded-full', isMobile ? 'w-16 h-16' : 'w-20 h-20')}
+  style={{ background: gradient, boxShadow: config.glow }}
+>
+```
+
+**Responsive Design :**
+- Mobile-first : classes de base pour mobile
+- Breakpoints conditionnels : `isMobile ? 'text-sm' : 'text-base'`
+- Utiliser `useIsMobile()` plutôt que media queries CSS
 
 ## Don'ts
 
+**Backend :**
 - ❌ Logique métier dans les controllers
 - ❌ Import Prisma dans le domain
 - ❌ `any` type
 - ❌ Mutations directes d'état (use immutable patterns)
 - ❌ Dépendances circulaires entre features
+
+**Frontend :**
+- ❌ Logique métier dans les composants (utiliser des hooks)
+- ❌ Styles inline (utiliser Tailwind + design tokens)
+- ❌ Composants > 150 lignes (refactoriser en sous-composants)
+- ❌ Props drilling excessif (utiliser composition ou context si nécessaire)
+- ❌ `any` type (TypeScript strict mode)
+- ❌ Créer de nouveaux fichiers sans justification (préférer éditer l'existant)
+
+## Patterns Frontend Avancés
+
+### State Management
+- **useGame hook** : Source unique de vérité pour l'état du jeu
+- État local (useState) pour l'UI éphémère
+- Refs (useRef) pour les timers et valeurs non-reactives
+- Pas de Redux/Zustand nécessaire pour cette app
+
+### Performance
+- Prefetching : Charger le prochain personnage pendant l'écran de victoire
+- Optimistic UI : Afficher le résultat avant la réponse API
+- useCallback pour les handlers passés en props
+- Éviter le re-render inutile : React.memo si nécessaire
+
+### Accessibilité & UX
+- Auto-focus sur l'input pendant le jeu (useEffect + inputRef)
+- Animations subtiles (Tailwind animate-pulse, animate-shake)
+- Feedback visuel immédiat (wrong guess shake, success animations)
+- Mobile-first responsive design
+
+### Gamification Features
+- Système d'achievements (5 niveaux de badges)
+- Percentile ranking (comparaison sociale)
+- Social sharing (Web Share API + fallbacks)
+- Encouraging messages (messages personnalisés par performance)
