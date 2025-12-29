@@ -208,7 +208,7 @@ function MenuScreen({
   isLoading: boolean;
 }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
       <GlassCard style={{ padding: '40px 32px', textAlign: 'center' }}>
         <div style={{ fontSize: '64px', marginBottom: '12px' }}>🏀</div>
         <h2
