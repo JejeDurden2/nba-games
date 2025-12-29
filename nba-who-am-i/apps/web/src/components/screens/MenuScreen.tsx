@@ -44,50 +44,52 @@ export function MenuScreen({
         </p>
       </div>
 
-      {/* Player name input */}
-      <div className="mb-6">
-        <label
-          htmlFor="playerName"
-          className={cn(
-            'block text-dark-500 mb-2',
-            isMobile ? 'text-sm' : 'text-base'
-          )}
-        >
-          Ton nom
-        </label>
-        <input
-          id="playerName"
-          type="text"
-          placeholder="Joueur anonyme"
-          value={playerName}
-          onChange={(e) => setPlayerName(e.target.value)}
-          className={cn(
-            'w-full bg-dark-700 border-2 border-dark-600',
-            'rounded-xl text-white placeholder-dark-500',
-            'outline-none transition-colors',
-            'focus:border-white/20',
-            isMobile ? 'px-4 py-3 text-base' : 'px-5 py-4 text-lg'
-          )}
-          maxLength={20}
-        />
-      </div>
-
-      {/* Error message */}
-      {error && (
-        <div className="mb-6 p-4 bg-rim-500/20 border border-rim-500/40 rounded-xl">
-          <p className="text-red-300 text-sm">{error}</p>
+      {/* Player name input and start button - centered with max width */}
+      <div className="max-w-md mx-auto">
+        <div className="mb-6">
+          <label
+            htmlFor="playerName"
+            className={cn(
+              'block text-dark-500 mb-2',
+              isMobile ? 'text-sm' : 'text-base'
+            )}
+          >
+            Ton nom
+          </label>
+          <input
+            id="playerName"
+            type="text"
+            placeholder="Joueur anonyme"
+            value={playerName}
+            onChange={(e) => setPlayerName(e.target.value)}
+            className={cn(
+              'w-full bg-dark-700 border-2 border-dark-600',
+              'rounded-xl text-white placeholder-dark-500',
+              'outline-none transition-colors',
+              'focus:border-white/20',
+              isMobile ? 'px-4 py-3 text-base' : 'px-5 py-4 text-lg'
+            )}
+            maxLength={20}
+          />
         </div>
-      )}
 
-      {/* Start button */}
-      <Button
-        onClick={startGame}
-        size="lg"
-        disabled={isLoading}
-        className="w-full mb-8"
-      >
-        {isLoading ? 'Chargement...' : 'Jouer'}
-      </Button>
+        {/* Error message */}
+        {error && (
+          <div className="mb-6 p-4 bg-rim-500/20 border border-rim-500/40 rounded-xl">
+            <p className="text-red-300 text-sm">{error}</p>
+          </div>
+        )}
+
+        {/* Start button */}
+        <Button
+          onClick={startGame}
+          size="lg"
+          disabled={isLoading}
+          className="w-full mb-8"
+        >
+          {isLoading ? 'Chargement...' : 'Jouer'}
+        </Button>
+      </div>
 
       {/* Leaderboard */}
       {leaderboard.length > 0 && (
