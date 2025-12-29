@@ -1,0 +1,35 @@
+generator client {
+  provider   = "prisma-client"
+  engineType = "client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Character {
+  id         String   @id @default(uuid())
+  name       String   @unique
+  type       String
+  hints      String[]
+  difficulty Int      @default(1)
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  @@index([type])
+  @@map("characters")
+}
+
+model LeaderboardEntry {
+  id            String   @id @default(uuid())
+  playerName    String   @unique @map("player_name")
+  score         Int      @default(0)
+  gamesPlayed   Int      @default(0) @map("games_played")
+  gamesWon      Int      @default(0) @map("games_won")
+  currentStreak Int      @default(0) @map("current_streak")
+  maxStreak     Int      @default(0) @map("max_streak")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  @@index([score(sort: Desc)])
+  @@map("leaderboard_entries")
+}
