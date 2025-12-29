@@ -9,7 +9,7 @@ export interface ShareData {
 }
 
 /**
- * Generate share text based on game results
+ * Generate share text based on game results (with basketball trash talk)
  */
 export function generateShareText(data: ShareData): string {
   const {
@@ -22,25 +22,25 @@ export function generateShareText(data: ShareData): string {
   } = data;
 
   if (allLevelsCleared) {
-    return `🏆 ${playerName} a conquis NBA Who Am I! 🏆
+    return `🏆 ${playerName} vient de DOMINER NBA Who Am I! 🏆
 
-💯 Tous les 5 niveaux terminés
-🔥 Streak maximum: ${maxStreak}
-⭐ Score: ${totalScore} points
-🎯 ${round} rounds
+💯 Les 5 niveaux ANNIHILÉS
+🔥 Streak en feu: ${maxStreak}
+⭐ ${totalScore} points au compteur
+🎯 ${round} rounds de pure domination
 
-Tu peux me battre? 🏀`;
+Tu crois pouvoir me battre? Try me. 😤🏀`;
   }
 
   return `🏀 NBA Who Am I
 
-👤 ${playerName}
-📊 Score: ${totalScore}
-🔥 Streak: ${maxStreak}
+👤 ${playerName} est passé sur le terrain
+📊 ${totalScore} points scored
+🔥 ${maxStreak} streak (cooking!)
 🎯 Round ${round}
-⭐ Niveau ${highestLevelCleared}/5
+⭐ Niveau ${highestLevelCleared}/5 unlocked
 
-Joue maintenant! 🏆`;
+T'as le game pour faire mieux? Step up! 💪`;
 }
 
 /**
@@ -123,4 +123,107 @@ export function shareOnTwitter(data: ShareData): void {
  */
 export function canUseWebShare(): boolean {
   return typeof navigator !== 'undefined' && 'share' in navigator;
+}
+
+/**
+ * Share on WhatsApp
+ */
+export function shareOnWhatsApp(data: ShareData): void {
+  const text = generateShareText(data);
+  const url = getGameUrl();
+  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text + '\n\n' + url)}`;
+  window.open(whatsappUrl, '_blank');
+}
+
+/**
+ * Share on Instagram (copy text and prompt user)
+ * Instagram doesn't have direct web share, so we copy text and guide user
+ */
+export async function shareOnInstagram(data: ShareData): Promise<boolean> {
+  const text = generateShareText(data);
+  const url = getGameUrl();
+  const fullText = `${text}\n\n${url}`;
+
+  // Copy to clipboard first
+  const copied = await copyShareText(fullText);
+
+  if (copied) {
+    // Show alert with instructions
+    alert(
+      '📋 Texte copié! Time to flex! 💪\n\n' +
+        'Pour partager sur Instagram:\n' +
+        '1. Ouvre Instagram\n' +
+        '2. Crée une Story ou un Post\n' +
+        '3. Colle le texte (déjà copié)\n\n' +
+        'Ou utilise le bouton "Copier l\'image" pour faire encore + de bruit! 🔥'
+    );
+  }
+
+  return copied;
+}
+
+/**
+ * Generate image from HTML element using html2canvas
+ */
+export async function generateShareImage(
+  element: HTMLElement
+): Promise<Blob | null> {
+  try {
+    const html2canvas = (await import('html2canvas')).default;
+
+    // Generate canvas from element
+    const canvas = await html2canvas(element, {
+      backgroundColor: '#09090B', // dark-900
+      scale: 2, // Higher quality
+      logging: false,
+      windowWidth: element.scrollWidth,
+      windowHeight: element.scrollHeight,
+    });
+
+    // Convert canvas to blob
+    return new Promise((resolve) => {
+      canvas.toBlob((blob) => {
+        resolve(blob);
+      }, 'image/png');
+    });
+  } catch (error) {
+    console.error('Error generating image:', error);
+    return null;
+  }
+}
+
+/**
+ * Copy image to clipboard
+ */
+export async function copyImageToClipboard(blob: Blob): Promise<boolean> {
+  try {
+    // Check if Clipboard API supports images
+    if (!navigator.clipboard || !navigator.clipboard.write) {
+      throw new Error('Clipboard API not supported');
+    }
+
+    const item = new ClipboardItem({ 'image/png': blob });
+    await navigator.clipboard.write([item]);
+    return true;
+  } catch (error) {
+    console.error('Error copying image to clipboard:', error);
+    return false;
+  }
+}
+
+/**
+ * Download image as file
+ */
+export function downloadImage(
+  blob: Blob,
+  filename = 'nba-who-am-i-results.png'
+): void {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 }

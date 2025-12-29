@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { AchievementGrid } from './AchievementGrid';
@@ -6,8 +6,13 @@ import {
   ShareData,
   shareResults,
   shareOnTwitter,
+  shareOnWhatsApp,
+  shareOnInstagram,
   copyShareText,
   generateShareText,
+  generateShareImage,
+  copyImageToClipboard,
+  downloadImage,
   getGameUrl,
   canUseWebShare,
 } from '../../lib/share-utils';
@@ -34,7 +39,10 @@ export function ShareCard(props: ShareCardProps) {
   } = props;
 
   const isMobile = useIsMobile();
+  const cardRef = useRef<HTMLDivElement>(null);
   const [copySuccess, setCopySuccess] = useState(false);
+  const [imageSuccess, setImageSuccess] = useState(false);
+  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
   const hasWebShare = canUseWebShare();
 
   const shareData: ShareData = {
@@ -50,7 +58,6 @@ export function ShareCard(props: ShareCardProps) {
   const handleShare = async () => {
     const success = await shareResults(shareData);
     if (!hasWebShare && success) {
-      // Fallback to copy - show success message
       setCopySuccess(true);
       setTimeout(() => setCopySuccess(false), 2000);
     }
@@ -69,6 +76,39 @@ export function ShareCard(props: ShareCardProps) {
     shareOnTwitter(shareData);
   };
 
+  const handleWhatsApp = () => {
+    shareOnWhatsApp(shareData);
+  };
+
+  const handleInstagram = async () => {
+    await shareOnInstagram(shareData);
+  };
+
+  const handleCopyImage = async () => {
+    if (!cardRef.current) return;
+
+    setIsGeneratingImage(true);
+    try {
+      const blob = await generateShareImage(cardRef.current);
+      if (blob) {
+        const success = await copyImageToClipboard(blob);
+        if (success) {
+          setImageSuccess(true);
+          setTimeout(() => setImageSuccess(false), 2000);
+        } else {
+          // Fallback: download image if clipboard fails
+          downloadImage(blob);
+          alert('📥 Image téléchargée! Tu peux maintenant la partager.');
+        }
+      }
+    } catch (error) {
+      console.error('Error copying image:', error);
+      alert("❌ Erreur lors de la copie de l'image.");
+    } finally {
+      setIsGeneratingImage(false);
+    }
+  };
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-dark-900/80 backdrop-blur-sm p-4"
@@ -76,6 +116,7 @@ export function ShareCard(props: ShareCardProps) {
     >
       <div onClick={(e) => e.stopPropagation()}>
         <Card
+          ref={cardRef}
           className={cn('relative max-w-md w-full', isMobile ? 'p-6' : 'p-8')}
         >
           {/* Close button */}
@@ -102,7 +143,7 @@ export function ShareCard(props: ShareCardProps) {
                 allLevelsCleared ? 'text-accent-yellow' : 'text-white'
               )}
             >
-              {allLevelsCleared ? 'CHAMPION NBA!' : 'MES RÉSULTATS'}
+              {allLevelsCleared ? 'HALL OF FAME! 👑' : 'MY STATS'}
             </h2>
             <p className={cn('font-bold', isMobile ? 'text-lg' : 'text-xl')}>
               {playerName}
@@ -154,34 +195,79 @@ export function ShareCard(props: ShareCardProps) {
 
           {/* Share Buttons */}
           <div className="flex flex-col gap-3">
-            {/* Primary share button */}
-            {hasWebShare ? (
+            {/* Web Share API (mobile) */}
+            {hasWebShare && (
               <Button onClick={handleShare} size="lg" className="w-full">
                 📤 Partager mes résultats
               </Button>
-            ) : (
-              <>
+            )}
+
+            {/* Social buttons grid (desktop) */}
+            {!hasWebShare && (
+              <div className="grid grid-cols-2 gap-3">
                 {/* Twitter/X Button */}
                 <Button
                   onClick={handleTwitter}
-                  size="lg"
+                  size="md"
                   className="w-full"
                   gradient="linear-gradient(135deg, #1DA1F2 0%, #0C85D0 100%)"
                   glow="rgba(29,161,242,0.4)"
                 >
-                  𝕏 Partager sur Twitter
+                  𝕏 Twitter
                 </Button>
 
-                {/* Copy button */}
+                {/* WhatsApp Button */}
                 <Button
-                  onClick={handleCopy}
+                  onClick={handleWhatsApp}
                   size="md"
-                  variant="secondary"
                   className="w-full"
+                  gradient="linear-gradient(135deg, #25D366 0%, #128C7E 100%)"
+                  glow="rgba(37,211,102,0.4)"
                 >
-                  {copySuccess ? '✓ Copié!' : '📋 Copier le texte'}
+                  📱 WhatsApp
                 </Button>
-              </>
+              </div>
+            )}
+
+            {/* Instagram and Copy buttons */}
+            <div className="grid grid-cols-2 gap-3">
+              {/* Instagram Button */}
+              <Button
+                onClick={handleInstagram}
+                size="md"
+                className="w-full"
+                gradient="linear-gradient(135deg, #F58529 0%, #DD2A7B 50%, #8134AF 100%)"
+                glow="rgba(245,133,41,0.4)"
+              >
+                📷 Instagram
+              </Button>
+
+              {/* Copy Image Button */}
+              <Button
+                onClick={handleCopyImage}
+                size="md"
+                variant="secondary"
+                className="w-full"
+                disabled={isGeneratingImage}
+              >
+                {isGeneratingImage
+                  ? '⏳'
+                  : imageSuccess
+                    ? '✓ Copié!'
+                    : '🖼️ Image'}
+              </Button>
+            </div>
+
+            {/* Copy Text Button */}
+            {!hasWebShare && (
+              <Button
+                onClick={handleCopy}
+                size="md"
+                variant="secondary"
+                className="w-full"
+              >
+                {copySuccess ? '✓ Copié!' : '📋 Copier le texte'}
+              </Button>
             )}
 
             {/* Close button */}

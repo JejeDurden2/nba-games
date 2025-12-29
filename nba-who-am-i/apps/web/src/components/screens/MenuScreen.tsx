@@ -40,7 +40,7 @@ export function MenuScreen({
           NBA WHO AM I?
         </h2>
         <p className={cn('text-dark-500', isMobile ? 'text-sm' : 'text-base')}>
-          Devine le joueur, coach ou légende NBA à partir des indices
+          Penses-tu avoir le basketball IQ pour reconnaitre ces légendes? 👀
         </p>
       </div>
 
@@ -54,12 +54,12 @@ export function MenuScreen({
               isMobile ? 'text-sm' : 'text-base'
             )}
           >
-            Ton nom
+            Qui ose me défier?
           </label>
           <input
             id="playerName"
             type="text"
-            placeholder="Joueur anonyme"
+            placeholder="Un rookie anonyme"
             value={playerName}
             onChange={(e) => setPlayerName(e.target.value)}
             className={cn(
@@ -87,7 +87,7 @@ export function MenuScreen({
           disabled={isLoading}
           className="w-full mb-8"
         >
-          {isLoading ? 'Chargement...' : 'Jouer'}
+          {isLoading ? 'Chargement...' : 'Step on the court 🔥'}
         </Button>
       </div>
 
@@ -100,7 +100,7 @@ export function MenuScreen({
               isMobile ? 'text-lg' : 'text-xl'
             )}
           >
-            🏆 Meilleurs scores
+            🏆 Hall of Fame
           </h3>
           <Leaderboard entries={leaderboard} limit={5} />
         </div>

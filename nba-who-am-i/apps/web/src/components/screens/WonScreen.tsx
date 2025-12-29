@@ -35,14 +35,14 @@ export function WonScreen({
           isMobile ? 'text-2xl' : 'text-3xl'
         )}
       >
-        BRAVO !
+        BUCKETS! 💰
       </h2>
 
       {/* Answer */}
       <p
         className={cn('text-dark-500 mb-1', isMobile ? 'text-sm' : 'text-base')}
       >
-        C&apos;était bien
+        Yessir, c&apos;était
       </p>
       <p
         className={cn(
@@ -89,7 +89,7 @@ export function WonScreen({
       {/* Action buttons */}
       <div className="flex flex-col gap-3">
         <Button onClick={startGame} size="lg" className="w-full">
-          Suivant →
+          Next victim →
         </Button>
         <Button
           onClick={resetToMenu}
@@ -97,7 +97,7 @@ export function WonScreen({
           variant="secondary"
           className="w-full"
         >
-          🏠 Menu principal
+          🏠 Back to the bench
         </Button>
       </div>
     </Card>

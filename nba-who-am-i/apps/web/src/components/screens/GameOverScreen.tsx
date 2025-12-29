@@ -23,25 +23,26 @@ export interface GameOverScreenProps {
 }
 
 /**
- * Get encouraging message based on performance
+ * Get encouraging message based on performance (with basketball trash talk)
  */
 function getEncouragingMessage(
   percentile?: number,
   allLevelsCleared?: boolean
 ): string {
   if (allLevelsCleared) {
-    return '🎉 INCROYABLE ! Tu as conquis tous les niveaux ! Tu es un vrai champion NBA ! 🏆';
+    return "🎉 GOAT STATUS UNLOCKED! T'as dominé comme Jordan en 96! Respect! 🏆👑";
   }
-  if (!percentile) return 'Bien joué ! Continue de t&apos;entraîner ! 💪';
+  if (!percentile)
+    return 'Pas mal rookie! Mais faut bosser ton basketball IQ! 💪';
   if (percentile >= 90)
-    return `🔥 Exceptionnel ! Tu es meilleur que ${percentile}% des joueurs !`;
+    return `🔥 SHEESH! T'as cuit ${percentile}% des joueurs! T'es clutch! 🥶`;
   if (percentile >= 75)
-    return `⭐ Impressionnant ! Tu es meilleur que ${percentile}% des joueurs !`;
+    return `⭐ Solid game! T'as crossé ${percentile}% des joueurs! Keep cooking! 🍳`;
   if (percentile >= 50)
-    return `👍 Bien joué ! Tu es meilleur que ${percentile}% des joueurs !`;
+    return `👊 Pas mal! T'as battu ${percentile}% des joueurs! T'as du potentiel!`;
   if (percentile >= 25)
-    return `💪 Continue ! Tu es meilleur que ${percentile}% des joueurs !`;
-  return `🏀 Bon début ! Tu es meilleur que ${percentile}% des joueurs ! Continue ! 📈`;
+    return `💪 Allez! T'as fait mieux que ${percentile}% des joueurs! Next time! 📈`;
+  return `🏀 Rookie numbers (top ${percentile}%)... Faut retravailler tes fondamentaux! 💯`;
 }
 
 /**
@@ -87,10 +88,10 @@ export function GameOverScreen({
           )}
         >
           {allLevelsCleared
-            ? 'CHAMPION NBA!'
+            ? 'HALL OF FAME! 👑'
             : isTimeout
-              ? 'TEMPS ÉCOULÉ'
-              : 'PARTIE TERMINÉE'}
+              ? 'SHOT CLOCK VIOLATION ⏰'
+              : 'GAME OVER'}
         </h2>
 
         {/* Achievement Grid - show if any levels cleared */}
@@ -125,7 +126,7 @@ export function GameOverScreen({
                 isMobile ? 'text-xs' : 'text-sm'
               )}
             >
-              La réponse était:
+              C&apos;était:
             </p>
             <p
               className={cn('font-bold mb-6', isMobile ? 'text-lg' : 'text-xl')}
@@ -175,13 +176,15 @@ export function GameOverScreen({
               }
               glow={allLevelsCleared ? 'rgba(252,211,77,0.5)' : undefined}
             >
-              {allLevelsCleared ? '🏆 Partager ma victoire!' : '📤 Partager'}
+              {allLevelsCleared
+                ? '🏆 Flex sur tout le monde!'
+                : '📤 Talk my talk'}
             </Button>
           )}
 
           {/* Play again button */}
           <Button onClick={startGame} size="lg" className="w-full">
-            Rejouer
+            Run it back 🔄
           </Button>
 
           {/* Menu button */}
@@ -191,7 +194,7 @@ export function GameOverScreen({
             variant="secondary"
             className="w-full"
           >
-            🏠 Menu principal
+            🏠 Back to the bench
           </Button>
         </div>
       </Card>

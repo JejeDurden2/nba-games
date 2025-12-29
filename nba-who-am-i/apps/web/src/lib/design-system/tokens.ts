@@ -67,31 +67,31 @@ export const achievementLevelConfig: Record<
   1: {
     gradient: achievementGradients.level1,
     glow: 'rgba(16,185,129,0.5)',
-    label: 'NOVICE',
+    label: 'ROOKIE',
     locked: 'linear-gradient(135deg, #52525B 0%, #3F3F46 100%)',
   },
   2: {
     gradient: achievementGradients.level2,
     glow: 'rgba(59,130,246,0.5)',
-    label: 'APPRENTI',
+    label: 'STARTER',
     locked: 'linear-gradient(135deg, #52525B 0%, #3F3F46 100%)',
   },
   3: {
     gradient: achievementGradients.level3,
     glow: 'rgba(168,85,247,0.5)',
-    label: 'EXPERT',
+    label: 'ALL-STAR',
     locked: 'linear-gradient(135deg, #52525B 0%, #3F3F46 100%)',
   },
   4: {
     gradient: achievementGradients.level4,
     glow: 'rgba(245,158,11,0.5)',
-    label: 'MAÎTRE',
+    label: 'MVP',
     locked: 'linear-gradient(135deg, #52525B 0%, #3F3F46 100%)',
   },
   5: {
     gradient: achievementGradients.level5,
     glow: 'rgba(252,211,77,0.6)',
-    label: 'LÉGENDE',
+    label: 'GOAT',
     locked: 'linear-gradient(135deg, #52525B 0%, #3F3F46 100%)',
   },
 } as const;
