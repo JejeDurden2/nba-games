@@ -292,30 +292,38 @@ function MenuScreen({
           </div>
         )}
 
-        <input
-          type="text"
-          placeholder="Entre ton pseudo..."
-          value={playerName}
-          onChange={(e) => setPlayerName(e.target.value)}
-          maxLength={20}
+        <div
           style={{
-            width: '100%',
-            maxWidth: '260px',
-            padding: '14px 18px',
-            background: tokens.colors.dark[800],
-            border: `2px solid ${tokens.colors.dark[600]}`,
-            borderRadius: '12px',
-            color: 'white',
-            fontSize: '15px',
-            textAlign: 'center',
-            marginBottom: '32px',
-            outline: 'none',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '24px',
           }}
-        />
+        >
+          <input
+            type="text"
+            placeholder="Entre ton pseudo..."
+            value={playerName}
+            onChange={(e) => setPlayerName(e.target.value)}
+            maxLength={20}
+            style={{
+              width: '100%',
+              maxWidth: '260px',
+              padding: '14px 18px',
+              background: tokens.colors.dark[800],
+              border: `2px solid ${tokens.colors.dark[600]}`,
+              borderRadius: '12px',
+              color: 'white',
+              fontSize: '15px',
+              textAlign: 'center',
+              outline: 'none',
+            }}
+          />
 
-        <GlowButton onClick={startGame} size="lg" disabled={isLoading}>
-          {isLoading ? '⏳ Chargement...' : '🎮 JOUER'}
-        </GlowButton>
+          <GlowButton onClick={startGame} size="lg" disabled={isLoading}>
+            {isLoading ? '⏳ Chargement...' : '🎮 JOUER'}
+          </GlowButton>
+        </div>
       </GlassCard>
 
       <GlassCard style={{ padding: isMobile ? '20px' : '24px' }}>
