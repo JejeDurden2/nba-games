@@ -2,10 +2,11 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import * as express from 'express';
+import { Express } from 'express';
 
-let cachedServer;
+let cachedServer: Express | null = null;
 
-async function bootstrap() {
+async function bootstrap(): Promise<Express> {
   if (!cachedServer) {
     const expressApp = express();
     const app = await NestFactory.create(
@@ -31,7 +32,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // For Vercel serverless
-export default async (req, res) => {
+export default async (req: express.Request, res: express.Response) => {
   const server = await bootstrap();
   return server(req, res);
 };
