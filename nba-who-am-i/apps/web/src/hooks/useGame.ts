@@ -81,11 +81,6 @@ export function useGame(): UseGameReturn {
     }
   }, []);
 
-  // Load leaderboard on mount
-  useEffect(() => {
-    refreshLeaderboard();
-  }, []);
-
   const refreshLeaderboard = useCallback(async () => {
     try {
       const res = await gameApi.getLeaderboard(10);
@@ -94,6 +89,11 @@ export function useGame(): UseGameReturn {
       console.error('Failed to load leaderboard:', err);
     }
   }, []);
+
+  // Load leaderboard on mount
+  useEffect(() => {
+    refreshLeaderboard();
+  }, [refreshLeaderboard]);
 
   // Timer effect
   useEffect(() => {

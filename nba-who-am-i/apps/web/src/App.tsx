@@ -132,7 +132,7 @@ function LeaderboardInline({ entries }: { entries: LeaderboardEntry[] }) {
           padding: '20px',
         }}
       >
-        Aucun score pour l'instant. Sois le premier !
+        Aucun score pour l&apos;instant. Sois le premier !
       </div>
     );
   }

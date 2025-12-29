@@ -53,7 +53,7 @@ class GameApiClient {
     playerName: string,
     excludeCharacterIds: string[] = []
   ): Promise<StartGameResponse> {
-    return this.fetch<StartGameResponse>('/game/start', {
+    return this.fetch<StartGameResponse>('/api/game/start', {
       method: 'POST',
       body: JSON.stringify({ playerName, excludeCharacterIds }),
     });
@@ -66,14 +66,16 @@ class GameApiClient {
     timeSpent: number;
     playerName: string;
   }): Promise<SubmitAnswerResponse> {
-    return this.fetch<SubmitAnswerResponse>('/game/answer', {
+    return this.fetch<SubmitAnswerResponse>('/api/game/answer', {
       method: 'POST',
       body: JSON.stringify(params),
     });
   }
 
   async getLeaderboard(limit = 10): Promise<LeaderboardResponse> {
-    return this.fetch<LeaderboardResponse>(`/game/leaderboard?limit=${limit}`);
+    return this.fetch<LeaderboardResponse>(
+      `/api/game/leaderboard?limit=${limit}`
+    );
   }
 }
 
