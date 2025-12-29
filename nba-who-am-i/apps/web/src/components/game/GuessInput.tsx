@@ -38,7 +38,7 @@ export function GuessInput({
       <input
         ref={inputRef}
         type="text"
-        placeholder="Qui c'est? Prove it..."
+        placeholder="Une idée ?"
         value={guess}
         onChange={(e) => setGuess(e.target.value)}
         onKeyDown={handleKeyDown}

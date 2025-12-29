@@ -89,7 +89,7 @@ export function WonScreen({
       {/* Action buttons */}
       <div className="flex flex-col gap-3">
         <Button onClick={startGame} size="lg" className="w-full">
-          Next victim →
+          Envoie le prochain →
         </Button>
         <Button
           onClick={resetToMenu}
@@ -97,7 +97,7 @@ export function WonScreen({
           variant="secondary"
           className="w-full"
         >
-          🏠 Back to the bench
+          🏠 Back to back
         </Button>
       </div>
     </Card>

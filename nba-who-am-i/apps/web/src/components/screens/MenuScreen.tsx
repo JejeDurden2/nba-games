@@ -40,7 +40,7 @@ export function MenuScreen({
           NBA WHO AM I?
         </h2>
         <p className={cn('text-dark-500', isMobile ? 'text-sm' : 'text-base')}>
-          Penses-tu avoir le basketball IQ pour reconnaitre ces légendes? 👀
+          Penses-tu avoir le QI basket pour reconnaitre ces légendes? 👀
         </p>
       </div>
 
@@ -54,7 +54,7 @@ export function MenuScreen({
               isMobile ? 'text-sm' : 'text-base'
             )}
           >
-            Qui ose me défier?
+            Qui es-tu, rookie ?
           </label>
           <input
             id="playerName"
@@ -87,7 +87,7 @@ export function MenuScreen({
           disabled={isLoading}
           className="w-full mb-8"
         >
-          {isLoading ? 'Chargement...' : 'Step on the court 🔥'}
+          {isLoading ? 'Chargement...' : 'Game Time 🔥'}
         </Button>
       </div>
 

@@ -33,15 +33,15 @@ function getEncouragingMessage(
     return "🎉 GOAT STATUS UNLOCKED! T'as dominé comme Jordan en 96! Respect! 🏆👑";
   }
   if (!percentile)
-    return 'Pas mal rookie! Mais faut bosser ton basketball IQ! 💪';
+    return 'Pas mal rookie ! Mais faut bosser ta vision de jeu ! 💪';
   if (percentile >= 90)
-    return `🔥 SHEESH! T'as cuit ${percentile}% des joueurs! T'es clutch! 🥶`;
+    return `🔥 SHEESH! T'as cuit ${percentile}% des joueurs ! T'es clutch! 🥶`;
   if (percentile >= 75)
-    return `⭐ Solid game! T'as crossé ${percentile}% des joueurs! Keep cooking! 🍳`;
+    return `⭐ Solid game! T'as crossé ${percentile}% des joueurs ! Keep cooking! 🍳`;
   if (percentile >= 50)
-    return `👊 Pas mal! T'as battu ${percentile}% des joueurs! T'as du potentiel!`;
+    return `👊 Pas mal! T'as battu ${percentile}% des joueurs ! T'as du potentiel !`;
   if (percentile >= 25)
-    return `💪 Allez! T'as fait mieux que ${percentile}% des joueurs! Next time! 📈`;
+    return `💪 Allez! T'as fait mieux que ${percentile}% des joueurs ! Next time ! 📈`;
   return `🏀 Rookie numbers (top ${percentile}%)... Faut retravailler tes fondamentaux! 💯`;
 }
 
@@ -194,7 +194,7 @@ export function GameOverScreen({
             variant="secondary"
             className="w-full"
           >
-            🏠 Back to the bench
+            🏠 Back to back
           </Button>
         </div>
       </Card>
