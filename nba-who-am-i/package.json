@@ -1,0 +1,45 @@
+{
+  "name": "nba-who-am-i",
+  "private": true,
+  "scripts": {
+    "dev": "turbo run dev --filter=@nba-who-am-i/*",
+    "dev:api": "pnpm --filter @nba-who-am-i/api dev",
+    "dev:web": "pnpm --filter @nba-who-am-i/web dev",
+    "build": "turbo run build --filter=@nba-who-am-i/*",
+    "test": "turbo run test --filter=@nba-who-am-i/*",
+    "lint": "turbo run lint --filter=@nba-who-am-i/*",
+    "lint:fix": "turbo run lint:fix --filter=@nba-who-am-i/*",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "prepare": "husky",
+    "db:migrate": "pnpm --filter @nba-who-am-i/api prisma migrate dev",
+    "db:generate": "pnpm --filter @nba-who-am-i/api prisma generate",
+    "db:seed": "pnpm --filter @nba-who-am-i/api prisma db seed"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@typescript-eslint/eslint-plugin": "^8.50.1",
+    "@typescript-eslint/parser": "^8.50.1",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.7.4",
+    "turbo": "^2.0.0",
+    "typescript": "^5.3.0",
+    "typescript-eslint": "^8.50.1"
+  },
+  "packageManager": "pnpm@8.15.0"
+}

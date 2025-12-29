@@ -1,0 +1,75 @@
+{
+  // Auto-format on save
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  // Auto-fix ESLint issues on save
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+
+  // Auto-save files
+  "files.autoSave": "onFocusChange",
+
+  // ESLint validation for all JS/TS files
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+
+  // Use workspace TypeScript version
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+
+  // Prettier as default formatter for specific languages
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // Show ESLint status in status bar
+  "eslint.alwaysShowStatus": true,
+
+  // Run ESLint on file open
+  "eslint.run": "onType",
+
+  // Enable ESLint flat config
+  "eslint.experimental.useFlatConfig": true,
+
+  // Show all ESLint output
+  "eslint.trace.server": "off",
+
+  // Format on paste
+  "editor.formatOnPaste": true,
+
+  // Format on type (auto-format as you type)
+  "editor.formatOnType": false,
+
+  // Show problems immediately
+  "problems.showCurrentInStatus": true,
+
+  // Validate files on open
+  "eslint.probe": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ]
+}

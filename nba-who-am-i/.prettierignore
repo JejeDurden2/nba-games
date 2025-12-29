@@ -1,0 +1,13 @@
+node_modules
+dist
+build
+.turbo
+coverage
+*.min.js
+*.min.css
+pnpm-lock.yaml
+.next
+.cache
+out
+prisma/schema.prisma
+*.prisma
