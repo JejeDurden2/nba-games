@@ -37,7 +37,13 @@ export class GameController {
   }
 
   @Get('leaderboard')
-  leaderboard(@Query('limit') limit?: string) {
-    return this.getLeaderboard.execute(limit ? parseInt(limit) : 10);
+  leaderboard(
+    @Query('limit') limit?: string,
+    @Query('playerScore') playerScore?: string
+  ) {
+    return this.getLeaderboard.execute({
+      limit: limit ? parseInt(limit) : 10,
+      playerScore: playerScore ? parseInt(playerScore) : undefined,
+    });
   }
 }

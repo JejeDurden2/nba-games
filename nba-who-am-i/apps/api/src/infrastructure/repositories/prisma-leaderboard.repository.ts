@@ -52,4 +52,14 @@ export class PrismaLeaderboardRepository implements ILeaderboardRepository {
     if (existing) return existing;
     return this.save(LeaderboardEntryEntity.create(playerName));
   }
+
+  async countTotal() {
+    return this.prisma.leaderboardEntry.count();
+  }
+
+  async countScoresBelow(score: number) {
+    return this.prisma.leaderboardEntry.count({
+      where: { score: { lt: score } },
+    });
+  }
 }

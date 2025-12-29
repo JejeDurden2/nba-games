@@ -4,6 +4,25 @@ import {
   LEADERBOARD_REPOSITORY,
 } from '../ports/leaderboard.repository.port';
 
+export interface GetLeaderboardParams {
+  limit?: number;
+  playerScore?: number;
+}
+
+export interface GetLeaderboardResponse {
+  entries: Array<{
+    id: string;
+    playerName: string;
+    score: number;
+    gamesPlayed: number;
+    gamesWon: number;
+    currentStreak: number;
+    maxStreak: number;
+  }>;
+  playerPercentile?: number;
+  totalPlayers?: number;
+}
+
 @Injectable()
 export class GetLeaderboardUseCase {
   constructor(
@@ -11,9 +30,14 @@ export class GetLeaderboardUseCase {
     private readonly repo: ILeaderboardRepository
   ) {}
 
-  async execute(limit = 10) {
+  async execute(
+    params: GetLeaderboardParams = {}
+  ): Promise<GetLeaderboardResponse> {
+    const { limit = 10, playerScore } = params;
+
     const entries = await this.repo.findTop(limit);
-    return {
+
+    const result: GetLeaderboardResponse = {
       entries: entries.map((e) => ({
         id: e.id,
         playerName: e.playerName,
@@ -24,5 +48,18 @@ export class GetLeaderboardUseCase {
         maxStreak: e.maxStreak,
       })),
     };
+
+    // Calculate percentile if playerScore is provided
+    if (playerScore !== undefined) {
+      const totalPlayers = await this.repo.countTotal();
+      if (totalPlayers > 0) {
+        const playersBelow = await this.repo.countScoresBelow(playerScore);
+        const percentile = Math.round((playersBelow / totalPlayers) * 100);
+        result.playerPercentile = percentile;
+        result.totalPlayers = totalPlayers;
+      }
+    }
+
+    return result;
   }
 }

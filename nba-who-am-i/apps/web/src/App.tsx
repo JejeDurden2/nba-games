@@ -33,6 +33,10 @@ export default function App() {
     failuresThisRound,
     difficulty,
     questionsAtDifficulty,
+    highestLevelCleared,
+    allLevelsCleared,
+    playerPercentile,
+    totalPlayers,
     setGuess,
     setPlayerName,
     startGame,
@@ -145,6 +149,12 @@ export default function App() {
               round={round}
               maxStreak={maxStreak}
               isTimeout={timeLeft === 0 && failuresThisRound < 3}
+              difficulty={difficulty}
+              highestLevelCleared={highestLevelCleared}
+              allLevelsCleared={allLevelsCleared}
+              playerPercentile={playerPercentile}
+              totalPlayers={totalPlayers}
+              playerName={playerName}
               startGame={startGame}
               resetToMenu={resetToMenu}
             />

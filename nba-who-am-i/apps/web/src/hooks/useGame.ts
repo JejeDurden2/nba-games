@@ -27,6 +27,10 @@ interface UseGameReturn {
   failuresThisRound: number;
   difficulty: number;
   questionsAtDifficulty: number;
+  highestLevelCleared: number;
+  allLevelsCleared: boolean;
+  playerPercentile?: number;
+  totalPlayers?: number;
 
   // Actions
   setGuess: (guess: string) => void;
@@ -63,6 +67,13 @@ export function useGame(): UseGameReturn {
   const [failuresThisRound, setFailuresThisRound] = useState(0);
   const [difficulty, setDifficulty] = useState(1);
   const [questionsAtDifficulty, setQuestionsAtDifficulty] = useState(0);
+  const [highestLevelCleared, setHighestLevelCleared] = useState(0);
+  const [playerPercentile, setPlayerPercentile] = useState<number | undefined>(
+    undefined
+  );
+  const [totalPlayers, setTotalPlayers] = useState<number | undefined>(
+    undefined
+  );
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const textIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -103,6 +114,17 @@ export function useGame(): UseGameReturn {
     refreshLeaderboard();
   }, [refreshLeaderboard]);
 
+  // Fetch percentile on game over
+  const fetchPercentile = useCallback(async (score: number) => {
+    try {
+      const res = await gameApi.getLeaderboard(10, score);
+      setPlayerPercentile(res.playerPercentile);
+      setTotalPlayers(res.totalPlayers);
+    } catch (err) {
+      console.error('Failed to fetch percentile:', err);
+    }
+  }, []);
+
   // Timer effect
   useEffect(() => {
     if (gameState !== 'playing') return;
@@ -115,6 +137,8 @@ export function useGame(): UseGameReturn {
           setStreak(0);
           setIsGameOver(true);
           setGameState('lost');
+          // Fetch percentile when losing
+          fetchPercentile(totalScore);
           return 0;
         }
         return t - 1;
@@ -122,7 +146,7 @@ export function useGame(): UseGameReturn {
     }, 1000);
 
     return clearTimers;
-  }, [gameState, clearTimers, streak]);
+  }, [gameState, clearTimers, streak, totalScore, fetchPercentile]);
 
   // Text reveal effect
   useEffect(() => {
@@ -242,6 +266,8 @@ export function useGame(): UseGameReturn {
         setIsGameOver(true);
         setAnswerName(character.name);
         setGameState('lost');
+        // Fetch percentile when losing
+        fetchPercentile(totalScore);
         return;
       }
 
@@ -266,8 +292,13 @@ export function useGame(): UseGameReturn {
 
     // Level up after 5 questions at current difficulty (max difficulty is 5)
     if (newQuestionsAtDifficulty >= 5 && difficulty < 5) {
+      // Track that we cleared this level
+      setHighestLevelCleared(difficulty);
       setDifficulty(difficulty + 1);
       setQuestionsAtDifficulty(0);
+    } else if (newQuestionsAtDifficulty >= 5 && difficulty === 5) {
+      // Cleared the final level!
+      setHighestLevelCleared(5);
     }
 
     // Calculate estimated score based on time
@@ -341,6 +372,7 @@ export function useGame(): UseGameReturn {
     failuresThisRound,
     questionsAtDifficulty,
     difficulty,
+    fetchPercentile,
   ]);
 
   const resetToMenu = useCallback(() => {
@@ -357,6 +389,9 @@ export function useGame(): UseGameReturn {
     setFailuresThisRound(0);
     setDifficulty(1);
     setQuestionsAtDifficulty(0);
+    setHighestLevelCleared(0);
+    setPlayerPercentile(undefined);
+    setTotalPlayers(undefined);
     refreshLeaderboard();
   }, [clearTimers, refreshLeaderboard]);
 
@@ -366,6 +401,8 @@ export function useGame(): UseGameReturn {
     setIsGameOver(true);
     setGameState('lost');
   }, [clearTimers, streak]);
+
+  const allLevelsCleared = highestLevelCleared >= 5;
 
   return {
     gameState,
@@ -389,6 +426,10 @@ export function useGame(): UseGameReturn {
     failuresThisRound,
     difficulty,
     questionsAtDifficulty,
+    highestLevelCleared,
+    allLevelsCleared,
+    playerPercentile,
+    totalPlayers,
     setGuess,
     setPlayerName,
     setShowLeaderboard,

@@ -34,6 +34,8 @@ export interface LeaderboardEntry {
 
 export interface LeaderboardResponse {
   entries: LeaderboardEntry[];
+  playerPercentile?: number;
+  totalPlayers?: number;
 }
 
 class GameApiClient {
@@ -74,9 +76,16 @@ class GameApiClient {
     });
   }
 
-  async getLeaderboard(limit = 10): Promise<LeaderboardResponse> {
+  async getLeaderboard(
+    limit = 10,
+    playerScore?: number
+  ): Promise<LeaderboardResponse> {
+    const params = new URLSearchParams({ limit: limit.toString() });
+    if (playerScore !== undefined) {
+      params.append('playerScore', playerScore.toString());
+    }
     return this.fetch<LeaderboardResponse>(
-      `/api/game/leaderboard?limit=${limit}`
+      `/api/game/leaderboard?${params.toString()}`
     );
   }
 }

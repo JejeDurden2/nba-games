@@ -43,6 +43,59 @@ export const gradients = {
   green: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
 } as const;
 
+// Achievement Level Gradients
+export const achievementGradients = {
+  level1: 'linear-gradient(135deg, #10B981 0%, #059669 100%)', // green (beginner)
+  level2: 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)', // blue (intermediate)
+  level3: 'linear-gradient(135deg, #A855F7 0%, #7C3AED 100%)', // purple (advanced)
+  level4: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)', // orange (expert)
+  level5: 'linear-gradient(135deg, #FCD34D 0%, #F59E0B 50%, #EF4444 100%)', // gold (master)
+} as const;
+
+// Achievement Level Configuration
+export interface AchievementLevelConfig {
+  gradient: string;
+  glow: string;
+  label: string;
+  locked: string; // grayscale gradient
+}
+
+export const achievementLevelConfig: Record<
+  1 | 2 | 3 | 4 | 5,
+  AchievementLevelConfig
+> = {
+  1: {
+    gradient: achievementGradients.level1,
+    glow: 'rgba(16,185,129,0.5)',
+    label: 'NOVICE',
+    locked: 'linear-gradient(135deg, #52525B 0%, #3F3F46 100%)',
+  },
+  2: {
+    gradient: achievementGradients.level2,
+    glow: 'rgba(59,130,246,0.5)',
+    label: 'APPRENTI',
+    locked: 'linear-gradient(135deg, #52525B 0%, #3F3F46 100%)',
+  },
+  3: {
+    gradient: achievementGradients.level3,
+    glow: 'rgba(168,85,247,0.5)',
+    label: 'EXPERT',
+    locked: 'linear-gradient(135deg, #52525B 0%, #3F3F46 100%)',
+  },
+  4: {
+    gradient: achievementGradients.level4,
+    glow: 'rgba(245,158,11,0.5)',
+    label: 'MAÎTRE',
+    locked: 'linear-gradient(135deg, #52525B 0%, #3F3F46 100%)',
+  },
+  5: {
+    gradient: achievementGradients.level5,
+    glow: 'rgba(252,211,77,0.6)',
+    label: 'LÉGENDE',
+    locked: 'linear-gradient(135deg, #52525B 0%, #3F3F46 100%)',
+  },
+} as const;
+
 // Breakpoints (px)
 export const breakpoints = {
   mobile: 640,
