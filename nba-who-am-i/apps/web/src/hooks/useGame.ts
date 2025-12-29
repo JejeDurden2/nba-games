@@ -23,6 +23,7 @@ interface UseGameReturn {
   error: string | null;
   isGameOver: boolean;
   usedCharacterIds: string[];
+  isSubmitting: boolean;
 
   // Actions
   setGuess: (guess: string) => void;
@@ -56,6 +57,7 @@ export function useGame(): UseGameReturn {
   const [answerName, setAnswerName] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isGameOver, setIsGameOver] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const textIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -185,10 +187,18 @@ export function useGame(): UseGameReturn {
   }, [playerName, usedCharacterIds]);
 
   const submitGuess = useCallback(async () => {
-    if (!guess.trim() || gameState !== 'playing' || !character || !sessionId)
+    if (
+      !guess.trim() ||
+      gameState !== 'playing' ||
+      !character ||
+      !sessionId ||
+      isSubmitting
+    )
       return;
 
     const timeSpent = Math.round((Date.now() - startTimeRef.current) / 1000);
+
+    setIsSubmitting(true);
 
     try {
       const response = await gameApi.submitAnswer({
@@ -220,6 +230,8 @@ export function useGame(): UseGameReturn {
       }
     } catch (err) {
       console.error(err);
+    } finally {
+      setIsSubmitting(false);
     }
   }, [
     guess,
@@ -227,6 +239,7 @@ export function useGame(): UseGameReturn {
     character,
     sessionId,
     playerName,
+    isSubmitting,
     clearTimers,
     refreshLeaderboard,
   ]);
@@ -271,6 +284,7 @@ export function useGame(): UseGameReturn {
     error,
     isGameOver,
     usedCharacterIds,
+    isSubmitting,
     setGuess,
     setPlayerName,
     setShowLeaderboard,
