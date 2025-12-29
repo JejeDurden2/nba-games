@@ -359,7 +359,6 @@ function PlayingScreen({
   round,
   streak,
   totalScore,
-  isSubmitting,
 }: {
   displayedText: string;
   timeLeft: number;
@@ -374,7 +373,6 @@ function PlayingScreen({
   round: number;
   streak: number;
   totalScore: number;
-  isSubmitting: boolean;
 }) {
   const isMobile = useMediaQuery(`(max-width: ${BREAKPOINTS.mobile}px)`);
   const timerColor =
@@ -551,7 +549,6 @@ function PlayingScreen({
           value={guess}
           onChange={(e) => setGuess(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && submitGuess()}
-          disabled={isSubmitting}
           style={{
             flex: 1,
             padding: isMobile ? '14px 16px' : '18px 24px',
@@ -563,7 +560,6 @@ function PlayingScreen({
             outline: 'none',
             transition: 'all 0.2s',
             animation: wrongGuess ? 'shake 0.4s ease' : 'none',
-            opacity: isSubmitting ? 0.6 : 1,
           }}
         />
         <GlowButton
@@ -571,52 +567,10 @@ function PlayingScreen({
           gradient={config.gradient}
           glow={config.glow}
           size={isMobile ? 'md' : 'lg'}
-          disabled={isSubmitting}
         >
-          <span style={{ fontSize: isMobile ? '20px' : '24px' }}>
-            {isSubmitting ? '⏳' : '→'}
-          </span>
+          <span style={{ fontSize: isMobile ? '20px' : '24px' }}>→</span>
         </GlowButton>
       </div>
-
-      {/* Loading overlay */}
-      {isSubmitting && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000,
-            backdropFilter: 'blur(4px)',
-          }}
-        >
-          <div
-            style={{
-              background: tokens.colors.dark[800],
-              padding: '32px 48px',
-              borderRadius: '20px',
-              border: `2px solid ${tokens.colors.dark[600]}`,
-              textAlign: 'center',
-            }}
-          >
-            <div
-              style={{
-                fontSize: '48px',
-                marginBottom: '16px',
-                animation: 'pulse 1s ease-in-out infinite',
-              }}
-            >
-              ⏳
-            </div>
-            <div style={{ fontSize: '18px', fontWeight: 600 }}>
-              Vérification...
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
@@ -916,7 +870,6 @@ export default function App() {
     answerName,
     error,
     isGameOver,
-    isSubmitting,
     setGuess,
     setPlayerName,
     startGame,
@@ -1052,7 +1005,6 @@ export default function App() {
             round={round}
             streak={streak}
             totalScore={totalScore}
-            isSubmitting={isSubmitting}
           />
         )}
 

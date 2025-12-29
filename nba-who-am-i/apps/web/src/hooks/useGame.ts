@@ -24,7 +24,6 @@ interface UseGameReturn {
   error: string | null;
   isGameOver: boolean;
   usedCharacterIds: string[];
-  isSubmitting: boolean;
 
   // Actions
   setGuess: (guess: string) => void;
@@ -58,7 +57,6 @@ export function useGame(): UseGameReturn {
   const [answerName, setAnswerName] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isGameOver, setIsGameOver] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const textIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -188,13 +186,7 @@ export function useGame(): UseGameReturn {
   }, [playerName, usedCharacterIds]);
 
   const submitGuess = useCallback(async () => {
-    if (
-      !guess.trim() ||
-      gameState !== 'playing' ||
-      !character ||
-      !sessionId ||
-      isSubmitting
-    )
+    if (!guess.trim() || gameState !== 'playing' || !character || !sessionId)
       return;
 
     const timeSpent = Math.round((Date.now() - startTimeRef.current) / 1000);
@@ -211,9 +203,26 @@ export function useGame(): UseGameReturn {
       return;
     }
 
-    // Correct answer - submit to backend for score calculation
-    setIsSubmitting(true);
+    // Correct answer - show success immediately (optimistic UI)
+    clearTimers();
+    setAnswerName(character.name);
 
+    // Calculate estimated score based on time
+    const estimatedScore = calculatePotentialScore(30 - timeSpent);
+    const estimatedStreak = streak + 1;
+    const streakBonus =
+      streak > 0 ? Math.round(estimatedScore * (streak * 0.15)) : 0;
+    const estimatedTotalScore = estimatedScore + streakBonus;
+
+    // Show success screen immediately with estimated values
+    setScore(estimatedTotalScore);
+    setTotalScore(totalScore + estimatedTotalScore);
+    setStreak(estimatedStreak);
+    setMaxStreak((ms) => Math.max(ms, estimatedStreak));
+    setIsGameOver(false);
+    setGameState('won');
+
+    // Submit to backend in background to get real score and update leaderboard
     try {
       const response = await gameApi.submitAnswer({
         sessionId,
@@ -223,24 +232,18 @@ export function useGame(): UseGameReturn {
         playerName: playerName || 'Anonymous',
       });
 
-      setAnswerName(response.answer);
-
-      // Backend should always agree with our fuzzy match
-      clearTimers();
+      // Update with real values from backend (usually same as estimate)
       setScore(response.score);
       setTotalScore(response.totalScore);
       setStreak(response.streak);
       setMaxStreak((ms) => Math.max(ms, response.streak));
-      setIsGameOver(false);
-      setGameState('won');
 
       // Refresh leaderboard
       refreshLeaderboard();
     } catch (err) {
-      console.error(err);
-      setError('Erreur lors de la soumission du score');
-    } finally {
-      setIsSubmitting(false);
+      console.error('Failed to submit score:', err);
+      // Keep the optimistic values, just log the error
+      // The game continues normally even if the API fails
     }
   }, [
     guess,
@@ -248,9 +251,11 @@ export function useGame(): UseGameReturn {
     character,
     sessionId,
     playerName,
-    isSubmitting,
     clearTimers,
     refreshLeaderboard,
+    calculatePotentialScore,
+    streak,
+    totalScore,
   ]);
 
   const resetToMenu = useCallback(() => {
@@ -293,7 +298,6 @@ export function useGame(): UseGameReturn {
     error,
     isGameOver,
     usedCharacterIds,
-    isSubmitting,
     setGuess,
     setPlayerName,
     setShowLeaderboard,
