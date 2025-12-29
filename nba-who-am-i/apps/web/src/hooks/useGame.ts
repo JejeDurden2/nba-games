@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { gameApi, GameCharacter, LeaderboardEntry } from '../api/game';
+import { fuzzyMatch } from '../lib/fuzzy-match';
 
 export type GameState = 'menu' | 'loading' | 'playing' | 'won' | 'lost';
 
@@ -144,7 +145,7 @@ export function useGame(): UseGameReturn {
       }
     };
 
-    textIntervalRef.current = setInterval(reveal, 18);
+    textIntervalRef.current = setInterval(reveal, 40);
 
     return () => {
       if (textIntervalRef.current) clearInterval(textIntervalRef.current);
@@ -198,6 +199,19 @@ export function useGame(): UseGameReturn {
 
     const timeSpent = Math.round((Date.now() - startTimeRef.current) / 1000);
 
+    // Client-side fuzzy matching for instant feedback
+    const isCorrect = fuzzyMatch(guess.trim(), character.name);
+
+    if (!isCorrect) {
+      // Wrong answer - immediate feedback, no API call needed
+      setGuess('');
+      setTimeLeft((t) => Math.max(0, t - 3));
+      setWrongGuess(true);
+      setTimeout(() => setWrongGuess(false), 400);
+      return;
+    }
+
+    // Correct answer - submit to backend for score calculation
     setIsSubmitting(true);
 
     try {
@@ -211,25 +225,20 @@ export function useGame(): UseGameReturn {
 
       setAnswerName(response.answer);
 
-      if (response.correct) {
-        clearTimers();
-        setScore(response.score);
-        setTotalScore(response.totalScore);
-        setStreak(response.streak);
-        setMaxStreak((ms) => Math.max(ms, response.streak));
-        setIsGameOver(false);
-        setGameState('won');
+      // Backend should always agree with our fuzzy match
+      clearTimers();
+      setScore(response.score);
+      setTotalScore(response.totalScore);
+      setStreak(response.streak);
+      setMaxStreak((ms) => Math.max(ms, response.streak));
+      setIsGameOver(false);
+      setGameState('won');
 
-        // Refresh leaderboard
-        refreshLeaderboard();
-      } else {
-        setGuess('');
-        setTimeLeft((t) => Math.max(0, t - 3));
-        setWrongGuess(true);
-        setTimeout(() => setWrongGuess(false), 400);
-      }
+      // Refresh leaderboard
+      refreshLeaderboard();
     } catch (err) {
       console.error(err);
+      setError('Erreur lors de la soumission du score');
     } finally {
       setIsSubmitting(false);
     }

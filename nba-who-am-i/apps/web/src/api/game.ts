@@ -4,6 +4,7 @@ export type CharacterType = 'player' | 'coach' | 'executive' | 'legend';
 
 export interface GameCharacter {
   id: string;
+  name: string;
   type: CharacterType;
   hints: string[];
 }

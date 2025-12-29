@@ -51,6 +51,11 @@ export class CharacterEntity {
   }
 
   toResponse() {
-    return { id: this.id, type: this.type, hints: [...this.hints] };
+    return {
+      id: this.id,
+      name: this.name,
+      type: this.type,
+      hints: [...this.hints],
+    };
   }
 }
