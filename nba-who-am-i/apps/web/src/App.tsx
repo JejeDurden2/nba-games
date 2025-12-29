@@ -1,6 +1,28 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useGame } from './hooks/useGame';
 import { CharacterType, LeaderboardEntry } from './api/game';
+
+// Responsive breakpoints
+const BREAKPOINTS = {
+  mobile: 640,
+  tablet: 768,
+  desktop: 1024,
+};
+
+function useMediaQuery(query: string) {
+  const [matches, setMatches] = useState(
+    () => window.matchMedia(query).matches
+  );
+
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    const listener = () => setMatches(media.matches);
+    media.addEventListener('change', listener);
+    return () => media.removeEventListener('change', listener);
+  }, [query]);
+
+  return matches;
+}
 
 const tokens = {
   colors: {
@@ -207,13 +229,34 @@ function MenuScreen({
   error: string | null;
   isLoading: boolean;
 }) {
+  const isDesktop = useMediaQuery(`(min-width: ${BREAKPOINTS.tablet}px)`);
+  const isMobile = useMediaQuery(`(max-width: ${BREAKPOINTS.mobile}px)`);
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-      <GlassCard style={{ padding: '40px 32px', textAlign: 'center' }}>
-        <div style={{ fontSize: '64px', marginBottom: '12px' }}>🏀</div>
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: isDesktop ? '1fr 1fr' : '1fr',
+        gap: isDesktop ? '24px' : '20px',
+      }}
+    >
+      <GlassCard
+        style={{
+          padding: isMobile ? '32px 20px' : '40px 32px',
+          textAlign: 'center',
+        }}
+      >
+        <div
+          style={{
+            fontSize: isMobile ? '48px' : '64px',
+            marginBottom: '12px',
+          }}
+        >
+          🏀
+        </div>
         <h2
           style={{
-            fontSize: '1.4rem',
+            fontSize: isMobile ? '1.2rem' : '1.4rem',
             fontWeight: 700,
             marginBottom: '8px',
             margin: '0 0 8px 0',
@@ -226,7 +269,7 @@ function MenuScreen({
             color: tokens.colors.dark[500],
             marginBottom: '24px',
             lineHeight: 1.5,
-            fontSize: '14px',
+            fontSize: isMobile ? '13px' : '14px',
           }}
         >
           Des indices apparaissent progressivement pendant 30 secondes.
@@ -276,11 +319,11 @@ function MenuScreen({
         </GlowButton>
       </GlassCard>
 
-      <GlassCard style={{ padding: '24px' }}>
+      <GlassCard style={{ padding: isMobile ? '20px' : '24px' }}>
         <h3
           style={{
             margin: '0 0 16px 0',
-            fontSize: '1.1rem',
+            fontSize: isMobile ? '1rem' : '1.1rem',
             fontWeight: 700,
             display: 'flex',
             alignItems: 'center',
@@ -324,6 +367,7 @@ function PlayingScreen({
   streak: number;
   totalScore: number;
 }) {
+  const isMobile = useMediaQuery(`(max-width: ${BREAKPOINTS.mobile}px)`);
   const timerColor =
     timeLeft > 20
       ? tokens.colors.accent.green
@@ -341,13 +385,21 @@ function PlayingScreen({
           justifyContent: 'space-between',
           alignItems: 'center',
           marginBottom: '16px',
-          padding: '12px 16px',
+          padding: isMobile ? '10px 12px' : '12px 16px',
           background: 'rgba(24,24,27,0.6)',
           borderRadius: '12px',
-          fontSize: '13px',
+          fontSize: isMobile ? '12px' : '13px',
+          flexWrap: isMobile ? 'wrap' : 'nowrap',
+          gap: isMobile ? '12px' : '0',
         }}
       >
-        <div style={{ display: 'flex', gap: '20px' }}>
+        <div
+          style={{
+            display: 'flex',
+            gap: isMobile ? '12px' : '20px',
+            flexWrap: 'wrap',
+          }}
+        >
           <span>
             Round <b style={{ color: 'white' }}>{round}</b>
           </span>
@@ -362,14 +414,15 @@ function PlayingScreen({
         <button
           onClick={onQuit}
           style={{
-            padding: '6px 12px',
+            padding: isMobile ? '5px 10px' : '6px 12px',
             background: 'rgba(220,38,38,0.2)',
             border: '1px solid rgba(220,38,38,0.4)',
             borderRadius: '6px',
             color: '#FCA5A5',
-            fontSize: '12px',
+            fontSize: isMobile ? '11px' : '12px',
             cursor: 'pointer',
             fontWeight: 600,
+            whiteSpace: 'nowrap',
           }}
         >
           ✕ Quitter
@@ -383,16 +436,18 @@ function PlayingScreen({
           justifyContent: 'space-between',
           alignItems: 'flex-start',
           marginBottom: '16px',
+          flexWrap: 'wrap',
+          gap: isMobile ? '12px' : '0',
         }}
       >
         <div
           style={{
-            padding: '8px 20px',
+            padding: isMobile ? '6px 16px' : '8px 20px',
             background: config.gradient,
             borderRadius: '30px',
             fontWeight: 800,
-            fontSize: '13px',
-            letterSpacing: '2px',
+            fontSize: isMobile ? '11px' : '13px',
+            letterSpacing: isMobile ? '1.5px' : '2px',
             boxShadow: `0 0 20px ${config.glow}`,
             display: 'flex',
             alignItems: 'center',
@@ -405,7 +460,7 @@ function PlayingScreen({
         <div style={{ textAlign: 'right' }}>
           <div
             style={{
-              fontSize: '48px',
+              fontSize: isMobile ? '36px' : '48px',
               fontWeight: 900,
               fontFamily: 'monospace',
               color: timerColor,
@@ -417,7 +472,12 @@ function PlayingScreen({
           >
             {timeLeft}
           </div>
-          <div style={{ fontSize: '14px', color: tokens.colors.dark[500] }}>
+          <div
+            style={{
+              fontSize: isMobile ? '12px' : '14px',
+              color: tokens.colors.dark[500],
+            }}
+          >
             +{calculatePotentialScore(timeLeft)} pts
           </div>
         </div>
@@ -446,8 +506,8 @@ function PlayingScreen({
       {/* Hints text */}
       <GlassCard
         style={{
-          padding: '28px',
-          minHeight: '300px',
+          padding: isMobile ? '20px' : '28px',
+          minHeight: isMobile ? '200px' : '300px',
           marginBottom: '20px',
           boxShadow: `0 0 40px ${config.glow}`,
         }}
@@ -474,7 +534,7 @@ function PlayingScreen({
       </GlassCard>
 
       {/* Input */}
-      <div style={{ display: 'flex', gap: '12px' }}>
+      <div style={{ display: 'flex', gap: isMobile ? '8px' : '12px' }}>
         <input
           ref={inputRef}
           type="text"
@@ -484,12 +544,12 @@ function PlayingScreen({
           onKeyDown={(e) => e.key === 'Enter' && submitGuess()}
           style={{
             flex: 1,
-            padding: '18px 24px',
+            padding: isMobile ? '14px 16px' : '18px 24px',
             background: tokens.colors.dark[800],
             border: `2px solid ${wrongGuess ? tokens.colors.rim[500] : tokens.colors.dark[600]}`,
             borderRadius: '14px',
             color: 'white',
-            fontSize: '18px',
+            fontSize: isMobile ? '16px' : '18px',
             outline: 'none',
             transition: 'all 0.2s',
             animation: wrongGuess ? 'shake 0.4s ease' : 'none',
@@ -499,8 +559,9 @@ function PlayingScreen({
           onClick={submitGuess}
           gradient={config.gradient}
           glow={config.glow}
+          size={isMobile ? 'md' : 'lg'}
         >
-          <span style={{ fontSize: '24px' }}>→</span>
+          <span style={{ fontSize: isMobile ? '20px' : '24px' }}>→</span>
         </GlowButton>
       </div>
     </div>
@@ -520,12 +581,23 @@ function WonScreen({
   startGame: () => void;
   resetToMenu: () => void;
 }) {
+  const isMobile = useMediaQuery(`(max-width: ${BREAKPOINTS.mobile}px)`);
+
   return (
-    <GlassCard style={{ padding: '48px 32px', textAlign: 'center' }}>
-      <div style={{ fontSize: '72px', marginBottom: '8px' }}>🎉</div>
+    <GlassCard
+      style={{
+        padding: isMobile ? '32px 20px' : '48px 32px',
+        textAlign: 'center',
+      }}
+    >
+      <div
+        style={{ fontSize: isMobile ? '56px' : '72px', marginBottom: '8px' }}
+      >
+        🎉
+      </div>
       <h2
         style={{
-          fontSize: '2rem',
+          fontSize: isMobile ? '1.5rem' : '2rem',
           fontWeight: 900,
           background: tokens.gradients.green,
           WebkitBackgroundClip: 'text',
@@ -535,12 +607,18 @@ function WonScreen({
       >
         CORRECT!
       </h2>
-      <p style={{ fontSize: '1.25rem', margin: '0 0 20px 0', color: 'white' }}>
+      <p
+        style={{
+          fontSize: isMobile ? '1.1rem' : '1.25rem',
+          margin: '0 0 20px 0',
+          color: 'white',
+        }}
+      >
         {answerName}
       </p>
       <div
         style={{
-          fontSize: '56px',
+          fontSize: isMobile ? '42px' : '56px',
           fontWeight: 900,
           background: tokens.gradients.ocean,
           WebkitBackgroundClip: 'text',
@@ -620,14 +698,23 @@ function GameOverScreen({
   startGame: () => void;
   resetToMenu: () => void;
 }) {
+  const isMobile = useMediaQuery(`(max-width: ${BREAKPOINTS.mobile}px)`);
+
   return (
-    <GlassCard style={{ padding: '48px 32px', textAlign: 'center' }}>
-      <div style={{ fontSize: '72px', marginBottom: '8px' }}>
+    <GlassCard
+      style={{
+        padding: isMobile ? '32px 20px' : '48px 32px',
+        textAlign: 'center',
+      }}
+    >
+      <div
+        style={{ fontSize: isMobile ? '56px' : '72px', marginBottom: '8px' }}
+      >
         {isTimeout ? '⏱️' : '🏁'}
       </div>
       <h2
         style={{
-          fontSize: '1.75rem',
+          fontSize: isMobile ? '1.4rem' : '1.75rem',
           fontWeight: 900,
           color: tokens.colors.rim[500],
           margin: '0 0 8px 0',
@@ -638,12 +725,18 @@ function GameOverScreen({
 
       {answerName && (
         <>
-          <p style={{ color: tokens.colors.dark[500], margin: '0 0 4px 0' }}>
+          <p
+            style={{
+              color: tokens.colors.dark[500],
+              margin: '0 0 4px 0',
+              fontSize: isMobile ? '13px' : '14px',
+            }}
+          >
             La réponse était:
           </p>
           <p
             style={{
-              fontSize: '1.3rem',
+              fontSize: isMobile ? '1.1rem' : '1.3rem',
               fontWeight: 700,
               margin: '0 0 24px 0',
             }}
@@ -657,10 +750,11 @@ function GameOverScreen({
       <div
         style={{
           display: 'flex',
+          flexDirection: isMobile ? 'column' : 'row',
           justifyContent: 'center',
-          gap: '32px',
+          gap: isMobile ? '16px' : '32px',
           marginBottom: '32px',
-          padding: '20px',
+          padding: isMobile ? '16px' : '20px',
           background: 'rgba(39,39,42,0.5)',
           borderRadius: '12px',
         }}
@@ -787,6 +881,7 @@ export default function App() {
   }, [gameState]);
 
   const config = character ? TYPE_CONFIG[character.type] : TYPE_CONFIG.player;
+  const isMobile = useMediaQuery(`(max-width: ${BREAKPOINTS.mobile}px)`);
 
   return (
     <div
@@ -837,20 +932,20 @@ export default function App() {
           position: 'relative',
           maxWidth: '680px',
           margin: '0 auto',
-          padding: '16px',
+          padding: isMobile ? '12px' : '16px',
         }}
       >
         {/* Header */}
         <header
           style={{
             textAlign: 'center',
-            padding: '20px 0',
+            padding: isMobile ? '16px 0' : '20px 0',
             marginBottom: '8px',
           }}
         >
           <h1
             style={{
-              fontSize: '2.2rem',
+              fontSize: isMobile ? '1.75rem' : '2.2rem',
               fontWeight: 900,
               margin: 0,
               letterSpacing: '-1px',
