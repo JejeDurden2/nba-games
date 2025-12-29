@@ -1,5 +1,6 @@
 {
   "name": "@nba-who-am-i/api",
+  "packageManager": "pnpm@9.15.1",
   "version": "1.0.0",
   "scripts": {
     "build": "nest build",

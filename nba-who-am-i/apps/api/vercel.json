@@ -1,7 +1,5 @@
 {
   "version": 2,
-  "buildCommand": "pnpm install && pnpm prisma generate",
-  "installCommand": "pnpm install",
   "builds": [
     {
       "src": "api/index.ts",
