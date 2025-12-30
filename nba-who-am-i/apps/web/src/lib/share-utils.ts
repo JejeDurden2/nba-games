@@ -136,6 +136,15 @@ export function shareOnWhatsApp(data: ShareData): void {
 }
 
 /**
+ * Share on Facebook
+ */
+export function shareOnFacebook(_data: ShareData): void {
+  const url = getGameUrl();
+  const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+  window.open(facebookUrl, '_blank', 'width=555,height=400');
+}
+
+/**
  * Share on Instagram (copy text and prompt user)
  * Instagram doesn't have direct web share, so we copy text and guide user
  */
@@ -155,7 +164,7 @@ export async function shareOnInstagram(data: ShareData): Promise<boolean> {
         '1. Ouvre Instagram\n' +
         '2. Crée une Story ou un Post\n' +
         '3. Colle le texte (déjà copié)\n\n' +
-        'Ou utilise le bouton "Copier l\'image" pour faire encore + de bruit ! 🔥'
+        'Ou utilise le bouton "Image" pour télécharger une image à poster ! 🔥'
     );
   }
 

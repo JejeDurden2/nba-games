@@ -47,7 +47,7 @@ export function MenuScreen({
           NBA WHO AM I ?
         </h2>
         <p className={cn('text-dark-500', isMobile ? 'text-sm' : 'text-base')}>
-          WHERE YOU AT ?! Reconnais ces légendes si t'as le game ! 🔥
+          WHERE YOU AT ?! Reconnais ces légendes si t&apos;as le game ! 🔥
         </p>
       </div>
 

@@ -7,6 +7,7 @@ import {
   shareResults,
   shareOnTwitter,
   shareOnWhatsApp,
+  shareOnFacebook,
   shareOnInstagram,
   copyShareText,
   generateShareText,
@@ -80,8 +81,31 @@ export function ShareCard(props: ShareCardProps) {
     shareOnWhatsApp(shareData);
   };
 
+  const handleFacebook = () => {
+    shareOnFacebook(shareData);
+  };
+
   const handleInstagram = async () => {
-    await shareOnInstagram(shareData);
+    if (!cardRef.current) return;
+
+    setIsGeneratingImage(true);
+    try {
+      // Generate and download image automatically
+      const blob = await generateShareImage(cardRef.current);
+      if (blob) {
+        downloadImage(
+          blob,
+          `nba-who-am-i-${playerName.toLowerCase().replace(/\s+/g, '-')}.png`
+        );
+        // Also copy text
+        await shareOnInstagram(shareData);
+      }
+    } catch (error) {
+      console.error('Error generating Instagram image:', error);
+      alert("❌ Erreur lors de la génération de l'image.");
+    } finally {
+      setIsGeneratingImage(false);
+    }
   };
 
   const handleCopyImage = async () => {
@@ -195,57 +219,79 @@ export function ShareCard(props: ShareCardProps) {
 
           {/* Share Buttons */}
           <div className="flex flex-col gap-3">
-            {/* Web Share API (mobile) */}
+            {/* Title */}
+            <div className="text-center mb-1">
+              <p className="text-sm font-bold text-dark-400">
+                PARTAGE TON SCORE ! 📤
+              </p>
+            </div>
+
+            {/* Web Share API (mobile only) */}
             {hasWebShare && (
-              <Button onClick={handleShare} size="lg" className="w-full">
+              <Button onClick={handleShare} size="lg" className="w-full mb-2">
                 📤 Partager mes résultats
               </Button>
             )}
 
-            {/* Social buttons grid (desktop) */}
-            {!hasWebShare && (
-              <div className="grid grid-cols-2 gap-3">
-                {/* Twitter/X Button */}
-                <Button
-                  onClick={handleTwitter}
-                  size="md"
-                  className="w-full"
-                  gradient="linear-gradient(135deg, #1DA1F2 0%, #0C85D0 100%)"
-                  glow="rgba(29,161,242,0.4)"
-                >
-                  𝕏 Twitter
-                </Button>
+            {/* Social Media Grid - Always show on desktop, show below web share on mobile */}
+            <div
+              className={cn(
+                'grid gap-3',
+                hasWebShare ? 'grid-cols-2' : 'grid-cols-2'
+              )}
+            >
+              {/* Twitter/X Button */}
+              <Button
+                onClick={handleTwitter}
+                size="md"
+                className="w-full"
+                gradient="linear-gradient(135deg, #1DA1F2 0%, #0C85D0 100%)"
+                glow="rgba(29,161,242,0.4)"
+              >
+                𝕏 Twitter
+              </Button>
 
-                {/* WhatsApp Button */}
-                <Button
-                  onClick={handleWhatsApp}
-                  size="md"
-                  className="w-full"
-                  gradient="linear-gradient(135deg, #25D366 0%, #128C7E 100%)"
-                  glow="rgba(37,211,102,0.4)"
-                >
-                  📱 WhatsApp
-                </Button>
-              </div>
-            )}
+              {/* WhatsApp Button */}
+              <Button
+                onClick={handleWhatsApp}
+                size="md"
+                className="w-full"
+                gradient="linear-gradient(135deg, #25D366 0%, #128C7E 100%)"
+                glow="rgba(37,211,102,0.4)"
+              >
+                📱 WhatsApp
+              </Button>
 
-            {/* Instagram and Copy buttons */}
-            <div className="grid grid-cols-2 gap-3">
-              {/* Instagram Button */}
+              {/* Facebook Button */}
+              <Button
+                onClick={handleFacebook}
+                size="md"
+                className="w-full"
+                gradient="linear-gradient(135deg, #1877F2 0%, #0C5DBF 100%)"
+                glow="rgba(24,119,242,0.4)"
+              >
+                📘 Facebook
+              </Button>
+
+              {/* Instagram Button - Downloads image + copies text */}
               <Button
                 onClick={handleInstagram}
                 size="md"
                 className="w-full"
                 gradient="linear-gradient(135deg, #F58529 0%, #DD2A7B 50%, #8134AF 100%)"
                 glow="rgba(245,133,41,0.4)"
+                disabled={isGeneratingImage}
               >
-                📷 Instagram
+                {isGeneratingImage ? '⏳' : '📷 Instagram'}
               </Button>
+            </div>
 
+            {/* Utility Buttons */}
+            <div className="grid grid-cols-2 gap-3 pt-2 border-t border-dark-700">
               {/* Copy Image Button */}
               <Button
                 onClick={handleCopyImage}
-                size="md"
+                size="sm"
                 variant="secondary"
                 className="w-full"
                 disabled={isGeneratingImage}
@@ -254,28 +300,26 @@ export function ShareCard(props: ShareCardProps) {
                   ? '⏳'
                   : imageSuccess
                     ? '✓ Copié !'
-                    : '🖼️ Image'}
+                    : '🖼️ Copier image'}
               </Button>
-            </div>
 
-            {/* Copy Text Button */}
-            {!hasWebShare && (
+              {/* Copy Text Button */}
               <Button
                 onClick={handleCopy}
-                size="md"
+                size="sm"
                 variant="secondary"
                 className="w-full"
               >
-                {copySuccess ? '✓ Copié !' : '📋 Copier le texte'}
+                {copySuccess ? '✓ Copié !' : '📋 Copier texte'}
               </Button>
-            )}
+            </div>
 
             {/* Close button */}
             <Button
               onClick={onClose}
               size="sm"
               variant="secondary"
-              className="w-full"
+              className="w-full mt-2"
             >
               Fermer
             </Button>
