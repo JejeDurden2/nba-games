@@ -48,7 +48,7 @@ export function PlayingScreen({
   questionsAtDifficulty,
 }: PlayingScreenProps) {
   return (
-    <div>
+    <div className="flex flex-col">
       {/* Stats Bar */}
       <StatsBar
         round={round}
@@ -61,7 +61,7 @@ export function PlayingScreen({
       />
 
       {/* Character Badge & Timer */}
-      <div className="flex justify-between items-start mb-4 flex-wrap gap-3">
+      <div className="flex justify-between items-start mb-4 flex-wrap gap-3 shrink-0">
         <CharacterBadge type={characterType} />
         <div className="flex-1 min-w-0">
           <Timer
@@ -72,20 +72,22 @@ export function PlayingScreen({
       </div>
 
       {/* Hints Display */}
-      <div className="mb-4">
+      <div className="mb-4 shrink-0">
         <HintsDisplay displayedText={displayedText} />
       </div>
 
       {/* Guess Input */}
-      <GuessInput
-        guess={guess}
-        setGuess={setGuess}
-        onSubmit={submitGuess}
-        wrongGuess={wrongGuess}
-        correctGuess={correctGuess}
-        inputRef={inputRef}
-        characterType={characterType}
-      />
+      <div className="shrink-0">
+        <GuessInput
+          guess={guess}
+          setGuess={setGuess}
+          onSubmit={submitGuess}
+          wrongGuess={wrongGuess}
+          correctGuess={correctGuess}
+          inputRef={inputRef}
+          characterType={characterType}
+        />
+      </div>
     </div>
   );
 }
