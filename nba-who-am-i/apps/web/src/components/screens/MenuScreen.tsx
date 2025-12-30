@@ -44,7 +44,7 @@ export function MenuScreen({
             isMobile ? 'text-2xl' : 'text-3xl'
           )}
         >
-          NBA WHO AM I?
+          NBA WHO AM I ?
         </h2>
         <p className={cn('text-dark-500', isMobile ? 'text-sm' : 'text-base')}>
           Penses-tu avoir le QI basket pour reconnaitre ces légendes ? 👀

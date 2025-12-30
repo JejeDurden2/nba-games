@@ -96,7 +96,7 @@ export default function App() {
                 NBA
               </span>
               <span className="text-white"> WHO AM I</span>
-              <span className="text-ball-400">?</span>
+              <span className="text-ball-400"> ?</span>
             </h1>
           </header>
 
