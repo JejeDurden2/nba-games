@@ -95,7 +95,7 @@ export function MenuScreen({
           disabled={isLoading}
           className="w-full mb-8"
         >
-          {isLoading ? 'Chargement...' : 'Game Time 🔥'}
+          {isLoading ? 'Chargement...' : "C'est parti ! 🔥"}
         </Button>
       </div>
 

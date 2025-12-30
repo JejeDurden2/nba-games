@@ -31,19 +31,19 @@ function getEncouragingMessage(
   allLevelsCleared?: boolean
 ): string {
   if (allLevelsCleared) {
-    return "🎮 GAMEBREAKER UNLOCKED ! WHERE YOU AT ?! T'as mis tout le monde au poste ! GOAT STATUS ! 🏆";
+    return '🎮 GAMEBREAKER UNLOCKED ! WHERE YOU AT ?! Tu les as tous mis au poste ! GOAT STATUS ! 🏆';
   }
   if (!percentile)
     return 'Pas mal rookie... Mais WHERE YOU AT ?! Faut bosser ta vision de jeu ! 💪';
   if (percentile >= 90)
-    return `🔥 BANG ! BANG ! OH WHAT A SHOT ! T'as posté ${percentile}% des joueurs ! BALL OR FALL ! 🥶`;
+    return `🔥 BANG ! BANG ! OH WHAT A SHOT ! Tu as explosé ${percentile}% des joueurs ! BALL OR FALL ! 🥶`;
   if (percentile >= 75)
-    return `⭐ WITH NO REGARD FOR HUMAN LIFE ! T'as crossé ${percentile}% des joueurs ! THAT'S GAME ! 🍳`;
+    return `⭐ WITH NO REGARD FOR HUMAN LIFE ! Tu as crossé ${percentile}% des joueurs ! THAT'S GAME ! 🍳`;
   if (percentile >= 50)
-    return `👊 GOT THE SKILLS TO PAY THE BILLS ! T'as battu ${percentile}% des joueurs ! Respect ! 💯`;
+    return `👊 GOT THE SKILLS TO PAY THE BILLS ! Tu as battu ${percentile}% des joueurs ! Respect ! 💯`;
   if (percentile >= 25)
-    return `💪 T'as fait mieux que ${percentile}% ! ARE YOU KIDDING ME ?! Continue comme ça ! 📈`;
-  return `🏀 Rookie numbers (top ${percentile}%)... BALL OR FALL ! Reviens plus fort ! 🎯`;
+    return `💪 Tu as fait mieux que ${percentile}% des joueurs ! ARE YOU KIDDING ME ?! Continue ! 📈`;
+  return `🏀 Pas mal rookie (top ${percentile}%)... BALL OR FALL ! Reviens plus fort ! 🎯`;
 }
 
 /**
@@ -138,7 +138,7 @@ export function GameOverScreen({
                 isMobile ? 'text-xs' : 'text-sm'
               )}
             >
-              C&apos;était:
+              C&apos;était :
             </p>
             <p
               className={cn('font-bold mb-6', isMobile ? 'text-lg' : 'text-xl')}
@@ -189,14 +189,14 @@ export function GameOverScreen({
               glow={allLevelsCleared ? 'rgba(252,211,77,0.5)' : undefined}
             >
               {allLevelsCleared
-                ? '🎮 WHERE YOU AT ?! Flex sur tout le monde !'
-                : '📤 Talk my talk'}
+                ? '🎮 WHERE YOU AT ?! Partage ton score !'
+                : '📤 Partage ton score'}
             </Button>
           )}
 
           {/* Play again button */}
           <Button onClick={startGame} size="lg" className="w-full">
-            🔁 Run it back ! Let's go !
+            🔁 Run it back !
           </Button>
 
           {/* Menu button */}
@@ -206,7 +206,7 @@ export function GameOverScreen({
             variant="secondary"
             className="w-full"
           >
-            ⏱️ Time out
+            🏠 Retour au menu
           </Button>
         </div>
       </Card>

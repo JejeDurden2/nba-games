@@ -101,7 +101,7 @@ export function WonScreen({
       {/* Action buttons */}
       <div className="flex flex-col gap-3">
         <Button onClick={startGame} size="lg" className="w-full">
-          Envoie le prochain →
+          Prochain round →
         </Button>
         <Button
           onClick={resetToMenu}
@@ -109,7 +109,7 @@ export function WonScreen({
           variant="secondary"
           className="w-full"
         >
-          ⏱️ Time out
+          🏠 Retour au menu
         </Button>
       </div>
     </Card>
