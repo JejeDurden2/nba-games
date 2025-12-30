@@ -135,10 +135,10 @@ export function ShareCard(props: ShareCardProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-dark-900/80 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-dark-900/80 backdrop-blur-sm p-4 overflow-y-auto"
       onClick={onClose}
     >
-      <div onClick={(e) => e.stopPropagation()}>
+      <div className="my-auto" onClick={(e) => e.stopPropagation()}>
         <Card
           ref={cardRef}
           className={cn('relative max-w-md w-full', isMobile ? 'p-6' : 'p-8')}
