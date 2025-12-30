@@ -166,9 +166,9 @@ export function GameOverScreen({
             <div className="text-3xl font-black text-white">{round}</div>
           </div>
           <div className="text-center">
-            <div className="text-xs text-dark-500 mb-1">MAX STREAK</div>
+            <div className="text-xs text-dark-500 mb-1">MAX GAMEBREAKER</div>
             <div className="text-3xl font-black text-ball-400">
-              {maxStreak}🔥
+              {maxStreak}🎮
             </div>
           </div>
         </div>

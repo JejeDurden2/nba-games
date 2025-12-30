@@ -25,7 +25,7 @@ export function generateShareText(data: ShareData): string {
     return `🏆 ${playerName} vient de DOMINER NBA Who Am I ! 🏆
 
 🎮 GAMEBREAKER UNLOCKED ! Les 5 niveaux ANNIHILÉS
-🔥 Streak en feu : ${maxStreak} - BANG ! BANG !
+🔥 Max Gamebreaker : ${maxStreak} - BANG ! BANG !
 ⭐ ${totalScore} points au compteur
 🎯 ${round} rounds - WITH NO REGARD FOR HUMAN LIFE !
 
@@ -34,9 +34,9 @@ WHERE YOU AT ?! Tu crois pouvoir me battre ? BALL OR FALL ! 😤🏀`;
 
   return `🏀 NBA Who Am I - THAT'S GAME !
 
-👤 ${playerName} est passé sur le terrain
+👤 ${playerName} est passé sur le terrain - Pick Up Game !
 📊 ${totalScore} points scored - ARE YOU KIDDING ME ?!
-🔥 ${maxStreak} streak (cooking !)
+🎮 ${maxStreak} Gamebreaker (cooking !)
 🎯 Round ${round}
 ⭐ Niveau ${highestLevelCleared}/5 unlocked
 

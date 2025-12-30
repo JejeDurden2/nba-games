@@ -85,14 +85,14 @@ export function WonScreen({
             </div>
           </div>
           <div>
-            <div className="text-dark-500 text-sm mb-1">STREAK</div>
+            <div className="text-dark-500 text-sm mb-1">GAMEBREAKER</div>
             <div
               className={cn(
                 'font-black text-ball-400',
                 isMobile ? 'text-2xl' : 'text-3xl'
               )}
             >
-              {streak}🔥
+              {streak}🎮
             </div>
           </div>
         </div>

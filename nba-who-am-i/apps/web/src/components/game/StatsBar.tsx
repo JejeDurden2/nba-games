@@ -49,7 +49,7 @@ export function StatsBar({
           Round <b className="text-white">{round}</b>
         </span>
         <span className="text-dark-500">
-          Streak <b className="text-ball-400">{streak}🔥</b>
+          Gamebreaker <b className="text-ball-400">{streak}🎮</b>
         </span>
         <span className="text-dark-500">
           Score <b className="text-accent-cyan">{totalScore}</b>
@@ -76,7 +76,7 @@ export function StatsBar({
           isMobile ? 'px-2.5 py-1.5 text-xs' : 'px-3 py-1.5 text-xs'
         )}
       >
-        ✕ Quitter
+        ✕ Back to Papa
       </button>
     </div>
   );

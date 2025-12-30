@@ -176,9 +176,9 @@ export function ShareCard(props: ShareCardProps) {
               </div>
             </div>
             <div className="text-center">
-              <div className="text-xs text-dark-500 mb-1">STREAK</div>
+              <div className="text-xs text-dark-500 mb-1">GAMEBREAKER</div>
               <div className="text-2xl font-black text-ball-400">
-                {maxStreak}🔥
+                {maxStreak}🎮
               </div>
             </div>
             <div className="text-center">
