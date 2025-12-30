@@ -193,7 +193,7 @@ export function useGame(): UseGameReturn {
       // Clear any existing timers before setting new character
       clearTimers();
 
-      setSessionId(crypto.randomUUID());
+      // Don't reset sessionId - keep the same session throughout the game
       setDisplayedText('');
       setCharacter(prefetchedCharacter);
       setUsedCharacterIds((prev) => [...prev, prefetchedCharacter.id]);
