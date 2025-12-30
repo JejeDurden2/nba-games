@@ -97,7 +97,7 @@ export function WonScreen({
           variant="secondary"
           className="w-full"
         >
-          🏠 Back to back
+          ⏱️ Time out
         </Button>
       </div>
     </Card>

@@ -30,7 +30,7 @@ function getEncouragingMessage(
   allLevelsCleared?: boolean
 ): string {
   if (allLevelsCleared) {
-    return "🎉 GOAT STATUS UNLOCKED! T'as dominé comme Jordan en 96! Respect! 🏆👑";
+    return "🐐 GOAT STATUS UNLOCKED! T'as dominé comme Jordan en 96! Respect! 🏆";
   }
   if (!percentile)
     return 'Pas mal rookie ! Mais faut bosser ta vision de jeu ! 💪';
@@ -184,7 +184,7 @@ export function GameOverScreen({
 
           {/* Play again button */}
           <Button onClick={startGame} size="lg" className="w-full">
-            Run it back 🔄
+            🔁 Back to back
           </Button>
 
           {/* Menu button */}
@@ -194,7 +194,7 @@ export function GameOverScreen({
             variant="secondary"
             className="w-full"
           >
-            🏠 Back to back
+            ⏱️ Time out
           </Button>
         </div>
       </Card>
