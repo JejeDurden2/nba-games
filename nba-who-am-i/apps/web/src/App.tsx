@@ -2,6 +2,7 @@ import { useRef, useEffect } from 'react';
 import { useGame } from './hooks/useGame';
 import { useIsMobile } from './hooks/useMediaQuery';
 import { BackgroundEffects } from './components/ui/BackgroundEffects';
+import { Header } from './components/ui/Header';
 import { MenuScreen } from './components/screens/MenuScreen';
 import { PlayingScreen } from './components/screens/PlayingScreen';
 import { WonScreen } from './components/screens/WonScreen';
@@ -76,31 +77,10 @@ export default function App() {
           )}
         >
           {/* Header */}
-          <header className="text-center mb-8">
-            <h1
-              onClick={
-                gameState === 'menu' || gameState === 'loading'
-                  ? undefined
-                  : resetToMenu
-              }
-              className={cn(
-                'font-black tracking-tight',
-                isMobile ? 'text-4xl' : 'text-5xl',
-                gameState !== 'menu' &&
-                  gameState !== 'loading' &&
-                  'cursor-pointer hover:opacity-80 transition-opacity'
-              )}
-            >
-              <span
-                className="bg-gradient-fire bg-clip-text"
-                style={{ WebkitTextFillColor: 'transparent' }}
-              >
-                NBA
-              </span>
-              <span className="text-white"> WHO AM I</span>
-              <span className="text-ball-400"> ?</span>
-            </h1>
-          </header>
+          <Header
+            onClick={resetToMenu}
+            clickable={gameState !== 'menu' && gameState !== 'loading'}
+          />
 
           {/* Game Screens */}
           {(gameState === 'menu' || gameState === 'loading') && (
