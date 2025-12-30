@@ -17,7 +17,7 @@ export function HintsDisplay({ displayedText }: HintsDisplayProps) {
         'bg-dark-800/60 rounded-2xl',
         'border border-dark-600/50',
         'overflow-y-auto',
-        isMobile ? 'p-4 h-48' : 'p-6 h-64'
+        isMobile ? 'p-4 h-48 min-h-48 max-h-48' : 'p-6 h-64 min-h-64 max-h-64'
       )}
     >
       <pre
