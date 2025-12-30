@@ -39,6 +39,7 @@ export default function App() {
     allLevelsCleared,
     playerPercentile,
     totalPlayers,
+    isLeaderboardLoading,
     setGuess,
     setPlayerName,
     startGame,
@@ -110,6 +111,7 @@ export default function App() {
               leaderboard={leaderboard}
               error={error}
               isLoading={gameState === 'loading'}
+              isLeaderboardLoading={isLeaderboardLoading}
             />
           )}
 

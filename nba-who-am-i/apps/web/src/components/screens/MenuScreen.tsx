@@ -12,6 +12,7 @@ export interface MenuScreenProps {
   leaderboard: LeaderboardEntry[];
   error: string | null;
   isLoading: boolean;
+  isLeaderboardLoading: boolean;
 }
 
 /**
@@ -24,6 +25,7 @@ export function MenuScreen({
   leaderboard,
   error,
   isLoading,
+  isLeaderboardLoading,
 }: MenuScreenProps) {
   const isMobile = useIsMobile();
 
@@ -51,7 +53,7 @@ export function MenuScreen({
             NBA WHO AM I ?
           </h2>
           <p
-            className={cn('text-dark-500', isMobile ? 'text-sm' : 'text-base')}
+            className={cn('text-dark-400', isMobile ? 'text-sm' : 'text-base')}
           >
             WHERE YOU AT ?! Reconnais ces légendes si t&apos;as le game ! 🔥
           </p>
@@ -63,7 +65,7 @@ export function MenuScreen({
             <label
               htmlFor="playerName"
               className={cn(
-                'block text-dark-500 mb-2',
+                'block text-dark-400 mb-2',
                 isMobile ? 'text-sm' : 'text-base'
               )}
             >
@@ -120,14 +122,18 @@ export function MenuScreen({
             </h3>
             <p
               className={cn(
-                'text-center text-dark-500',
+                'text-center text-dark-400',
                 isMobile ? 'text-xs' : 'text-sm'
               )}
             >
               Top 10 des meilleurs joueurs
             </p>
           </div>
-          <Leaderboard entries={leaderboard} limit={10} />
+          <Leaderboard
+            entries={leaderboard}
+            limit={10}
+            isLoading={isLeaderboardLoading}
+          />
         </Card>
       )}
     </div>

@@ -32,6 +32,7 @@ interface UseGameReturn {
   allLevelsCleared: boolean;
   playerPercentile?: number;
   totalPlayers?: number;
+  isLeaderboardLoading: boolean;
 
   // Actions
   setGuess: (guess: string) => void;
@@ -76,6 +77,7 @@ export function useGame(): UseGameReturn {
   const [totalPlayers, setTotalPlayers] = useState<number | undefined>(
     undefined
   );
+  const [isLeaderboardLoading, setIsLeaderboardLoading] = useState(false);
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const textIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -103,11 +105,14 @@ export function useGame(): UseGameReturn {
   }, []);
 
   const refreshLeaderboard = useCallback(async () => {
+    setIsLeaderboardLoading(true);
     try {
       const res = await gameApi.getLeaderboard(10);
       setLeaderboard(res.entries);
     } catch (err) {
       console.error('Failed to load leaderboard:', err);
+    } finally {
+      setIsLeaderboardLoading(false);
     }
   }, []);
 
@@ -441,6 +446,7 @@ export function useGame(): UseGameReturn {
     allLevelsCleared,
     playerPercentile,
     totalPlayers,
+    isLeaderboardLoading,
     setGuess,
     setPlayerName,
     setShowLeaderboard,
