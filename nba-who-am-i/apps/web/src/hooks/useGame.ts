@@ -143,6 +143,9 @@ export function useGame(): UseGameReturn {
           setMaxStreak((ms) => Math.max(ms, streak));
           setStreak(0);
           setIsGameOver(true);
+          if (character) {
+            setAnswerName(character.name);
+          }
           setGameState('lost');
           // Fetch percentile when losing
           fetchPercentile(totalScore);
@@ -153,7 +156,7 @@ export function useGame(): UseGameReturn {
     }, 1000);
 
     return clearTimers;
-  }, [gameState, clearTimers, streak, totalScore, fetchPercentile]);
+  }, [gameState, clearTimers, streak, totalScore, fetchPercentile, character]);
 
   // Text reveal effect
   useEffect(() => {
