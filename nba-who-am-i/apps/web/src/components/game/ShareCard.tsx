@@ -98,7 +98,7 @@ export function ShareCard(props: ShareCardProps) {
         } else {
           // Fallback: download image if clipboard fails
           downloadImage(blob);
-          alert('📥 Image téléchargée! Tu peux maintenant la partager.');
+          alert('📥 Image téléchargée ! Tu peux maintenant la partager.');
         }
       }
     } catch (error) {
@@ -143,7 +143,7 @@ export function ShareCard(props: ShareCardProps) {
                 allLevelsCleared ? 'text-accent-yellow' : 'text-white'
               )}
             >
-              {allLevelsCleared ? 'HALL OF FAME! 👑' : 'MY STATS'}
+              {allLevelsCleared ? 'HALL OF FAME ! 👑' : 'MY STATS'}
             </h2>
             <p className={cn('font-bold', isMobile ? 'text-lg' : 'text-xl')}>
               {playerName}
@@ -253,7 +253,7 @@ export function ShareCard(props: ShareCardProps) {
                 {isGeneratingImage
                   ? '⏳'
                   : imageSuccess
-                    ? '✓ Copié!'
+                    ? '✓ Copié !'
                     : '🖼️ Image'}
               </Button>
             </div>
@@ -266,7 +266,7 @@ export function ShareCard(props: ShareCardProps) {
                 variant="secondary"
                 className="w-full"
               >
-                {copySuccess ? '✓ Copié!' : '📋 Copier le texte'}
+                {copySuccess ? '✓ Copié !' : '📋 Copier le texte'}
               </Button>
             )}
 

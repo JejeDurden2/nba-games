@@ -22,25 +22,25 @@ export function generateShareText(data: ShareData): string {
   } = data;
 
   if (allLevelsCleared) {
-    return `🏆 ${playerName} vient de DOMINER NBA Who Am I! 🏆
+    return `🏆 ${playerName} vient de DOMINER NBA Who Am I ! 🏆
 
 💯 Les 5 niveaux ANNIHILÉS
-🔥 Streak en feu: ${maxStreak}
+🔥 Streak en feu : ${maxStreak}
 ⭐ ${totalScore} points au compteur
 🎯 ${round} rounds de pure domination
 
-Tu crois pouvoir me battre? Try me. 😤🏀`;
+Tu crois pouvoir me battre ? Try me. 😤🏀`;
   }
 
   return `🏀 NBA Who Am I
 
 👤 ${playerName} est passé sur le terrain
 📊 ${totalScore} points scored
-🔥 ${maxStreak} streak (cooking!)
+🔥 ${maxStreak} streak (cooking !)
 🎯 Round ${round}
 ⭐ Niveau ${highestLevelCleared}/5 unlocked
 
-T'as le game pour faire mieux? Step up! 💪`;
+T'as le game pour faire mieux ? Step up ! 💪`;
 }
 
 /**
@@ -150,12 +150,12 @@ export async function shareOnInstagram(data: ShareData): Promise<boolean> {
   if (copied) {
     // Show alert with instructions
     alert(
-      '📋 Texte copié! Time to flex! 💪\n\n' +
-        'Pour partager sur Instagram:\n' +
+      '📋 Texte copié ! Time to flex ! 💪\n\n' +
+        'Pour partager sur Instagram :\n' +
         '1. Ouvre Instagram\n' +
         '2. Crée une Story ou un Post\n' +
         '3. Colle le texte (déjà copié)\n\n' +
-        'Ou utilise le bouton "Copier l\'image" pour faire encore + de bruit! 🔥'
+        'Ou utilise le bouton "Copier l\'image" pour faire encore + de bruit ! 🔥'
     );
   }
 
