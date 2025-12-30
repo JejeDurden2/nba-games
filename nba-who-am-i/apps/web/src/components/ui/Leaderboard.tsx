@@ -23,52 +23,68 @@ export function Leaderboard({ entries, limit = 5 }: LeaderboardProps) {
 
   return (
     <div className="space-y-2">
-      {displayedEntries.map((entry, index) => (
-        <div
-          key={entry.id}
-          className={cn(
-            'flex items-center justify-between',
-            'bg-dark-700/50 rounded-xl',
-            isMobile ? 'px-3 py-2.5' : 'px-4 py-3'
-          )}
-        >
-          <div className="flex items-center gap-3 flex-1 min-w-0">
-            <span
-              className={cn(
-                'font-bold',
-                isMobile ? 'text-base' : 'text-lg',
-                index < 3 ? 'text-2xl' : 'text-dark-500'
-              )}
-            >
-              {getRankEmoji(index + 1)}
-            </span>
-            <span
-              className={cn(
-                'font-semibold truncate',
-                isMobile ? 'text-sm' : 'text-base',
-                index < 3 ? 'text-white' : 'text-dark-500'
-              )}
-            >
-              {entry.playerName}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span
-              className={cn(
-                'font-bold text-accent-cyan',
-                isMobile ? 'text-sm' : 'text-base'
-              )}
-            >
-              {entry.score.toLocaleString()}
-            </span>
-            {entry.maxStreak > 0 && (
-              <span className={cn('text-xs', 'text-ball-400')}>
-                {entry.maxStreak}🔥
-              </span>
+      {displayedEntries.map((entry, index) => {
+        const rank = index + 1;
+        const isTopThree = rank <= 3;
+
+        return (
+          <div
+            key={entry.id}
+            className={cn(
+              'flex items-center justify-between',
+              'rounded-xl transition-all',
+              isMobile ? 'px-3 py-2.5' : 'px-4 py-3',
+              isTopThree
+                ? 'bg-dark-700/70 border border-dark-600/50'
+                : 'bg-dark-700/30'
             )}
+          >
+            <div className="flex items-center gap-3 flex-1 min-w-0">
+              <span
+                className={cn(
+                  'font-bold shrink-0',
+                  isMobile ? 'w-8' : 'w-10',
+                  isTopThree
+                    ? 'text-2xl'
+                    : cn('text-dark-400', isMobile ? 'text-sm' : 'text-base')
+                )}
+              >
+                {getRankEmoji(rank)}
+              </span>
+              <span
+                className={cn(
+                  'font-semibold truncate',
+                  isMobile ? 'text-sm' : 'text-base',
+                  isTopThree ? 'text-white' : 'text-dark-400'
+                )}
+              >
+                {entry.playerName}
+              </span>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <span
+                className={cn(
+                  'font-bold',
+                  isMobile ? 'text-sm' : 'text-base',
+                  isTopThree ? 'text-accent-cyan' : 'text-dark-400'
+                )}
+              >
+                {entry.score.toLocaleString()}
+              </span>
+              {entry.maxStreak > 0 && (
+                <span
+                  className={cn(
+                    'text-xs',
+                    isTopThree ? 'text-ball-400' : 'text-dark-500'
+                  )}
+                >
+                  {entry.maxStreak}🎮
+                </span>
+              )}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

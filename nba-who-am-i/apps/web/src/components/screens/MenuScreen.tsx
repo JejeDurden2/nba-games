@@ -35,84 +35,101 @@ export function MenuScreen({
   };
 
   return (
-    <Card className={isMobile ? 'p-6' : 'p-10'}>
-      <div className="text-center mb-8">
-        <div className={cn('mb-4', isMobile ? 'text-5xl' : 'text-6xl')}>🏀</div>
-        <h2
-          className={cn(
-            'font-black text-white mb-2',
-            isMobile ? 'text-2xl' : 'text-3xl'
-          )}
-        >
-          NBA WHO AM I ?
-        </h2>
-        <p className={cn('text-dark-500', isMobile ? 'text-sm' : 'text-base')}>
-          WHERE YOU AT ?! Reconnais ces légendes si t&apos;as le game ! 🔥
-        </p>
-      </div>
-
-      {/* Player name input and start button - centered with max width */}
-      <div className="max-w-md mx-auto">
-        <div className="mb-6">
-          <label
-            htmlFor="playerName"
-            className={cn(
-              'block text-dark-500 mb-2',
-              isMobile ? 'text-sm' : 'text-base'
-            )}
-          >
-            Qui es-tu, rookie ?
-          </label>
-          <input
-            id="playerName"
-            type="text"
-            placeholder="Un rookie anonyme"
-            value={playerName}
-            onChange={(e) => setPlayerName(e.target.value)}
-            onKeyDown={handleKeyDown}
-            className={cn(
-              'w-full bg-dark-700 border-2 border-dark-600',
-              'rounded-xl text-white placeholder-dark-500',
-              'outline-none transition-colors',
-              'focus:border-white/20',
-              isMobile ? 'px-4 py-3 text-base' : 'px-5 py-4 text-lg'
-            )}
-            maxLength={20}
-          />
-        </div>
-
-        {/* Error message */}
-        {error && (
-          <div className="mb-6 p-4 bg-rim-500/20 border border-rim-500/40 rounded-xl">
-            <p className="text-red-300 text-sm">{error}</p>
+    <div className="space-y-6">
+      {/* Main Game Card */}
+      <Card className={isMobile ? 'p-6' : 'p-10'}>
+        <div className="text-center mb-8">
+          <div className={cn('mb-4', isMobile ? 'text-5xl' : 'text-6xl')}>
+            🏀
           </div>
-        )}
-
-        {/* Start button */}
-        <Button
-          onClick={startGame}
-          size="lg"
-          disabled={isLoading}
-          className="w-full mb-8"
-        >
-          {isLoading ? 'Chargement...' : "C'est parti ! 🔥"}
-        </Button>
-      </div>
-
-      {/* Leaderboard */}
-      {leaderboard.length > 0 && (
-        <div>
-          <h3
+          <h2
             className={cn(
-              'font-bold text-white mb-4',
-              isMobile ? 'text-lg' : 'text-xl'
+              'font-black text-white mb-2',
+              isMobile ? 'text-2xl' : 'text-3xl'
             )}
           >
-            🏆 Hall of Fame
-          </h3>
-          <Leaderboard entries={leaderboard} limit={5} />
+            NBA WHO AM I ?
+          </h2>
+          <p
+            className={cn('text-dark-500', isMobile ? 'text-sm' : 'text-base')}
+          >
+            WHERE YOU AT ?! Reconnais ces légendes si t&apos;as le game ! 🔥
+          </p>
         </div>
+
+        {/* Player name input and start button - centered with max width */}
+        <div className="max-w-md mx-auto">
+          <div className="mb-6">
+            <label
+              htmlFor="playerName"
+              className={cn(
+                'block text-dark-500 mb-2',
+                isMobile ? 'text-sm' : 'text-base'
+              )}
+            >
+              Qui es-tu, rookie ?
+            </label>
+            <input
+              id="playerName"
+              type="text"
+              placeholder="Un rookie anonyme"
+              value={playerName}
+              onChange={(e) => setPlayerName(e.target.value)}
+              onKeyDown={handleKeyDown}
+              className={cn(
+                'w-full bg-dark-700 border-2 border-dark-600',
+                'rounded-xl text-white placeholder-dark-500',
+                'outline-none transition-colors',
+                'focus:border-white/20',
+                isMobile ? 'px-4 py-3 text-base' : 'px-5 py-4 text-lg'
+              )}
+              maxLength={20}
+            />
+          </div>
+
+          {/* Error message */}
+          {error && (
+            <div className="mb-6 p-4 bg-rim-500/20 border border-rim-500/40 rounded-xl">
+              <p className="text-red-300 text-sm">{error}</p>
+            </div>
+          )}
+
+          {/* Start button */}
+          <Button
+            onClick={startGame}
+            size="lg"
+            disabled={isLoading}
+            className="w-full"
+          >
+            {isLoading ? 'Chargement...' : "C'est parti ! 🔥"}
+          </Button>
+        </div>
+      </Card>
+
+      {/* Leaderboard Card */}
+      {leaderboard.length > 0 && (
+        <Card className={isMobile ? 'p-6' : 'p-8'}>
+          <div className="mb-6">
+            <h3
+              className={cn(
+                'font-black text-white text-center mb-2',
+                isMobile ? 'text-xl' : 'text-2xl'
+              )}
+            >
+              🏆 Hall of Fame
+            </h3>
+            <p
+              className={cn(
+                'text-center text-dark-500',
+                isMobile ? 'text-xs' : 'text-sm'
+              )}
+            >
+              Top 10 des meilleurs joueurs
+            </p>
+          </div>
+          <Leaderboard entries={leaderboard} limit={10} />
+        </Card>
       )}
-    </Card>
+    </div>
   );
 }
