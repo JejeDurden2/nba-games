@@ -20,6 +20,7 @@ export class SubmitAnswerUseCase {
   ) {}
 
   async execute(req: {
+    sessionId: string;
     characterId: string;
     guess: string;
     timeSpent: number;
@@ -28,8 +29,11 @@ export class SubmitAnswerUseCase {
     const char = await this.charRepo.findById(req.characterId);
     if (!char) throw new NotFoundException('Character not found');
 
+    // Find entry by sessionId (created at game start)
+    const entry = await this.lbRepo.findBySessionId(req.sessionId);
+    if (!entry) throw new NotFoundException('Game session not found');
+
     const correct = AnswerCheckerService.isCorrect(req.guess, char.name);
-    const entry = await this.lbRepo.findOrCreate(req.playerName);
     const score = correct
       ? Score.calculate(30 - req.timeSpent, entry.currentStreak)
       : Score.zero();

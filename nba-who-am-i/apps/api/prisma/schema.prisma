@@ -21,7 +21,8 @@ model Character {
 
 model LeaderboardEntry {
   id            String   @id @default(uuid())
-  playerName    String   @unique @map("player_name")
+  sessionId     String   @unique @default(uuid()) @map("session_id")
+  playerName    String   @map("player_name")
   score         Int      @default(0)
   gamesPlayed   Int      @default(0) @map("games_played")
   gamesWon      Int      @default(0) @map("games_won")
@@ -30,5 +31,6 @@ model LeaderboardEntry {
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
   @@index([score(sort: Desc)])
+  @@index([playerName])
   @@map("leaderboard_entries")
 }

@@ -2,6 +2,7 @@ import { LeaderboardEntryEntity } from '../../domain/entities/leaderboard-entry.
 
 export interface ILeaderboardRepository {
   findByPlayerName(name: string): Promise<LeaderboardEntryEntity | null>;
+  findBySessionId(sessionId: string): Promise<LeaderboardEntryEntity | null>;
   findTop(limit: number): Promise<LeaderboardEntryEntity[]>;
   save(entry: LeaderboardEntryEntity): Promise<LeaderboardEntryEntity>;
   findOrCreate(playerName: string): Promise<LeaderboardEntryEntity>;

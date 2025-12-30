@@ -27,6 +27,7 @@ export class GameController {
   answer(
     @Body()
     req: {
+      sessionId: string;
       characterId: string;
       guess: string;
       timeSpent: number;
