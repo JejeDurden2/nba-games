@@ -255,7 +255,13 @@ export function useGame(): UseGameReturn {
   }, [playerName, usedCharacterIds, clearTimers, difficulty]);
 
   const submitGuess = useCallback(async () => {
-    if (!guess.trim() || gameState !== 'playing' || !character || !sessionId)
+    if (
+      !guess.trim() ||
+      gameState !== 'playing' ||
+      !character ||
+      !sessionId ||
+      failuresThisRound >= 3
+    )
       return;
 
     const timeSpent = Math.round((Date.now() - startTimeRef.current) / 1000);
