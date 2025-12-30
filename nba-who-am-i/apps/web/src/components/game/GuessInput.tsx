@@ -55,12 +55,12 @@ export function GuessInput({
       />
       <Button
         onClick={onSubmit}
-        size={isMobile ? 'md' : 'lg'}
+        size="lg"
         gradient={config.gradient}
         glow={config.glow}
         className="aspect-square !px-0"
       >
-        <span className={isMobile ? 'text-xl' : 'text-2xl'}>→</span>
+        <span className="text-2xl">→</span>
       </Button>
     </div>
   );

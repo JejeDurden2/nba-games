@@ -6,6 +6,7 @@ import { MenuScreen } from './components/screens/MenuScreen';
 import { PlayingScreen } from './components/screens/PlayingScreen';
 import { WonScreen } from './components/screens/WonScreen';
 import { GameOverScreen } from './components/screens/GameOverScreen';
+import { Footer } from './components/ui/Footer';
 import { cn } from './lib/design-system/utils';
 
 /**
@@ -59,16 +60,16 @@ export default function App() {
   const characterType = character?.type || 'player';
 
   return (
-    <div className="bg-dark-900 min-h-screen text-white font-sans relative overflow-hidden">
+    <div className="bg-dark-900 min-h-screen text-white font-sans relative overflow-hidden flex flex-col">
       {/* Background Effects */}
       <BackgroundEffects />
 
       {/* Main Content */}
-      <div className="relative z-10">
+      <div className="relative z-10 flex-1 flex flex-col">
         {/* Content Container */}
         <div
           className={cn(
-            'mx-auto',
+            'mx-auto flex-1',
             isMobile ? 'px-4 py-6 max-w-2xl' : 'px-6 py-8 max-w-4xl'
           )}
         >
@@ -160,6 +161,9 @@ export default function App() {
             />
           )}
         </div>
+
+        {/* Footer */}
+        <Footer />
       </div>
     </div>
   );

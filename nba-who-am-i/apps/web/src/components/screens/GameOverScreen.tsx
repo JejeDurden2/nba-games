@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { AchievementGrid } from '../game/AchievementGrid';
@@ -30,19 +30,19 @@ function getEncouragingMessage(
   allLevelsCleared?: boolean
 ): string {
   if (allLevelsCleared) {
-    return "🐐 GOAT STATUS UNLOCKED! T'as dominé comme Jordan en 96! Respect! 🏆";
+    return "🐐 GOAT STATUS UNLOCKED ! T'as dominé comme Jordan en 96 ! Respect ! 🏆";
   }
   if (!percentile)
     return 'Pas mal rookie ! Mais faut bosser ta vision de jeu ! 💪';
   if (percentile >= 90)
-    return `🔥 SHEESH! T'as cuit ${percentile}% des joueurs ! T'es clutch! 🥶`;
+    return `🔥 SHEESH ! T'as cuit ${percentile}% des joueurs ! T'es clutch ! 🥶`;
   if (percentile >= 75)
-    return `⭐ Solid game! T'as crossé ${percentile}% des joueurs ! Keep cooking! 🍳`;
+    return `⭐ Solid game ! T'as crossé ${percentile}% des joueurs ! Keep cooking ! 🍳`;
   if (percentile >= 50)
-    return `👊 Pas mal! T'as battu ${percentile}% des joueurs ! T'as du potentiel !`;
+    return `👊 Pas mal ! T'as battu ${percentile}% des joueurs ! T'as du potentiel !`;
   if (percentile >= 25)
-    return `💪 Allez! T'as fait mieux que ${percentile}% des joueurs ! Next time ! 📈`;
-  return `🏀 Rookie numbers (top ${percentile}%)... Faut retravailler tes fondamentaux! 💯`;
+    return `💪 Allez ! T'as fait mieux que ${percentile}% des joueurs ! Next time ! 📈`;
+  return `🏀 Rookie numbers (top ${percentile}%)... Faut retravailler tes fondamentaux ! 💯`;
 }
 
 /**
@@ -71,6 +71,17 @@ export function GameOverScreen({
     allLevelsCleared
   );
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter' && !showShareCard) {
+        startGame();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [startGame, showShareCard]);
+
   return (
     <>
       <Card className={cn('text-center', isMobile ? 'p-8' : 'p-12')}>
@@ -88,7 +99,7 @@ export function GameOverScreen({
           )}
         >
           {allLevelsCleared
-            ? 'HALL OF FAME! 👑'
+            ? 'HALL OF FAME ! 👑'
             : isTimeout
               ? 'SHOT CLOCK VIOLATION ⏰'
               : 'GAME OVER'}
@@ -177,7 +188,7 @@ export function GameOverScreen({
               glow={allLevelsCleared ? 'rgba(252,211,77,0.5)' : undefined}
             >
               {allLevelsCleared
-                ? '🏆 Flex sur tout le monde!'
+                ? '🏆 Flex sur tout le monde !'
                 : '📤 Talk my talk'}
             </Button>
           )}

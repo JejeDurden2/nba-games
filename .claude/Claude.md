@@ -196,6 +196,56 @@ const gradient = unlocked ? config.gradient : config.locked;
 - Breakpoints conditionnels : `isMobile ? 'text-sm' : 'text-base'`
 - Utiliser `useIsMobile()` plutôt que media queries CSS
 
+## Database Migration Pattern - Expand-Contract
+
+**⚠️ CRITICAL: NEVER delete data or remove columns without explicit user approval.**
+
+Toujours utiliser le pattern **Expand-Contract** pour les migrations de schéma en production :
+
+### Phase 1: Expand (Ajouter)
+1. Ajouter les nouvelles colonnes/tables avec des valeurs par défaut ou nullable
+2. Déployer le code qui écrit dans les anciennes ET nouvelles structures
+3. Migrer les données existantes (backfill)
+
+### Phase 2: Contract (Retirer) - UNIQUEMENT sur demande explicite
+1. ❌ **NE JAMAIS** supprimer de colonnes/tables sans approbation explicite
+2. ❌ **NE JAMAIS** utiliser `--force-reset` ou `--accept-data-loss` en production
+3. ✅ Si demandé explicitement, déprécier d'abord (renommer en `_deprecated_*`)
+4. ✅ Attendre plusieurs déploiements avant suppression définitive
+
+### Exemple: Ajouter sessionId
+```prisma
+// ✅ CORRECT - Expand phase
+model LeaderboardEntry {
+  id          String @id @default(uuid())
+  sessionId   String @unique @default(uuid()) // Nouvelle colonne avec default
+  playerName  String                           // Ancienne colonne conservée
+  // ... autres champs
+}
+```
+
+```prisma
+// ❌ INCORRECT - Contract sans autorisation
+model LeaderboardEntry {
+  id          String @id @default(uuid())
+  sessionId   String @unique @default(uuid())
+  // playerName supprimé <- JAMAIS sans approbation !
+}
+```
+
+### Commandes Prisma sécurisées
+```bash
+# ✅ Safe migrations
+pnpm prisma migrate dev      # Développement local uniquement
+pnpm prisma db push          # Push schema sans supprimer données
+pnpm prisma migrate deploy   # Production (si migrations configurées)
+
+# ❌ DANGEROUS - Requiert approbation explicite
+pnpm prisma db push --force-reset        # Supprime TOUTES les données
+pnpm prisma db push --accept-data-loss   # Peut perdre des données
+pnpm prisma migrate reset                # Reset complet
+```
+
 ## Don'ts
 
 **Backend :**
@@ -204,6 +254,8 @@ const gradient = unlocked ? config.gradient : config.locked;
 - ❌ `any` type
 - ❌ Mutations directes d'état (use immutable patterns)
 - ❌ Dépendances circulaires entre features
+- ❌ **Supprimer des colonnes/données sans approbation explicite**
+- ❌ **Utiliser --force-reset ou --accept-data-loss sans confirmation**
 
 **Frontend :**
 - ❌ Logique métier dans les composants (utiliser des hooks)

@@ -27,6 +27,13 @@ export function MenuScreen({
 }: MenuScreenProps) {
   const isMobile = useIsMobile();
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !isLoading) {
+      e.preventDefault();
+      startGame();
+    }
+  };
+
   return (
     <Card className={isMobile ? 'p-6' : 'p-10'}>
       <div className="text-center mb-8">
@@ -40,7 +47,7 @@ export function MenuScreen({
           NBA WHO AM I?
         </h2>
         <p className={cn('text-dark-500', isMobile ? 'text-sm' : 'text-base')}>
-          Penses-tu avoir le QI basket pour reconnaitre ces légendes? 👀
+          Penses-tu avoir le QI basket pour reconnaitre ces légendes ? 👀
         </p>
       </div>
 
@@ -62,6 +69,7 @@ export function MenuScreen({
             placeholder="Un rookie anonyme"
             value={playerName}
             onChange={(e) => setPlayerName(e.target.value)}
+            onKeyDown={handleKeyDown}
             className={cn(
               'w-full bg-dark-700 border-2 border-dark-600',
               'rounded-xl text-white placeholder-dark-500',

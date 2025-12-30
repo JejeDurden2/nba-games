@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { cn } from '../../lib/design-system/utils';
@@ -23,6 +24,17 @@ export function WonScreen({
 }: WonScreenProps) {
   const isMobile = useIsMobile();
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        startGame();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [startGame]);
+
   return (
     <Card className={cn('text-center', isMobile ? 'p-8' : 'p-12')}>
       {/* Success icon */}
@@ -35,7 +47,7 @@ export function WonScreen({
           isMobile ? 'text-2xl' : 'text-3xl'
         )}
       >
-        BUCKETS! 💰
+        BUCKETS ! 💰
       </h2>
 
       {/* Answer */}
