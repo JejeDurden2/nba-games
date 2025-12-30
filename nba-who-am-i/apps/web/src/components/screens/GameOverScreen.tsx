@@ -36,14 +36,14 @@ function getEncouragingMessage(
   if (!percentile)
     return 'Pas mal rookie... Mais WHERE YOU AT ?! Faut bosser ta vision de jeu ! 💪';
   if (percentile >= 90)
-    return `🔥 BANG ! BANG ! OH WHAT A SHOT ! Tu as explosé ${percentile}% des joueurs ! BALL OR FALL ! 🥶`;
+    return `🔥 BANG ! BANG ! OH WHAT A SHOT ! Tu as explosé ${percentile}% des joueurs ! 🥶`;
   if (percentile >= 75)
     return `⭐ WITH NO REGARD FOR HUMAN LIFE ! Tu as crossé ${percentile}% des joueurs ! THAT'S GAME ! 🍳`;
   if (percentile >= 50)
     return `👊 GOT THE SKILLS TO PAY THE BILLS ! Tu as battu ${percentile}% des joueurs ! Respect ! 💯`;
   if (percentile >= 25)
     return `💪 Tu as fait mieux que ${percentile}% des joueurs ! ARE YOU KIDDING ME ?! Continue ! 📈`;
-  return `🏀 Pas mal rookie (top ${percentile}%)... BALL OR FALL ! Reviens plus fort ! 🎯`;
+  return `🏀 Pas mal rookie (top ${percentile}%)... Reviens plus fort ! 🎯`;
 }
 
 /**

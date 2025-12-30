@@ -29,7 +29,7 @@ export function generateShareText(data: ShareData): string {
 ⭐ ${totalScore} points au compteur
 🎯 ${round} rounds - WITH NO REGARD FOR HUMAN LIFE !
 
-WHERE YOU AT ?! Tu penses pouvoir faire mieux ? BALL OR FALL ! 😤🏀`;
+WHERE YOU AT ?! Tu penses pouvoir faire mieux ? 😤🏀`;
   }
 
   return `🏀 NBA Who Am I - THAT'S GAME !
