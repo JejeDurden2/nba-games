@@ -65,23 +65,12 @@ export function Footer() {
             </span>{' '}
             par{' '}
             <a
-              href="https://github.com/jeromedesmare"
+              href="https://www.linkedin.com/in/jeromedesmares/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-white hover:text-accent-cyan transition-colors font-medium"
             >
               Jérôme Desmares
-            </a>
-          </p>
-          <p className="text-xs text-dark-600">
-            Construit avec{' '}
-            <a
-              href="https://claude.ai/claude-code"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-accent-purple transition-colors"
-            >
-              Claude Code
             </a>
           </p>
         </div>
