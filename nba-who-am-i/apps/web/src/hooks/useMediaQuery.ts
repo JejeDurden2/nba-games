@@ -28,19 +28,3 @@ export function useMediaQuery(query: string): boolean {
 export function useIsMobile(): boolean {
   return useMediaQuery(`(max-width: ${breakpoints.mobile}px)`);
 }
-
-/**
- * Hook to detect if viewport is tablet size
- * @returns boolean indicating if viewport is tablet (≤768px)
- */
-export function useIsTablet(): boolean {
-  return useMediaQuery(`(max-width: ${breakpoints.tablet}px)`);
-}
-
-/**
- * Hook to detect if viewport is desktop size
- * @returns boolean indicating if viewport is desktop (>1024px)
- */
-export function useIsDesktop(): boolean {
-  return useMediaQuery(`(min-width: ${breakpoints.desktop + 1}px)`);
-}
