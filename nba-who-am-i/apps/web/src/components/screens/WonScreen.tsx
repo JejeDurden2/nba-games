@@ -47,7 +47,7 @@ export function WonScreen({
           isMobile ? 'text-2xl' : 'text-3xl'
         )}
       >
-        BUCKETS ! 💰
+        BANG ! BUCKETS ! 💰
       </h2>
 
       {/* Answer */}

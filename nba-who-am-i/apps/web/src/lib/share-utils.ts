@@ -24,23 +24,23 @@ export function generateShareText(data: ShareData): string {
   if (allLevelsCleared) {
     return `🏆 ${playerName} vient de DOMINER NBA Who Am I ! 🏆
 
-💯 Les 5 niveaux ANNIHILÉS
-🔥 Streak en feu : ${maxStreak}
+🎮 GAMEBREAKER UNLOCKED ! Les 5 niveaux ANNIHILÉS
+🔥 Streak en feu : ${maxStreak} - BANG ! BANG !
 ⭐ ${totalScore} points au compteur
-🎯 ${round} rounds de pure domination
+🎯 ${round} rounds - WITH NO REGARD FOR HUMAN LIFE !
 
-Tu crois pouvoir me battre ? Try me. 😤🏀`;
+WHERE YOU AT ?! Tu crois pouvoir me battre ? BALL OR FALL ! 😤🏀`;
   }
 
-  return `🏀 NBA Who Am I
+  return `🏀 NBA Who Am I - THAT'S GAME !
 
 👤 ${playerName} est passé sur le terrain
-📊 ${totalScore} points scored
+📊 ${totalScore} points scored - ARE YOU KIDDING ME ?!
 🔥 ${maxStreak} streak (cooking !)
 🎯 Round ${round}
 ⭐ Niveau ${highestLevelCleared}/5 unlocked
 
-T'as le game pour faire mieux ? Step up ! 💪`;
+T'as GOT THE SKILLS TO PAY THE BILLS ? Step up ! 💪`;
 }
 
 /**

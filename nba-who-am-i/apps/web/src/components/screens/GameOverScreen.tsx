@@ -23,26 +23,27 @@ export interface GameOverScreenProps {
 }
 
 /**
- * Get encouraging message based on performance (with basketball trash talk)
+ * Get encouraging message based on performance
+ * Features NBA Street Vol. 2 vocabulary and legendary broadcaster calls
  */
 function getEncouragingMessage(
   percentile?: number,
   allLevelsCleared?: boolean
 ): string {
   if (allLevelsCleared) {
-    return "🐐 GOAT STATUS UNLOCKED ! T'as dominé comme Jordan en 96 ! Respect ! 🏆";
+    return "🎮 GAMEBREAKER UNLOCKED ! WHERE YOU AT ?! T'as mis tout le monde au poste ! GOAT STATUS ! 🏆";
   }
   if (!percentile)
-    return 'Pas mal rookie ! Mais faut bosser ta vision de jeu ! 💪';
+    return 'Pas mal rookie... Mais WHERE YOU AT ?! Faut bosser ta vision de jeu ! 💪';
   if (percentile >= 90)
-    return `🔥 SHEESH ! T'as cuit ${percentile}% des joueurs ! T'es clutch ! 🥶`;
+    return `🔥 BANG ! BANG ! OH WHAT A SHOT ! T'as posté ${percentile}% des joueurs ! BALL OR FALL ! 🥶`;
   if (percentile >= 75)
-    return `⭐ Solid game ! T'as crossé ${percentile}% des joueurs ! Keep cooking ! 🍳`;
+    return `⭐ WITH NO REGARD FOR HUMAN LIFE ! T'as crossé ${percentile}% des joueurs ! THAT'S GAME ! 🍳`;
   if (percentile >= 50)
-    return `👊 Pas mal ! T'as battu ${percentile}% des joueurs ! T'as du potentiel !`;
+    return `👊 GOT THE SKILLS TO PAY THE BILLS ! T'as battu ${percentile}% des joueurs ! Respect ! 💯`;
   if (percentile >= 25)
-    return `💪 Allez ! T'as fait mieux que ${percentile}% des joueurs ! Next time ! 📈`;
-  return `🏀 Rookie numbers (top ${percentile}%)... Faut retravailler tes fondamentaux ! 💯`;
+    return `💪 T'as fait mieux que ${percentile}% ! ARE YOU KIDDING ME ?! Continue comme ça ! 📈`;
+  return `🏀 Rookie numbers (top ${percentile}%)... BALL OR FALL ! Reviens plus fort ! 🎯`;
 }
 
 /**
@@ -188,14 +189,14 @@ export function GameOverScreen({
               glow={allLevelsCleared ? 'rgba(252,211,77,0.5)' : undefined}
             >
               {allLevelsCleared
-                ? '🏆 Flex sur tout le monde !'
+                ? '🎮 WHERE YOU AT ?! Flex sur tout le monde !'
                 : '📤 Talk my talk'}
             </Button>
           )}
 
           {/* Play again button */}
           <Button onClick={startGame} size="lg" className="w-full">
-            🔁 Back to back
+            🔁 Run it back ! Let's go !
           </Button>
 
           {/* Menu button */}
