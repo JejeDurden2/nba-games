@@ -9,6 +9,7 @@ export interface GuessInputProps {
   setGuess: (guess: string) => void;
   onSubmit: () => void;
   wrongGuess: boolean;
+  correctGuess: boolean;
   inputRef: React.RefObject<HTMLInputElement>;
   characterType: CharacterType;
 }
@@ -21,6 +22,7 @@ export function GuessInput({
   setGuess,
   onSubmit,
   wrongGuess,
+  correctGuess,
   inputRef,
   characterType,
 }: GuessInputProps) {
@@ -50,7 +52,9 @@ export function GuessInput({
           isMobile ? 'px-4 py-3.5 text-base' : 'px-6 py-4.5 text-lg',
           wrongGuess
             ? 'border-rim-500 animate-shake'
-            : 'border-dark-600 focus:border-white/20'
+            : correctGuess
+              ? 'border-accent-green bg-accent-green/10'
+              : 'border-dark-600 focus:border-white/20'
         )}
       />
       <Button

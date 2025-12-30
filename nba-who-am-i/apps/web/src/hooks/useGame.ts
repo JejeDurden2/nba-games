@@ -17,6 +17,7 @@ interface UseGameReturn {
   round: number;
   guess: string;
   wrongGuess: boolean;
+  correctGuess: boolean;
   playerName: string;
   leaderboard: LeaderboardEntry[];
   showLeaderboard: boolean;
@@ -58,6 +59,7 @@ export function useGame(): UseGameReturn {
   const [round, setRound] = useState(0);
   const [guess, setGuess] = useState('');
   const [wrongGuess, setWrongGuess] = useState(false);
+  const [correctGuess, setCorrectGuess] = useState(false);
   const [playerName, setPlayerName] = useState('');
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
@@ -272,16 +274,20 @@ export function useGame(): UseGameReturn {
       }
 
       // Otherwise show wrong answer feedback
-      setGuess('');
       setTimeLeft((t) => Math.max(0, t - 3));
       setWrongGuess(true);
-      setTimeout(() => setWrongGuess(false), 400);
+      // Delay clearing input until after shake animation completes
+      setTimeout(() => {
+        setGuess('');
+        setWrongGuess(false);
+      }, 500);
       return;
     }
 
-    // Correct answer - show success immediately (optimistic UI)
+    // Correct answer - show success feedback first
     clearTimers();
     setAnswerName(character.name);
+    setCorrectGuess(true);
 
     // Reset failure count for next round
     setFailuresThisRound(0);
@@ -308,13 +314,17 @@ export function useGame(): UseGameReturn {
       streak > 0 ? Math.round(estimatedScore * (streak * 0.15)) : 0;
     const estimatedTotalScore = estimatedScore + streakBonus;
 
-    // Show success screen immediately with estimated values
-    setScore(estimatedTotalScore);
-    setTotalScore(totalScore + estimatedTotalScore);
-    setStreak(estimatedStreak);
-    setMaxStreak((ms) => Math.max(ms, estimatedStreak));
-    setIsGameOver(false);
-    setGameState('won');
+    // Brief delay to show success feedback before transitioning
+    setTimeout(() => {
+      setCorrectGuess(false);
+      // Show success screen with estimated values
+      setScore(estimatedTotalScore);
+      setTotalScore(totalScore + estimatedTotalScore);
+      setStreak(estimatedStreak);
+      setMaxStreak((ms) => Math.max(ms, estimatedStreak));
+      setIsGameOver(false);
+      setGameState('won');
+    }, 600);
 
     // Submit to backend in background to get real score and update leaderboard
     // Also prefetch next character for instant transition
@@ -416,6 +426,7 @@ export function useGame(): UseGameReturn {
     round,
     guess,
     wrongGuess,
+    correctGuess,
     playerName,
     leaderboard,
     showLeaderboard,

@@ -24,6 +24,7 @@ export function HintsDisplay({ displayedText }: HintsDisplayProps) {
         className={cn(
           'font-mono whitespace-pre-wrap text-white/90',
           'leading-relaxed',
+          'break-words',
           isMobile ? 'text-sm' : 'text-base'
         )}
       >

@@ -26,6 +26,7 @@ export default function App() {
     round,
     guess,
     wrongGuess,
+    correctGuess,
     playerName,
     leaderboard,
     answerName,
@@ -122,6 +123,7 @@ export default function App() {
               setGuess={setGuess}
               submitGuess={submitGuess}
               wrongGuess={wrongGuess}
+              correctGuess={correctGuess}
               inputRef={inputRef}
               onQuit={stopGame}
               round={round}

@@ -14,6 +14,7 @@ export interface PlayingScreenProps {
   setGuess: (guess: string) => void;
   submitGuess: () => void;
   wrongGuess: boolean;
+  correctGuess: boolean;
   inputRef: React.RefObject<HTMLInputElement>;
   onQuit: () => void;
   round: number;
@@ -36,6 +37,7 @@ export function PlayingScreen({
   setGuess,
   submitGuess,
   wrongGuess,
+  correctGuess,
   inputRef,
   onQuit,
   round,
@@ -80,6 +82,7 @@ export function PlayingScreen({
         setGuess={setGuess}
         onSubmit={submitGuess}
         wrongGuess={wrongGuess}
+        correctGuess={correctGuess}
         inputRef={inputRef}
         characterType={characterType}
       />
