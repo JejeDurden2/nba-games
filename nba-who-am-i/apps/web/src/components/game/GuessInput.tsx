@@ -58,9 +58,12 @@ export function GuessInput({
         size="lg"
         gradient={config.gradient}
         glow={config.glow}
-        className="aspect-square !px-0"
+        className={cn(
+          '!px-0 flex items-center justify-center',
+          isMobile ? 'w-16 min-w-16' : 'w-20 min-w-20'
+        )}
       >
-        <span className="text-2xl">→</span>
+        <span className={isMobile ? 'text-3xl' : 'text-2xl'}>→</span>
       </Button>
     </div>
   );
