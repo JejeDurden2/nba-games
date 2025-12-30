@@ -143,7 +143,7 @@ export function Leaderboard({
                     isTopThree ? 'text-ball-400' : 'text-dark-500'
                   )}
                 >
-                  {entry.maxStreak}🎮
+                  {entry.maxStreak} 🎮
                 </span>
               )}
             </div>
