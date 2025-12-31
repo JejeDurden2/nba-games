@@ -4,6 +4,7 @@ import { useIsMobile } from './hooks/useMediaQuery';
 import { BackgroundEffects } from './components/ui/BackgroundEffects';
 import { Header } from './components/ui/Header';
 import { MenuScreen } from './components/screens/MenuScreen';
+import { LoadingScreen } from './components/screens/LoadingScreen';
 import { PlayingScreen } from './components/screens/PlayingScreen';
 import { WonScreen } from './components/screens/WonScreen';
 import { GameOverScreen } from './components/screens/GameOverScreen';
@@ -76,21 +77,26 @@ export default function App() {
             isMobile ? 'px-4 py-6 max-w-2xl' : 'px-6 py-8 max-w-4xl'
           )}
         >
-          {/* Header */}
-          <Header
-            onClick={resetToMenu}
-            clickable={gameState !== 'menu' && gameState !== 'loading'}
-          />
+          {/* Header - compact during gameplay */}
+          {gameState !== 'loading' && (
+            <Header
+              onClick={resetToMenu}
+              clickable={gameState !== 'menu'}
+              compact={gameState === 'playing'}
+            />
+          )}
 
           {/* Game Screens */}
-          {(gameState === 'menu' || gameState === 'loading') && (
+          {gameState === 'loading' && <LoadingScreen />}
+
+          {gameState === 'menu' && (
             <MenuScreen
               playerName={playerName}
               setPlayerName={setPlayerName}
               startGame={startGame}
               leaderboard={leaderboard}
               error={error}
-              isLoading={gameState === 'loading'}
+              isLoading={false}
               isLeaderboardLoading={isLeaderboardLoading}
             />
           )}

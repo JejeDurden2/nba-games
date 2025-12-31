@@ -155,6 +155,18 @@ export function ShareCard(props: ShareCardProps) {
             ×
           </button>
 
+          {/* Logo watermark */}
+          <div className="absolute top-4 left-4">
+            <img
+              src="/logo.svg"
+              alt=""
+              className={cn(isMobile ? 'w-10 h-10' : 'w-12 h-12')}
+              style={{
+                filter: 'drop-shadow(0 0 8px rgba(255, 56, 100, 0.3))',
+              }}
+            />
+          </div>
+
           {/* Header */}
           <div className="text-center mb-6">
             <div className={cn('mb-2', isMobile ? 'text-4xl' : 'text-5xl')}>
