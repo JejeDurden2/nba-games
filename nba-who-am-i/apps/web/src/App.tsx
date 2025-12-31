@@ -73,7 +73,7 @@ export default function App() {
         {/* Content Container */}
         <div
           className={cn(
-            'mx-auto flex-1',
+            'mx-auto flex-1 w-full',
             isMobile ? 'px-4 py-6 max-w-2xl' : 'px-6 py-8 max-w-4xl'
           )}
         >

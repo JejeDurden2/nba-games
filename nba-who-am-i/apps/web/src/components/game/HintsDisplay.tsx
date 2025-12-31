@@ -7,6 +7,7 @@ export interface HintsDisplayProps {
 
 /**
  * Displays hints with typewriter animation and blinking cursor
+ * Uses fixed height to prevent layout shifts during text reveal
  */
 export function HintsDisplay({ displayedText }: HintsDisplayProps) {
   const isMobile = useIsMobile();
@@ -16,21 +17,30 @@ export function HintsDisplay({ displayedText }: HintsDisplayProps) {
       className={cn(
         'bg-dark-800/60 rounded-2xl',
         'border border-dark-600/50',
-        'overflow-y-auto',
-        isMobile ? 'p-4 h-48 min-h-48 max-h-48' : 'p-6 h-64 min-h-64 max-h-64'
+        'overflow-y-auto overflow-x-hidden',
+        'w-full'
       )}
+      style={{
+        height: isMobile ? '192px' : '256px',
+        minHeight: isMobile ? '192px' : '256px',
+        maxHeight: isMobile ? '192px' : '256px',
+      }}
     >
-      <pre
-        className={cn(
-          'font-mono whitespace-pre-wrap text-white/90',
-          'leading-relaxed',
-          'break-words',
-          isMobile ? 'text-sm' : 'text-base'
-        )}
-      >
-        {displayedText}
-        <span className="inline-block w-2 h-5 bg-ball-400 ml-1 animate-blink" />
-      </pre>
+      <div className={cn(isMobile ? 'p-4' : 'p-6')}>
+        <pre
+          className={cn(
+            'font-mono whitespace-pre-wrap text-white/90',
+            'leading-relaxed',
+            'break-words overflow-wrap-anywhere',
+            isMobile ? 'text-sm' : 'text-base',
+            'w-full'
+          )}
+          style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}
+        >
+          {displayedText}
+          <span className="inline-block w-2 h-5 bg-ball-400 ml-1 animate-blink" />
+        </pre>
+      </div>
     </div>
   );
 }
