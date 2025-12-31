@@ -31,10 +31,9 @@ function getEncouragingMessage(
   allLevelsCleared?: boolean
 ): string {
   if (allLevelsCleared) {
-    return '🎮 GAMEBREAKER UNLOCKED ! WHERE YOU AT ?! Tu les as tous mis au poste ! GOAT STATUS ! 🏆';
+    return '🎮 GAMEBREAKER UNLOCKED ! Tu les as tous mis au poste ! GOAT STATUS ! 🏆';
   }
-  if (!percentile)
-    return 'Pas mal rookie... Mais WHERE YOU AT ?! Faut bosser ta vision de jeu ! 💪';
+  if (!percentile) return 'Pas mal rookie... Faut bosser ta vision de jeu ! 💪';
   if (percentile >= 90)
     return `🔥 BANG ! BANG ! OH WHAT A SHOT ! Tu as explosé ${percentile}% des joueurs ! 🥶`;
   if (percentile >= 75)
@@ -189,7 +188,7 @@ export function GameOverScreen({
               glow={allLevelsCleared ? 'rgba(252,211,77,0.5)' : undefined}
             >
               {allLevelsCleared
-                ? '🎮 WHERE YOU AT ?! Partage ton score !'
+                ? '🎮 GOAT ! Partage ton score !'
                 : '📤 Partage ton score'}
             </Button>
           )}

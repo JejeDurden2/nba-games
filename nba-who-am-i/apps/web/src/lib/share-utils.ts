@@ -29,7 +29,7 @@ export function generateShareText(data: ShareData): string {
 ⭐ ${totalScore} points
 🎯 ${round} rounds
 
-WHERE YOU AT ?! Tu penses pouvoir faire mieux ? 💪`;
+Tu penses pouvoir faire mieux ? 💪`;
   }
 
   return `Je viens de scorer *${totalScore} points* sur NBA Who Am I ! 🏀

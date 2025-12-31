@@ -55,7 +55,7 @@ export function MenuScreen({
           <p
             className={cn('text-dark-400', isMobile ? 'text-sm' : 'text-base')}
           >
-            WHERE YOU AT ?! Reconnais ces légendes si t&apos;as le game ! 🔥
+            Le quiz ultime des légendes NBA 👑
           </p>
         </div>
 
