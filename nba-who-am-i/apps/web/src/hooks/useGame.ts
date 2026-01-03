@@ -83,19 +83,23 @@ export function useGame(): UseGameReturn {
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const textIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const pauseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const startTimeRef = useRef<number>(0);
   const nextCharacterRef = useRef<GameCharacter | null>(null);
 
   // Hint-based scoring: score decreases as more hints are revealed
-  // Score values: 1000 (hint 1) → 800 (hint 2) → 600 (hint 3) → 400 (hint 4) → 200 (hint 5+)
+  // Score values: 1000 → 800 → 600 → 400 → 300 → 200 → 100 → 50 (8 hints total)
   const calculatePotentialScore = useCallback(
     (_time: number, hintIndex?: number): number => {
       const idx = hintIndex ?? currentHintIndex;
-      if (idx === 0) return 1000;
-      if (idx === 1) return 800;
-      if (idx === 2) return 600;
-      if (idx === 3) return 400;
-      return 200;
+      if (idx === 0) return 1000; // Hint 1
+      if (idx === 1) return 800; // Hint 2 (-200)
+      if (idx === 2) return 600; // Hint 3 (-200)
+      if (idx === 3) return 400; // Hint 4 (-200)
+      if (idx === 4) return 300; // Hint 5 (-100)
+      if (idx === 5) return 200; // Hint 6 (-100)
+      if (idx === 6) return 100; // Hint 7 (-100)
+      return 50; // Hint 8+ (-50)
     },
     [currentHintIndex]
   );
@@ -108,6 +112,10 @@ export function useGame(): UseGameReturn {
     if (textIntervalRef.current) {
       clearInterval(textIntervalRef.current);
       textIntervalRef.current = null;
+    }
+    if (pauseTimeoutRef.current) {
+      clearTimeout(pauseTimeoutRef.current);
+      pauseTimeoutRef.current = null;
     }
   }, []);
 
@@ -194,7 +202,12 @@ export function useGame(): UseGameReturn {
     let hintIdx = 0;
     let charIdx = 0;
     let isPaused = false;
-    let pauseTimeout: ReturnType<typeof setTimeout> | null = null;
+
+    // Clear any existing pause timeout before starting
+    if (pauseTimeoutRef.current) {
+      clearTimeout(pauseTimeoutRef.current);
+      pauseTimeoutRef.current = null;
+    }
 
     const reveal = () => {
       if (isPaused) return;
@@ -221,8 +234,9 @@ export function useGame(): UseGameReturn {
 
           // Pause before next hint
           isPaused = true;
-          pauseTimeout = setTimeout(() => {
+          pauseTimeoutRef.current = setTimeout(() => {
             isPaused = false;
+            pauseTimeoutRef.current = null;
           }, HINT_PAUSE);
         } else {
           // All hints revealed
@@ -235,16 +249,38 @@ export function useGame(): UseGameReturn {
     textIntervalRef.current = setInterval(reveal, CHAR_SPEED);
 
     return () => {
-      if (pauseTimeout) clearTimeout(pauseTimeout);
-      if (textIntervalRef.current) clearInterval(textIntervalRef.current);
+      if (pauseTimeoutRef.current) {
+        clearTimeout(pauseTimeoutRef.current);
+        pauseTimeoutRef.current = null;
+      }
+      if (textIntervalRef.current) {
+        clearInterval(textIntervalRef.current);
+        textIntervalRef.current = null;
+      }
     };
   }, [gameState, character]);
 
   const startGame = useCallback(async () => {
     setError(null);
 
-    // Check if we have a prefetched character
-    if (nextCharacterRef.current) {
+    // If starting fresh after game over, reset all session state
+    if (isGameOver) {
+      setTotalScore(0);
+      setStreak(0);
+      setMaxStreak(0);
+      setRound(0);
+      setUsedCharacterIds([]);
+      setSessionId(null);
+      setDifficulty(1);
+      setQuestionsAtDifficulty(0);
+      setHighestLevelCleared(0);
+      setPlayerPercentile(undefined);
+      setTotalPlayers(undefined);
+      nextCharacterRef.current = null; // Clear any prefetched character from previous game
+    }
+
+    // Check if we have a prefetched character (only valid if not starting fresh)
+    if (!isGameOver && nextCharacterRef.current) {
       // Use prefetched character - instant transition!
       const prefetchedCharacter = nextCharacterRef.current;
       nextCharacterRef.current = null;
@@ -273,16 +309,19 @@ export function useGame(): UseGameReturn {
 
     try {
       // Reset used IDs if we've used too many (to avoid running out)
-      let idsToExclude = usedCharacterIds;
+      // Note: If isGameOver, usedCharacterIds was already reset above
+      let idsToExclude = isGameOver ? [] : usedCharacterIds;
       if (usedCharacterIds.length >= 25) {
         idsToExclude = [];
         setUsedCharacterIds([]);
       }
 
+      const currentDifficulty = isGameOver ? 1 : difficulty;
+
       const response = await gameApi.startGame(
         playerName || 'Anonymous',
         idsToExclude,
-        difficulty
+        currentDifficulty
       );
 
       setSessionId(response.sessionId);
@@ -303,7 +342,7 @@ export function useGame(): UseGameReturn {
       setGameState('menu');
       console.error(err);
     }
-  }, [playerName, usedCharacterIds, clearTimers, difficulty]);
+  }, [playerName, usedCharacterIds, clearTimers, difficulty, isGameOver]);
 
   const submitGuess = useCallback(async () => {
     if (
