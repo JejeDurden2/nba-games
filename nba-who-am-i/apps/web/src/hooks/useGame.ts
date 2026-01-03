@@ -166,28 +166,17 @@ export function useGame(): UseGameReturn {
   }, [gameState, clearTimers, streak, totalScore, fetchPercentile, character]);
 
   // Text reveal effect with QPUC-style timing
-  // - Faster typing (20ms per character)
-  // - Pause between hints (800ms)
+  // - Start immediately (no delay)
+  // - Fast typing (15ms per character)
+  // - Longer pause between hints (1200ms)
   // - All hints finish with 5 seconds remaining
   useEffect(() => {
     if (gameState !== 'playing' || !character) return;
 
-    const TOTAL_TIME = 30; // seconds
-    const RESERVE_TIME = 5; // seconds to leave at end
-    const AVAILABLE_TIME = (TOTAL_TIME - RESERVE_TIME) * 1000; // 25 seconds in ms
-    const CHAR_SPEED = 20; // ms per character (faster typing)
-    const HINT_PAUSE = 800; // ms pause between hints
+    const CHAR_SPEED = 15; // ms per character (faster typing)
+    const HINT_PAUSE = 1200; // ms pause between hints (longer pause)
 
-    // Calculate total characters and timing
     const hints = character.hints;
-    const totalChars = hints.reduce((sum, h) => sum + h.length, 0);
-    const totalPauses = Math.max(0, hints.length - 1);
-    const totalPauseTime = totalPauses * HINT_PAUSE;
-    const totalTypingTime = totalChars * CHAR_SPEED;
-    const totalRevealTime = totalTypingTime + totalPauseTime;
-
-    // Calculate delay before starting (to finish with 5s left)
-    const startDelay = Math.max(0, AVAILABLE_TIME - totalRevealTime);
 
     let fullText = '';
     let hintIdx = 0;
@@ -230,13 +219,10 @@ export function useGame(): UseGameReturn {
       }
     };
 
-    // Start after calculated delay
-    const startTimeout = setTimeout(() => {
-      textIntervalRef.current = setInterval(reveal, CHAR_SPEED);
-    }, startDelay);
+    // Start immediately
+    textIntervalRef.current = setInterval(reveal, CHAR_SPEED);
 
     return () => {
-      clearTimeout(startTimeout);
       if (pauseTimeout) clearTimeout(pauseTimeout);
       if (textIntervalRef.current) clearInterval(textIntervalRef.current);
     };

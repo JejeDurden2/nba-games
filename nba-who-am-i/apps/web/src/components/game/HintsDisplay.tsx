@@ -6,6 +6,12 @@ export interface HintsDisplayProps {
   displayedText: string;
 }
 
+interface ParsedHint {
+  text: string;
+  isComplete: boolean;
+  isCurrent: boolean;
+}
+
 /**
  * QPUC-inspired hints display with slide-in animations
  * Features: Per-hint animations, dimmed previous hints, highlighted current hint
@@ -14,31 +20,17 @@ export function HintsDisplay({ displayedText }: HintsDisplayProps) {
   const isMobile = useIsMobile();
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Parse the displayed text into individual hints
-  const { completedHints, currentHint, isTyping } = useMemo(() => {
+  // Parse the displayed text into individual hints with their states
+  const hints = useMemo((): ParsedHint[] => {
+    if (!displayedText) return [];
+
     // Split by double newlines (hint separator)
     const parts = displayedText.split('\n\n');
-    const completed: string[] = [];
-    let current = '';
-    let typing = false;
-
-    for (let i = 0; i < parts.length; i++) {
-      const part = parts[i];
-      if (i < parts.length - 1) {
-        // Completed hints (followed by double newline)
-        completed.push(part);
-      } else {
-        // Last part is current (may be incomplete)
-        current = part;
-        typing = part.length > 0;
-      }
-    }
-
-    return {
-      completedHints: completed,
-      currentHint: current,
-      isTyping: typing,
-    };
+    return parts.map((text, index) => ({
+      text,
+      isComplete: index < parts.length - 1, // All but last are complete
+      isCurrent: index === parts.length - 1 && text.length > 0,
+    }));
   }, [displayedText]);
 
   // Auto-scroll to bottom when new content appears
@@ -48,7 +40,14 @@ export function HintsDisplay({ displayedText }: HintsDisplayProps) {
     }
   }, [displayedText]);
 
-  const totalHints = completedHints.length + (currentHint ? 1 : 0);
+  // Calculate opacity for each hint based on its position
+  const getHintOpacity = (index: number, isComplete: boolean): number => {
+    if (!isComplete) return 1; // Current hint is fully visible
+    const distanceFromCurrent = hints.length - 1 - index;
+    if (distanceFromCurrent === 0) return 0.7; // Just completed
+    if (distanceFromCurrent === 1) return 0.5; // One before
+    return 0.4; // Older hints
+  };
 
   return (
     <div
@@ -66,19 +65,13 @@ export function HintsDisplay({ displayedText }: HintsDisplayProps) {
       }}
     >
       <div className={cn(isMobile ? 'p-4' : 'p-6', 'space-y-3')}>
-        {/* Completed hints - dimmed with fade effect */}
-        {completedHints.map((hint, index) => (
+        {/* Render all hints with stable keys */}
+        {hints.map((hint, index) => (
           <div
-            key={index}
-            className={cn(
-              'transition-all duration-500',
-              'animate-in slide-in-from-left-4 fade-in',
-              // Older hints are more dimmed
-              index < completedHints.length - 1 ? 'opacity-40' : 'opacity-60'
-            )}
+            key={`hint-${index}`}
+            className="transition-opacity duration-700 ease-out"
             style={{
-              animationDelay: `${index * 100}ms`,
-              animationFillMode: 'backwards',
+              opacity: getHintOpacity(index, hint.isComplete),
             }}
           >
             <div className="flex items-start gap-2">
@@ -86,66 +79,37 @@ export function HintsDisplay({ displayedText }: HintsDisplayProps) {
               <span
                 className={cn(
                   'shrink-0 inline-flex items-center justify-center',
-                  'rounded-full bg-dark-600/80 text-dark-400',
-                  'font-bold tabular-nums',
-                  isMobile ? 'w-5 h-5 text-[10px]' : 'w-6 h-6 text-xs'
+                  'rounded-full font-bold tabular-nums',
+                  'transition-all duration-500',
+                  isMobile ? 'w-5 h-5 text-[10px]' : 'w-6 h-6 text-xs',
+                  hint.isCurrent
+                    ? 'bg-ball-500/30 text-ball-400 shadow-[0_0_10px_rgba(255,56,100,0.3)]'
+                    : 'bg-dark-600/80 text-dark-400'
                 )}
               >
                 {index + 1}
               </span>
               <p
                 className={cn(
-                  'font-mono text-white/70',
-                  'leading-relaxed',
-                  isMobile ? 'text-sm' : 'text-base'
+                  'font-mono leading-relaxed transition-all duration-500',
+                  isMobile ? 'text-sm' : 'text-base',
+                  hint.isCurrent ? 'text-white' : 'text-white/70'
                 )}
+                style={
+                  hint.isCurrent
+                    ? { textShadow: '0 0 20px rgba(255,255,255,0.1)' }
+                    : undefined
+                }
               >
-                {hint}
-              </p>
-            </div>
-          </div>
-        ))}
-
-        {/* Current hint - highlighted with glow */}
-        {currentHint && (
-          <div
-            className={cn(
-              'transition-all duration-300',
-              'animate-in slide-in-from-left-4 fade-in'
-            )}
-          >
-            <div className="flex items-start gap-2">
-              {/* Current hint number badge - highlighted */}
-              <span
-                className={cn(
-                  'shrink-0 inline-flex items-center justify-center',
-                  'rounded-full bg-ball-500/30 text-ball-400',
-                  'font-bold tabular-nums',
-                  'shadow-[0_0_10px_rgba(255,56,100,0.3)]',
-                  isMobile ? 'w-5 h-5 text-[10px]' : 'w-6 h-6 text-xs'
-                )}
-              >
-                {totalHints}
-              </span>
-              <p
-                className={cn(
-                  'font-mono text-white',
-                  'leading-relaxed',
-                  isMobile ? 'text-sm' : 'text-base'
-                )}
-                style={{
-                  textShadow: '0 0 20px rgba(255,255,255,0.1)',
-                }}
-              >
-                {currentHint}
-                {/* Blinking cursor */}
-                {isTyping && (
+                {hint.text}
+                {/* Blinking cursor only on current hint */}
+                {hint.isCurrent && (
                   <span className="inline-block w-2 h-5 bg-ball-400 ml-1 animate-blink align-middle" />
                 )}
               </p>
             </div>
           </div>
-        )}
+        ))}
 
         {/* Empty state cursor */}
         {!displayedText && (
