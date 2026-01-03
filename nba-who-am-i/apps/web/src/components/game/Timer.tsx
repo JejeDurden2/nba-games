@@ -13,7 +13,7 @@ export interface TimerProps {
  */
 export function Timer({
   timeLeft,
-  totalTime = 30,
+  totalTime = 40,
   calculatePotentialScore,
 }: TimerProps) {
   const isMobile = useIsMobile();

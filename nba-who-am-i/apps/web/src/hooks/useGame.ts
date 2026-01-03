@@ -53,7 +53,7 @@ export function useGame(): UseGameReturn {
   const [character, setCharacter] = useState<GameCharacter | null>(null);
   const [usedCharacterIds, setUsedCharacterIds] = useState<string[]>([]);
   const [displayedText, setDisplayedText] = useState('');
-  const [timeLeft, setTimeLeft] = useState(30);
+  const [timeLeft, setTimeLeft] = useState(40);
   const [score, setScore] = useState(0);
   const [totalScore, setTotalScore] = useState(0);
   const [streak, setStreak] = useState(0);
@@ -174,9 +174,21 @@ export function useGame(): UseGameReturn {
     if (gameState !== 'playing' || !character) return;
 
     const CHAR_SPEED = 15; // ms per character (faster typing)
-    const HINT_PAUSE = 1200; // ms pause between hints (longer pause)
+    const TOTAL_TIME = 40000; // 40 seconds total
+    const RESERVE_TIME = 5000; // 5 seconds at the end for thinking
+    const AVAILABLE_TIME = TOTAL_TIME - RESERVE_TIME; // 35 seconds for hints
 
     const hints = character.hints;
+
+    // Calculate total typing time for all hints
+    const totalChars = hints.reduce((sum, hint) => sum + hint.length, 0);
+    const typingTime = totalChars * CHAR_SPEED;
+
+    // Calculate pause duration between hints
+    const numPauses = hints.length - 1;
+    const pauseTime =
+      numPauses > 0 ? (AVAILABLE_TIME - typingTime) / numPauses : 0;
+    const HINT_PAUSE = Math.max(pauseTime, 500); // Minimum 500ms pause
 
     let fullText = '';
     let hintIdx = 0;
@@ -244,7 +256,7 @@ export function useGame(): UseGameReturn {
       setDisplayedText('');
       setCharacter(prefetchedCharacter);
       setUsedCharacterIds((prev) => [...prev, prefetchedCharacter.id]);
-      setTimeLeft(30);
+      setTimeLeft(40);
       setScore(0);
       setGuess('');
       setRound((r) => r + 1);
@@ -277,7 +289,7 @@ export function useGame(): UseGameReturn {
       setCharacter(response.character);
       setUsedCharacterIds((prev) => [...prev, response.character.id]);
       setDisplayedText('');
-      setTimeLeft(30);
+      setTimeLeft(40);
       setScore(0);
       setGuess('');
       setRound((r) => r + 1);
@@ -361,7 +373,7 @@ export function useGame(): UseGameReturn {
     }
 
     // Calculate estimated score based on time
-    const estimatedScore = calculatePotentialScore(30 - timeSpent);
+    const estimatedScore = calculatePotentialScore(40 - timeSpent);
     const estimatedStreak = streak + 1;
     const streakBonus =
       streak > 0 ? Math.round(estimatedScore * (streak * 0.15)) : 0;
