@@ -219,14 +219,15 @@ export function useGame(): UseGameReturn {
 
       const hint = hints[hintIdx];
       if (charIdx < hint.length) {
+        // Update hint index when first character of a new hint starts
+        if (charIdx === 0 && hintIdx > 0) {
+          setCurrentHintIndex(hintIdx);
+        }
         fullText += hint[charIdx];
         setDisplayedText(fullText);
         charIdx++;
       } else {
-        // Hint complete - update hint index for scoring
-        setCurrentHintIndex(hintIdx + 1);
-
-        // Check if there are more hints
+        // Hint complete - check if there are more hints
         if (hintIdx < hints.length - 1) {
           fullText += '\n\n';
           hintIdx++;
@@ -239,7 +240,8 @@ export function useGame(): UseGameReturn {
             pauseTimeoutRef.current = null;
           }, HINT_PAUSE);
         } else {
-          // All hints revealed
+          // All hints revealed - update to final hint index
+          setCurrentHintIndex(hints.length);
           if (textIntervalRef.current) clearInterval(textIntervalRef.current);
         }
       }

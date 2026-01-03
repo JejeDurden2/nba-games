@@ -25,14 +25,32 @@ export function WonScreen({
   const isMobile = useIsMobile();
 
   useEffect(() => {
+    // Track if component is mounted to prevent stale closure issues
+    let mounted = true;
+    let listenerAdded = false;
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Enter') {
         startGame();
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    // Small delay to prevent Enter key from immediately triggering startGame
+    // when transitioning from playing screen (where Enter submits guess)
+    const timeoutId = setTimeout(() => {
+      if (mounted) {
+        window.addEventListener('keydown', handleKeyDown);
+        listenerAdded = true;
+      }
+    }, 100);
+
+    return () => {
+      mounted = false;
+      clearTimeout(timeoutId);
+      if (listenerAdded) {
+        window.removeEventListener('keydown', handleKeyDown);
+      }
+    };
   }, [startGame]);
 
   return (
