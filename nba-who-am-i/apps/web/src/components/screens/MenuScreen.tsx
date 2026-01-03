@@ -39,26 +39,7 @@ export function MenuScreen({
   return (
     <div className="space-y-6">
       {/* Main Game Card */}
-      <Card className={isMobile ? 'p-6' : 'p-10'}>
-        <div className="text-center mb-8">
-          <div className={cn('mb-4', isMobile ? 'text-5xl' : 'text-6xl')}>
-            🏀
-          </div>
-          <h2
-            className={cn(
-              'font-black text-white mb-2',
-              isMobile ? 'text-2xl' : 'text-3xl'
-            )}
-          >
-            NBA WHO AM I ?
-          </h2>
-          <p
-            className={cn('text-dark-400', isMobile ? 'text-sm' : 'text-base')}
-          >
-            Le quiz ultime des légendes NBA 👑
-          </p>
-        </div>
-
+      <Card className={isMobile ? 'p-6' : 'p-8'}>
         {/* Player name input and start button - centered with max width */}
         <div className="max-w-md mx-auto">
           <div className="mb-6">

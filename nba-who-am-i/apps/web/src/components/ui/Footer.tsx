@@ -25,15 +25,6 @@ export function Footer() {
           )}
         >
           <a
-            href="https://github.com/anthropics/claude-code/issues"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-dark-500 hover:text-accent-cyan transition-colors"
-          >
-            🐛 Signaler un bug
-          </a>
-          <span className="text-dark-600">•</span>
-          <a
             href="https://twitter.com/intent/tweet?text=🏀%20NBA%20Who%20Am%20I%20-%20Test%20ton%20QI%20basket%20!&url="
             target="_blank"
             rel="noopener noreferrer"
@@ -78,10 +69,6 @@ export function Footer() {
         {/* Copyright */}
         <div className={cn('text-dark-600', isMobile ? 'text-xs' : 'text-sm')}>
           <p>© {currentYear} Jérôme Desmares. Tous droits réservés.</p>
-          <p className="text-xs mt-1">
-            Les noms et logos NBA sont des marques déposées de leurs
-            propriétaires respectifs.
-          </p>
         </div>
       </div>
     </footer>
