@@ -47,7 +47,7 @@ interface UseGameReturn {
   refreshLeaderboard: () => Promise<void>;
 }
 
-export function useGame(): UseGameReturn {
+export function useGame(universeId: string = 'nba'): UseGameReturn {
   const [gameState, setGameState] = useState<GameState>('menu');
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [character, setCharacter] = useState<GameCharacter | null>(null);
@@ -122,14 +122,14 @@ export function useGame(): UseGameReturn {
   const refreshLeaderboard = useCallback(async () => {
     setIsLeaderboardLoading(true);
     try {
-      const res = await gameApi.getLeaderboard(10);
+      const res = await gameApi.getLeaderboard(10, undefined, universeId);
       setLeaderboard(res.entries);
     } catch (err) {
       console.error('Failed to load leaderboard:', err);
     } finally {
       setIsLeaderboardLoading(false);
     }
-  }, []);
+  }, [universeId]);
 
   // Load leaderboard on mount
   useEffect(() => {
@@ -137,15 +137,18 @@ export function useGame(): UseGameReturn {
   }, [refreshLeaderboard]);
 
   // Fetch percentile on game over
-  const fetchPercentile = useCallback(async (score: number) => {
-    try {
-      const res = await gameApi.getLeaderboard(10, score);
-      setPlayerPercentile(res.playerPercentile);
-      setTotalPlayers(res.totalPlayers);
-    } catch (err) {
-      console.error('Failed to fetch percentile:', err);
-    }
-  }, []);
+  const fetchPercentile = useCallback(
+    async (score: number) => {
+      try {
+        const res = await gameApi.getLeaderboard(10, score, universeId);
+        setPlayerPercentile(res.playerPercentile);
+        setTotalPlayers(res.totalPlayers);
+      } catch (err) {
+        console.error('Failed to fetch percentile:', err);
+      }
+    },
+    [universeId]
+  );
 
   // Timer effect
   useEffect(() => {
@@ -323,7 +326,8 @@ export function useGame(): UseGameReturn {
       const response = await gameApi.startGame(
         playerName || 'Anonymous',
         idsToExclude,
-        currentDifficulty
+        currentDifficulty,
+        universeId
       );
 
       setSessionId(response.sessionId);
@@ -344,7 +348,14 @@ export function useGame(): UseGameReturn {
       setGameState('menu');
       console.error(err);
     }
-  }, [playerName, usedCharacterIds, clearTimers, difficulty, isGameOver]);
+  }, [
+    playerName,
+    usedCharacterIds,
+    clearTimers,
+    difficulty,
+    isGameOver,
+    universeId,
+  ]);
 
   const submitGuess = useCallback(async () => {
     if (
@@ -454,7 +465,8 @@ export function useGame(): UseGameReturn {
           const nextResponse = await gameApi.startGame(
             playerName || 'Anonymous',
             idsToExclude,
-            nextDifficulty
+            nextDifficulty,
+            universeId
           );
           nextCharacterRef.current = nextResponse.character;
         })(),
@@ -489,6 +501,7 @@ export function useGame(): UseGameReturn {
     questionsAtDifficulty,
     difficulty,
     fetchPercentile,
+    universeId,
   ]);
 
   const resetToMenu = useCallback(() => {

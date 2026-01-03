@@ -1,13 +1,19 @@
 import { LeaderboardEntryEntity } from '../../domain/entities/leaderboard-entry.entity';
 
 export interface ILeaderboardRepository {
-  findByPlayerName(name: string): Promise<LeaderboardEntryEntity | null>;
+  findByPlayerName(
+    name: string,
+    universe?: string
+  ): Promise<LeaderboardEntryEntity | null>;
   findBySessionId(sessionId: string): Promise<LeaderboardEntryEntity | null>;
-  findTop(limit: number): Promise<LeaderboardEntryEntity[]>;
+  findTop(limit: number, universe?: string): Promise<LeaderboardEntryEntity[]>;
   save(entry: LeaderboardEntryEntity): Promise<LeaderboardEntryEntity>;
-  findOrCreate(playerName: string): Promise<LeaderboardEntryEntity>;
-  countTotal(): Promise<number>;
-  countScoresBelow(score: number): Promise<number>;
+  findOrCreate(
+    playerName: string,
+    universe?: string
+  ): Promise<LeaderboardEntryEntity>;
+  countTotal(universe?: string): Promise<number>;
+  countScoresBelow(score: number, universe?: string): Promise<number>;
 }
 
 export const LEADERBOARD_REPOSITORY = Symbol('ILeaderboardRepository');

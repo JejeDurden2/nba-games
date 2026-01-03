@@ -1,12 +1,11 @@
-import { CharacterType } from '@nba-who-am-i/shared';
-
 export class CharacterEntity {
   private constructor(
     public readonly id: string,
     public readonly name: string,
-    public readonly type: CharacterType,
+    public readonly type: string,
     public readonly hints: readonly string[],
     public readonly difficulty: number,
+    public readonly universe: string,
     public readonly createdAt: Date
   ) {
     Object.freeze(this);
@@ -15,9 +14,10 @@ export class CharacterEntity {
   static create(props: {
     id?: string;
     name: string;
-    type: CharacterType;
+    type: string;
     hints: string[];
     difficulty?: number;
+    universe?: string;
   }): CharacterEntity {
     if (!props.name?.trim()) throw new Error('Character name is required');
     if (!props.hints?.length)
@@ -28,6 +28,7 @@ export class CharacterEntity {
       props.type,
       Object.freeze([...props.hints]),
       props.difficulty ?? 1,
+      props.universe ?? 'nba',
       new Date()
     );
   }
@@ -38,14 +39,16 @@ export class CharacterEntity {
     type: string;
     hints: string[];
     difficulty: number;
+    universe?: string;
     createdAt: Date;
   }): CharacterEntity {
     return new CharacterEntity(
       data.id,
       data.name,
-      data.type as CharacterType,
+      data.type,
       Object.freeze(data.hints),
       data.difficulty,
+      data.universe ?? 'nba',
       data.createdAt
     );
   }

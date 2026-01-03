@@ -1,6 +1,7 @@
 const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
-export type CharacterType = 'player' | 'coach' | 'executive' | 'legend';
+// Character type is now a string to support universe-specific types
+export type CharacterType = string;
 
 export interface GameCharacter {
   id: string;
@@ -12,6 +13,7 @@ export interface GameCharacter {
 export interface StartGameResponse {
   sessionId: string;
   character: GameCharacter;
+  universe?: string;
 }
 
 export interface SubmitAnswerResponse {
@@ -55,11 +57,17 @@ class GameApiClient {
   async startGame(
     playerName: string,
     excludeCharacterIds: string[] = [],
-    difficulty?: number
+    difficulty?: number,
+    universe?: string
   ): Promise<StartGameResponse> {
     return this.fetch<StartGameResponse>('/api/game/start', {
       method: 'POST',
-      body: JSON.stringify({ playerName, excludeCharacterIds, difficulty }),
+      body: JSON.stringify({
+        playerName,
+        excludeCharacterIds,
+        difficulty,
+        universe,
+      }),
     });
   }
 
@@ -78,11 +86,15 @@ class GameApiClient {
 
   async getLeaderboard(
     limit = 10,
-    playerScore?: number
+    playerScore?: number,
+    universe?: string
   ): Promise<LeaderboardResponse> {
     const params = new URLSearchParams({ limit: limit.toString() });
     if (playerScore !== undefined) {
       params.append('playerScore', playerScore.toString());
+    }
+    if (universe) {
+      params.append('universe', universe);
     }
     return this.fetch<LeaderboardResponse>(
       `/api/game/leaderboard?${params.toString()}`

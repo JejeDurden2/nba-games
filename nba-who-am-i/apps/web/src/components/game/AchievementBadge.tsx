@@ -1,6 +1,7 @@
-import { achievementLevelConfig } from '@/lib/design-system/tokens';
+import { achievementGradientConfig } from '@/lib/design-system/tokens';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/useMediaQuery';
+import { useAchievementLabels } from '@/contexts/UniverseContext';
 
 export interface AchievementBadgeProps {
   level: 1 | 2 | 3 | 4 | 5;
@@ -18,7 +19,8 @@ export function AchievementBadge({
   size = 'md',
 }: AchievementBadgeProps) {
   const isMobile = useIsMobile();
-  const config = achievementLevelConfig[level];
+  const achievementLabels = useAchievementLabels();
+  const config = achievementGradientConfig[level];
 
   const sizeClasses = {
     sm: isMobile ? 'w-12 h-12' : 'w-14 h-14',
@@ -81,7 +83,7 @@ export function AchievementBadge({
           unlocked ? 'text-white' : 'text-dark-500'
         )}
       >
-        {config.label}
+        {achievementLabels[level]}
       </div>
     </div>
   );

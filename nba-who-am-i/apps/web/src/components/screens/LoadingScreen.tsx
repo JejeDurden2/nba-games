@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/useMediaQuery';
+import { useWording, useUniverse } from '@/contexts/UniverseContext';
 
 /**
  * Full-screen loading screen with animated logo
@@ -7,6 +8,8 @@ import { useIsMobile } from '@/hooks/useMediaQuery';
  */
 export function LoadingScreen() {
   const isMobile = useIsMobile();
+  const wording = useWording();
+  const universe = useUniverse();
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] gap-8">
@@ -19,7 +22,7 @@ export function LoadingScreen() {
       >
         <img
           src="/logo.svg"
-          alt="NBA Who Am I"
+          alt={wording.appTitle}
           className="w-full h-full"
           style={{
             filter:
@@ -40,12 +43,12 @@ export function LoadingScreen() {
             className="bg-gradient-fire bg-clip-text"
             style={{ WebkitTextFillColor: 'transparent' }}
           >
-            NBA
+            {universe.name}
           </span>
           <span className="text-white"> WHO AM I</span>
           <span className="text-ball-400"> ?</span>
         </h2>
-        <p className="text-dark-500 text-sm animate-pulse">Chargement...</p>
+        <p className="text-dark-500 text-sm animate-pulse">{wording.loading}</p>
       </div>
 
       {/* Loading dots */}

@@ -1,6 +1,7 @@
 import { AchievementBadge } from '@/components/game/AchievementBadge';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/useMediaQuery';
+import { useWording } from '@/contexts/UniverseContext';
 
 export interface AchievementGridProps {
   highestLevelCleared: number;
@@ -18,6 +19,7 @@ export function AchievementGrid({
   size = 'md',
 }: AchievementGridProps) {
   const isMobile = useIsMobile();
+  const wording = useWording();
   const levels: Array<1 | 2 | 3 | 4 | 5> = [1, 2, 3, 4, 5];
 
   return (
@@ -51,7 +53,7 @@ export function AchievementGrid({
           )}
           style={{ WebkitTextFillColor: 'transparent' }}
         >
-          ⭐ TOUS LES NIVEAUX CONQUIS ⭐
+          {wording.gameOver.allLevelsCleared}
         </div>
       )}
     </div>

@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/useMediaQuery';
+import { useWording, useUniverse } from '@/contexts/UniverseContext';
 
 export interface HeaderProps {
   onClick?: () => void;
@@ -17,6 +18,8 @@ export function Header({
   compact = false,
 }: HeaderProps) {
   const isMobile = useIsMobile();
+  const wording = useWording();
+  const universe = useUniverse();
 
   return (
     <header className={cn('text-center', compact ? 'mb-4' : 'mb-8')}>
@@ -45,7 +48,7 @@ export function Header({
         >
           <img
             src="/logo.svg"
-            alt="NBA Who Am I Logo"
+            alt={wording.appTitle}
             className={cn(
               'w-full h-full transition-all duration-300',
               clickable && 'group-hover:brightness-110'
@@ -74,7 +77,7 @@ export function Header({
             className="bg-gradient-fire bg-clip-text"
             style={{ WebkitTextFillColor: 'transparent' }}
           >
-            NBA
+            {universe.name}
           </span>
           <span className="text-white"> WHO AM I</span>
           <span className="text-ball-400"> ?</span>

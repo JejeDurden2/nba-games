@@ -7,9 +7,9 @@ import { LeaderboardEntryEntity } from '../../core/domain/entities/leaderboard-e
 export class PrismaLeaderboardRepository implements ILeaderboardRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findByPlayerName(name: string) {
+  async findByPlayerName(name: string, universe: string = 'nba') {
     const d = await this.prisma.leaderboardEntry.findFirst({
-      where: { playerName: name },
+      where: { playerName: name, universe },
       orderBy: { createdAt: 'desc' },
     });
     return d ? LeaderboardEntryEntity.fromPersistence(d) : null;
@@ -22,8 +22,9 @@ export class PrismaLeaderboardRepository implements ILeaderboardRepository {
     return d ? LeaderboardEntryEntity.fromPersistence(d) : null;
   }
 
-  async findTop(limit: number) {
+  async findTop(limit: number, universe: string = 'nba') {
     const d = await this.prisma.leaderboardEntry.findMany({
+      where: { universe },
       take: limit,
       orderBy: { score: 'desc' },
     });
@@ -46,6 +47,7 @@ export class PrismaLeaderboardRepository implements ILeaderboardRepository {
         id: e.id,
         sessionId: e.sessionId,
         playerName: e.playerName,
+        universe: e.universe,
         score: e.score,
         gamesPlayed: e.gamesPlayed,
         gamesWon: e.gamesWon,
@@ -56,23 +58,30 @@ export class PrismaLeaderboardRepository implements ILeaderboardRepository {
     return LeaderboardEntryEntity.fromPersistence(d);
   }
 
-  async findOrCreate(playerName: string) {
+  async findOrCreate(playerName: string, universe: string = 'nba') {
     // This method is now deprecated - kept for backwards compatibility
     // New code should create entries at game start with session ID
-    const existing = await this.findByPlayerName(playerName);
+    const existing = await this.findByPlayerName(playerName, universe);
     if (existing) return existing;
     // Generate a temporary sessionId for legacy compatibility
     const sessionId = crypto.randomUUID();
-    return this.save(LeaderboardEntryEntity.create(sessionId, playerName));
+    return this.save(
+      LeaderboardEntryEntity.create(sessionId, playerName, universe)
+    );
   }
 
-  async countTotal() {
-    return this.prisma.leaderboardEntry.count();
-  }
-
-  async countScoresBelow(score: number) {
+  async countTotal(universe: string = 'nba') {
     return this.prisma.leaderboardEntry.count({
-      where: { score: { lt: score } },
+      where: { universe },
+    });
+  }
+
+  async countScoresBelow(score: number, universe: string = 'nba') {
+    return this.prisma.leaderboardEntry.count({
+      where: {
+        score: { lt: score },
+        universe,
+      },
     });
   }
 }

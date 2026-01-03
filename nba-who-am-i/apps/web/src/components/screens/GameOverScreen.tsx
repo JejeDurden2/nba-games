@@ -5,6 +5,8 @@ import { AchievementGrid } from '@/components/game/AchievementGrid';
 import { ShareCard } from '@/components/game/ShareCard';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/useMediaQuery';
+import { useWording } from '@/contexts/UniverseContext';
+import { t } from '@/lib/universe/interpolate';
 
 export interface GameOverScreenProps {
   answerName: string;
@@ -22,27 +24,25 @@ export interface GameOverScreenProps {
   playerName: string;
 }
 
+import type { EncouragingMessagesWording } from '@nba-who-am-i/shared';
+
 /**
- * Get encouraging message based on performance
- * Features NBA Street Vol. 2 vocabulary and legendary broadcaster calls
+ * Get encouraging message based on performance using universe wording
  */
 function getEncouragingMessage(
+  messages: EncouragingMessagesWording,
   percentile?: number,
   allLevelsCleared?: boolean
 ): string {
   if (allLevelsCleared) {
-    return '🎮 GAMEBREAKER UNLOCKED ! Tu les as tous mis au poste ! GOAT STATUS ! 🏆';
+    return messages.allCleared;
   }
-  if (!percentile) return 'Pas mal rookie... Faut bosser ta vision de jeu ! 💪';
-  if (percentile >= 90)
-    return `🔥 BANG ! BANG ! OH WHAT A SHOT ! Tu as explosé ${percentile}% des joueurs ! 🥶`;
-  if (percentile >= 75)
-    return `⭐ WITH NO REGARD FOR HUMAN LIFE ! Tu as crossé ${percentile}% des joueurs ! THAT'S GAME ! 🍳`;
-  if (percentile >= 50)
-    return `👊 GOT THE SKILLS TO PAY THE BILLS ! Tu as battu ${percentile}% des joueurs ! Respect ! 💯`;
-  if (percentile >= 25)
-    return `💪 Tu as fait mieux que ${percentile}% des joueurs ! ARE YOU KIDDING ME ?! Continue ! 📈`;
-  return `🏀 Pas mal rookie (top ${percentile}%)... Reviens plus fort ! 🎯`;
+  if (!percentile) return messages.default;
+  if (percentile >= 90) return t(messages.top90, { percentile });
+  if (percentile >= 75) return t(messages.top75, { percentile });
+  if (percentile >= 50) return t(messages.top50, { percentile });
+  if (percentile >= 25) return t(messages.top25, { percentile });
+  return t(messages.default, { percentile });
 }
 
 /**
@@ -64,9 +64,11 @@ export function GameOverScreen({
   playerName,
 }: GameOverScreenProps) {
   const isMobile = useIsMobile();
+  const wording = useWording();
   const [showShareCard, setShowShareCard] = useState(false);
 
   const encouragingMessage = getEncouragingMessage(
+    wording.encouragingMessages,
     playerPercentile,
     allLevelsCleared
   );
@@ -117,10 +119,10 @@ export function GameOverScreen({
           )}
         >
           {allLevelsCleared
-            ? 'HALL OF FAME ! 👑'
+            ? wording.gameOver.hallOfFameTitle
             : isTimeout
-              ? 'SHOT CLOCK VIOLATION ⏰'
-              : 'GAME OVER'}
+              ? wording.gameOver.timeoutTitle
+              : wording.gameOver.gameOverTitle}
         </h2>
 
         {/* Achievement Grid - show if any levels cleared */}
@@ -155,7 +157,7 @@ export function GameOverScreen({
                 isMobile ? 'text-xs' : 'text-sm'
               )}
             >
-              C&apos;était :
+              {wording.gameOver.answerPrefix}
             </p>
             <p
               className={cn('font-bold mb-6', isMobile ? 'text-lg' : 'text-xl')}
@@ -173,17 +175,23 @@ export function GameOverScreen({
           )}
         >
           <div className="text-center">
-            <div className="text-xs text-dark-500 mb-1">SCORE FINAL</div>
+            <div className="text-xs text-dark-500 mb-1">
+              {wording.gameOver.finalScoreLabel}
+            </div>
             <div className="text-3xl font-black text-accent-cyan">
               {totalScore}
             </div>
           </div>
           <div className="text-center">
-            <div className="text-xs text-dark-500 mb-1">ROUNDS</div>
+            <div className="text-xs text-dark-500 mb-1">
+              {wording.gameOver.roundsLabel}
+            </div>
             <div className="text-3xl font-black text-white">{round}</div>
           </div>
           <div className="text-center">
-            <div className="text-xs text-dark-500 mb-1">MAX GAMEBREAKER</div>
+            <div className="text-xs text-dark-500 mb-1">
+              {wording.gameOver.maxStreakLabel}
+            </div>
             <div className="text-3xl font-black text-ball-400">
               {maxStreak} 🎮
             </div>
@@ -206,14 +214,14 @@ export function GameOverScreen({
               glow={allLevelsCleared ? 'rgba(252,211,77,0.5)' : undefined}
             >
               {allLevelsCleared
-                ? '🎮 GOAT ! Partage ton score !'
-                : '📤 Partage ton score'}
+                ? wording.gameOver.shareButtonGoat
+                : wording.gameOver.shareButton}
             </Button>
           )}
 
           {/* Play again button */}
           <Button onClick={startGame} size="lg" className="w-full">
-            🔁 Run it back !
+            {wording.gameOver.playAgainButton}
           </Button>
 
           {/* Menu button */}
@@ -223,7 +231,7 @@ export function GameOverScreen({
             variant="secondary"
             className="w-full"
           >
-            🏠 Retour au menu
+            {wording.gameOver.menuButton}
           </Button>
         </div>
       </Card>

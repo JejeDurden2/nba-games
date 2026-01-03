@@ -1,11 +1,16 @@
+// Universe system exports
+export * from './universe';
+
+// Legacy character type - now universe-specific, kept for backward compatibility
 export type CharacterType = 'player' | 'coach' | 'executive' | 'legend';
 
 export interface Character {
   id: string;
   name: string;
-  type: CharacterType;
+  type: string; // Changed from CharacterType to string for universe flexibility
   hints: string[];
   difficulty: number;
+  universe?: string; // Optional for backward compatibility
 }
 
 export interface LeaderboardEntry {
@@ -21,11 +26,14 @@ export interface LeaderboardEntry {
 export interface StartGameRequest {
   playerName: string;
   excludeCharacterIds?: string[];
+  difficulty?: number;
+  universe?: string;
 }
 
 export interface StartGameResponse {
   sessionId: string;
-  character: { id: string; type: CharacterType; hints: string[] };
+  character: { id: string; type: string; hints: string[] };
+  universe?: string;
 }
 
 export interface SubmitAnswerRequest {

@@ -54,49 +54,47 @@ export const achievementGradients = {
   level5: 'linear-gradient(135deg, #FFD600 0%, #FFA800 50%, #FF3864 100%)', // Gold to hot pink (GOAT)
 } as const;
 
-// Achievement Level Configuration
-export interface AchievementLevelConfig {
+// Achievement Level Configuration (labels are now provided by universe)
+export interface AchievementGradientConfig {
   gradient: string;
   glow: string;
-  label: string;
   locked: string; // grayscale gradient
 }
 
-export const achievementLevelConfig: Record<
+// Export for use with universe-specific labels
+export const achievementGradientConfig: Record<
   1 | 2 | 3 | 4 | 5,
-  AchievementLevelConfig
+  AchievementGradientConfig
 > = {
   1: {
     gradient: achievementGradients.level1,
     glow: 'rgba(0,255,136,0.6)', // Neon green glow
-    label: 'ROOKIE',
     locked: 'linear-gradient(135deg, #45455F 0%, #2D2D44 100%)',
   },
   2: {
     gradient: achievementGradients.level2,
     glow: 'rgba(0,229,255,0.6)', // Cyan glow
-    label: 'STARTER',
     locked: 'linear-gradient(135deg, #45455F 0%, #2D2D44 100%)',
   },
   3: {
     gradient: achievementGradients.level3,
     glow: 'rgba(199,76,255,0.6)', // Purple glow
-    label: 'ALL-STAR',
     locked: 'linear-gradient(135deg, #45455F 0%, #2D2D44 100%)',
   },
   4: {
     gradient: achievementGradients.level4,
     glow: 'rgba(255,73,192,0.6)', // Pink glow
-    label: 'MVP',
     locked: 'linear-gradient(135deg, #45455F 0%, #2D2D44 100%)',
   },
   5: {
     gradient: achievementGradients.level5,
     glow: 'rgba(255,214,0,0.8)', // Gold glow (stronger)
-    label: 'GOAT',
     locked: 'linear-gradient(135deg, #45455F 0%, #2D2D44 100%)',
   },
 } as const;
+
+// Alias for backwards compatibility - reexport as achievementLevelConfig
+export const achievementLevelConfig = achievementGradientConfig;
 
 // Breakpoints (px)
 export const breakpoints = {

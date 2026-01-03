@@ -1,15 +1,23 @@
 import { PrismaClient } from '@prisma/client';
+import { onePieceCharacters } from './seeds/one-piece';
 
 const prisma = new PrismaClient();
 
-interface CharacterSeed {
+// Parse CLI arguments for universe selection
+const args = process.argv.slice(2);
+const universeArg = args.find((a) => a.startsWith('--universe='));
+const targetUniverse = universeArg?.split('=')[1] || 'nba';
+
+// Local interface for seed data (universe is added at runtime)
+interface NbaCharacterSeed {
   name: string;
   type: 'player' | 'coach' | 'legend' | 'executive';
   difficulty: number;
   hints: string[];
 }
 
-const characters: CharacterSeed[] = [
+// NBA characters
+const nbaCharacters: NbaCharacterSeed[] = [
   // ==================== LÉGENDES ====================
   {
     name: 'Michael Jordan',
@@ -3427,28 +3435,62 @@ const characters: CharacterSeed[] = [
   },
 ];
 
+// Universe seed data registry
+const universeSeeds: Record<
+  string,
+  Array<{ name: string; type: string; difficulty: number; hints: string[] }>
+> = {
+  nba: nbaCharacters,
+  'one-piece': onePieceCharacters,
+};
+
 async function main(): Promise<void> {
-  console.log('🌱 Seeding database with', characters.length, 'characters...\n');
+  // Determine which universes to seed
+  const universesToSeed =
+    targetUniverse === 'all' ? Object.keys(universeSeeds) : [targetUniverse];
 
-  for (const char of characters) {
-    await prisma.character.upsert({
-      where: { name: char.name },
-      update: {
-        type: char.type,
-        difficulty: char.difficulty,
-        hints: char.hints,
-      },
-      create: {
-        name: char.name,
-        type: char.type,
-        difficulty: char.difficulty,
-        hints: char.hints,
-      },
-    });
-    console.log(`  ✓ ${char.name} (${char.type})`);
+  for (const universeId of universesToSeed) {
+    const characters = universeSeeds[universeId];
+
+    if (!characters) {
+      console.error(`❌ Unknown universe: ${universeId}`);
+      console.log(
+        'Available universes:',
+        Object.keys(universeSeeds).join(', ')
+      );
+      process.exit(1);
+    }
+
+    console.log(
+      `\n🌱 Seeding ${universeId} universe with ${characters.length} characters...\n`
+    );
+
+    for (const char of characters) {
+      await prisma.character.upsert({
+        where: {
+          name_universe: {
+            name: char.name,
+            universe: universeId,
+          },
+        },
+        update: {
+          type: char.type,
+          difficulty: char.difficulty,
+          hints: char.hints,
+        },
+        create: {
+          name: char.name,
+          type: char.type,
+          difficulty: char.difficulty,
+          hints: char.hints,
+          universe: universeId,
+        },
+      });
+      console.log(`  ✓ ${char.name} (${char.type})`);
+    }
+
+    console.log(`\n✅ Seeded ${characters.length} ${universeId} characters`);
   }
-
-  console.log('\n✅ Seeded', characters.length, 'characters');
 }
 
 main()

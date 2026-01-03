@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/Button';
 import { Leaderboard } from '@/components/ui/Leaderboard';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/useMediaQuery';
+import { useWording } from '@/contexts/UniverseContext';
 
 export interface MenuScreenProps {
   playerName: string;
@@ -28,6 +29,7 @@ export function MenuScreen({
   isLeaderboardLoading,
 }: MenuScreenProps) {
   const isMobile = useIsMobile();
+  const wording = useWording();
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !isLoading) {
@@ -50,12 +52,12 @@ export function MenuScreen({
                 isMobile ? 'text-sm' : 'text-base'
               )}
             >
-              Qui es-tu, rookie ?
+              {wording.menu.playerNameLabel}
             </label>
             <input
               id="playerName"
               type="text"
-              placeholder="Un rookie anonyme"
+              placeholder={wording.menu.playerNamePlaceholder}
               value={playerName}
               onChange={(e) => setPlayerName(e.target.value)}
               onKeyDown={handleKeyDown}
@@ -84,7 +86,7 @@ export function MenuScreen({
             disabled={isLoading}
             className="w-full"
           >
-            {isLoading ? 'Chargement...' : "C'est parti ! 🔥"}
+            {isLoading ? wording.loading : wording.menu.startButton}
           </Button>
         </div>
       </Card>
@@ -99,7 +101,7 @@ export function MenuScreen({
                 isMobile ? 'text-xl' : 'text-2xl'
               )}
             >
-              🏆 Hall of Fame
+              {wording.menu.hallOfFameTitle}
             </h3>
             <p
               className={cn(
@@ -107,7 +109,7 @@ export function MenuScreen({
                 isMobile ? 'text-xs' : 'text-sm'
               )}
             >
-              Top 10 des meilleurs joueurs
+              {wording.menu.hallOfFameSubtitle}
             </p>
           </div>
           <Leaderboard

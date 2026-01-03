@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/useMediaQuery';
+import { useWording } from '@/contexts/UniverseContext';
 
 export interface StatsBarProps {
   round: number;
@@ -24,6 +25,7 @@ export function StatsBar({
   onQuit,
 }: StatsBarProps) {
   const isMobile = useIsMobile();
+  const wording = useWording();
 
   const attemptsLeft = 3 - failuresThisRound;
   const attemptsColor =
@@ -46,22 +48,25 @@ export function StatsBar({
       {/* Stats */}
       <div className={cn('flex gap-3 flex-wrap', isMobile ? 'gap-3' : 'gap-5')}>
         <span className="text-dark-500">
-          Round <b className="text-white">{round}</b>
+          {wording.playing.round} <b className="text-white">{round}</b>
         </span>
         <span className="text-dark-500">
-          Gamebreaker <b className="text-ball-400">{streak}🎮</b>
+          {wording.playing.streak} <b className="text-ball-400">{streak}🎮</b>
         </span>
         <span className="text-dark-500">
-          Score <b className="text-accent-cyan">{totalScore}</b>
+          {wording.playing.score}{' '}
+          <b className="text-accent-cyan">{totalScore}</b>
         </span>
         <span className="text-dark-500">
-          Niveau <b className="text-accent-yellow">{difficulty}</b>{' '}
+          {wording.playing.level}{' '}
+          <b className="text-accent-yellow">{difficulty}</b>{' '}
           <span className="text-xs text-dark-500">
             ({questionsAtDifficulty}/5)
           </span>
         </span>
         <span className="text-dark-500">
-          Essais <b className={attemptsColor}>{attemptsLeft}/3</b>
+          {wording.playing.attempts}{' '}
+          <b className={attemptsColor}>{attemptsLeft}/3</b>
         </span>
       </div>
 
@@ -76,7 +81,7 @@ export function StatsBar({
           isMobile ? 'px-2.5 py-1.5 text-xs' : 'px-3 py-1.5 text-xs'
         )}
       >
-        ✕ Back to Papa
+        {wording.playing.quitButton}
       </button>
     </div>
   );

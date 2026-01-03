@@ -4,11 +4,12 @@ export interface ICharacterRepository {
   findById(id: string): Promise<CharacterEntity | null>;
   findRandom(
     excludeIds?: string[],
-    difficulty?: number
+    difficulty?: number,
+    universe?: string
   ): Promise<CharacterEntity>;
-  findAll(): Promise<CharacterEntity[]>;
+  findAll(universe?: string): Promise<CharacterEntity[]>;
   save(character: CharacterEntity): Promise<CharacterEntity>;
-  count(): Promise<number>;
+  count(universe?: string): Promise<number>;
 }
 
 export const CHARACTER_REPOSITORY = Symbol('ICharacterRepository');

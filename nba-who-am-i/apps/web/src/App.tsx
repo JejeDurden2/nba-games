@@ -1,6 +1,7 @@
 import { useRef, useEffect } from 'react';
 import { useGame } from './hooks/useGame';
 import { useIsMobile } from './hooks/useMediaQuery';
+import { useUniverseId } from './contexts/UniverseContext';
 import { BackgroundEffects } from './components/ui/BackgroundEffects';
 import { Header } from './components/ui/Header';
 import { MenuScreen } from './components/screens/MenuScreen';
@@ -16,6 +17,7 @@ import { cn } from './lib/design-system/utils';
  * Orchestrates game flow and renders appropriate screens based on game state
  */
 export default function App() {
+  const universeId = useUniverseId();
   const {
     gameState,
     character,
@@ -49,7 +51,7 @@ export default function App() {
     resetToMenu,
     stopGame,
     calculatePotentialScore,
-  } = useGame();
+  } = useGame(universeId);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const isMobile = useIsMobile();

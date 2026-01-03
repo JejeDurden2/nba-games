@@ -7,6 +7,7 @@ import {
 export interface GetLeaderboardParams {
   limit?: number;
   playerScore?: number;
+  universe?: string;
 }
 
 export interface GetLeaderboardResponse {
@@ -33,9 +34,9 @@ export class GetLeaderboardUseCase {
   async execute(
     params: GetLeaderboardParams = {}
   ): Promise<GetLeaderboardResponse> {
-    const { limit = 10, playerScore } = params;
+    const { limit = 10, playerScore, universe = 'nba' } = params;
 
-    const entries = await this.repo.findTop(limit);
+    const entries = await this.repo.findTop(limit, universe);
 
     const result: GetLeaderboardResponse = {
       entries: entries.map((e) => ({
@@ -51,9 +52,12 @@ export class GetLeaderboardUseCase {
 
     // Calculate percentile if playerScore is provided
     if (playerScore !== undefined) {
-      const totalPlayers = await this.repo.countTotal();
+      const totalPlayers = await this.repo.countTotal(universe);
       if (totalPlayers > 0) {
-        const playersBelow = await this.repo.countScoresBelow(playerScore);
+        const playersBelow = await this.repo.countScoresBelow(
+          playerScore,
+          universe
+        );
         const percentile = Math.round((playersBelow / totalPlayers) * 100);
         result.playerPercentile = percentile;
         result.totalPlayers = totalPlayers;

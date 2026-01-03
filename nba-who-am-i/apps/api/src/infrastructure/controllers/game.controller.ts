@@ -18,6 +18,7 @@ export class GameController {
       playerName: string;
       excludeCharacterIds?: string[];
       difficulty?: number;
+      universe?: string;
     }
   ) {
     return this.startGame.execute(req);
@@ -40,11 +41,13 @@ export class GameController {
   @Get('leaderboard')
   leaderboard(
     @Query('limit') limit?: string,
-    @Query('playerScore') playerScore?: string
+    @Query('playerScore') playerScore?: string,
+    @Query('universe') universe?: string
   ) {
     return this.getLeaderboard.execute({
       limit: limit ? parseInt(limit) : 10,
       playerScore: playerScore ? parseInt(playerScore) : undefined,
+      universe: universe ?? 'nba',
     });
   }
 }

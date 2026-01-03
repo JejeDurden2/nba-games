@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/useMediaQuery';
+import { useWording } from '@/contexts/UniverseContext';
 
 export interface WonScreenProps {
   answerName: string;
@@ -23,6 +24,7 @@ export function WonScreen({
   resetToMenu,
 }: WonScreenProps) {
   const isMobile = useIsMobile();
+  const wording = useWording();
 
   useEffect(() => {
     // Track if component is mounted to prevent stale closure issues
@@ -65,14 +67,14 @@ export function WonScreen({
           isMobile ? 'text-2xl' : 'text-3xl'
         )}
       >
-        BANG ! BUCKETS ! 💰
+        {wording.won.title}
       </h2>
 
       {/* Answer */}
       <p
         className={cn('text-dark-500 mb-1', isMobile ? 'text-sm' : 'text-base')}
       >
-        Yessir, c&apos;était
+        {wording.won.answerPrefix}
       </p>
       <p
         className={cn(
@@ -92,7 +94,9 @@ export function WonScreen({
       >
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <div className="text-dark-500 text-sm mb-1">SCORE</div>
+            <div className="text-dark-500 text-sm mb-1">
+              {wording.won.scoreLabel}
+            </div>
             <div
               className={cn(
                 'font-black text-accent-cyan',
@@ -103,7 +107,9 @@ export function WonScreen({
             </div>
           </div>
           <div>
-            <div className="text-dark-500 text-sm mb-1">GAMEBREAKER</div>
+            <div className="text-dark-500 text-sm mb-1">
+              {wording.won.streakLabel}
+            </div>
             <div
               className={cn(
                 'font-black text-ball-400',
@@ -119,7 +125,7 @@ export function WonScreen({
       {/* Action buttons */}
       <div className="flex flex-col gap-3">
         <Button onClick={startGame} size="lg" className="w-full">
-          Prochain round →
+          {wording.won.nextRoundButton}
         </Button>
         <Button
           onClick={resetToMenu}
@@ -127,7 +133,7 @@ export function WonScreen({
           variant="secondary"
           className="w-full"
         >
-          🏠 Retour au menu
+          {wording.won.menuButton}
         </Button>
       </div>
     </Card>

@@ -22,23 +22,31 @@ export class StartGameUseCase {
     playerName: string;
     excludeCharacterIds?: string[];
     difficulty?: number;
+    universe?: string;
   }) {
     const sessionId = crypto.randomUUID();
     const playerName = req.playerName?.trim() || 'Anonymous';
+    const universe = req.universe ?? 'nba';
 
     // Create new leaderboard entry for this game session
-    const entry = LeaderboardEntryEntity.create(sessionId, playerName);
+    const entry = LeaderboardEntryEntity.create(
+      sessionId,
+      playerName,
+      universe
+    );
     await this.lbRepo.save(entry);
 
-    // Get random character
+    // Get random character from the specified universe
     const character = await this.repo.findRandom(
       req.excludeCharacterIds,
-      req.difficulty
+      req.difficulty,
+      universe
     );
 
     return {
       sessionId,
       character: character.toResponse(),
+      universe,
     };
   }
 }

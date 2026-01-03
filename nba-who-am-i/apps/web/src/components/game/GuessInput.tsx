@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/useMediaQuery';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/input';
-import { characterTypeConfig } from '@/lib/design-system/tokens';
+import { useWording, useCharacterTypes } from '@/contexts/UniverseContext';
 import { CharacterType } from '@/api/game';
 
 export interface GuessInputProps {
@@ -28,7 +28,9 @@ export function GuessInput({
   characterType,
 }: GuessInputProps) {
   const isMobile = useIsMobile();
-  const config = characterTypeConfig[characterType];
+  const wording = useWording();
+  const characterTypes = useCharacterTypes();
+  const config = characterTypes[characterType] || characterTypes['player'];
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -48,7 +50,7 @@ export function GuessInput({
       <Input
         ref={inputRef}
         type="text"
-        placeholder="Une idée ?"
+        placeholder={wording.playing.guessPlaceholder}
         value={guess}
         onChange={(e) => setGuess(e.target.value)}
         onKeyDown={handleKeyDown}

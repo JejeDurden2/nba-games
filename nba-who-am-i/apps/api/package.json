@@ -9,7 +9,11 @@
     "test": "jest",
     "test:cov": "jest --coverage",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "db:seed": "ts-node prisma/seed.ts",
+    "db:seed:nba": "ts-node prisma/seed.ts -- --universe=nba",
+    "db:seed:one-piece": "ts-node prisma/seed.ts -- --universe=one-piece",
+    "db:seed:all": "ts-node prisma/seed.ts -- --universe=all"
   },
   "dependencies": {
     "@nba-who-am-i/shared": "workspace:*",

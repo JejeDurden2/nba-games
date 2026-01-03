@@ -9,13 +9,18 @@ datasource db {
 
 model Character {
   id         String   @id @default(uuid())
-  name       String   @unique
+  name       String
   type       String
   hints      String[]
   difficulty Int      @default(1)
+  universe   String   @default("nba")
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@unique([name, universe], name: "name_universe")
   @@index([type])
+  @@index([universe])
+  @@index([universe, difficulty])
   @@map("characters")
 }
 
@@ -28,9 +33,12 @@ model LeaderboardEntry {
   gamesWon      Int      @default(0) @map("games_won")
   currentStreak Int      @default(0) @map("current_streak")
   maxStreak     Int      @default(0) @map("max_streak")
+  universe      String   @default("nba")
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
   @@index([score(sort: Desc)])
   @@index([playerName])
+  @@index([universe])
+  @@index([universe, score(sort: Desc)])
   @@map("leaderboard_entries")
 }

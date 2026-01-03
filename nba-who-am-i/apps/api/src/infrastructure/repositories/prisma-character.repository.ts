@@ -1,7 +1,7 @@
 // apps/api/src/infrastructure/repositories/prisma-character.repository.ts
 
 import { Injectable } from '@nestjs/common';
-import { Character } from '@prisma/client';
+import { Character, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { ICharacterRepository } from '../../core/application/ports/character.repository.port';
 import { CharacterEntity } from '../../core/domain/entities/character.entity';
@@ -17,10 +17,14 @@ export class PrismaCharacterRepository implements ICharacterRepository {
 
   async findRandom(
     excludeIds: string[] = [],
-    difficulty?: number
+    difficulty?: number,
+    universe: string = 'nba'
   ): Promise<CharacterEntity> {
-    // Build where clause with exclusions and optional difficulty filter
-    const where: { id?: { notIn: string[] }; difficulty?: number } = {};
+    // Build where clause with universe filter, exclusions and optional difficulty
+    const where: Prisma.CharacterWhereInput = {
+      universe, // Always filter by universe
+    };
+
     if (excludeIds.length > 0) {
       where.id = { notIn: excludeIds };
     }
@@ -28,22 +32,29 @@ export class PrismaCharacterRepository implements ICharacterRepository {
       where.difficulty = difficulty;
     }
 
-    // Récupérer tous les IDs disponibles
+    // Get all available IDs matching filters
     const availableCharacters = await this.prisma.character.findMany({
-      where: Object.keys(where).length > 0 ? where : undefined,
+      where,
       select: { id: true },
     });
 
     if (availableCharacters.length === 0) {
-      // Si tous exclus, on prend n'importe lequel avec la même difficulté si spécifiée
-      const fallbackWhere =
-        difficulty !== undefined ? { difficulty } : undefined;
+      // If all excluded, get any character with same universe and difficulty
+      const fallbackWhere: Prisma.CharacterWhereInput = { universe };
+      if (difficulty !== undefined) {
+        fallbackWhere.difficulty = difficulty;
+      }
+
       const allCharacters = await this.prisma.character.findMany({
         where: fallbackWhere,
         select: { id: true },
       });
-      if (allCharacters.length === 0)
-        throw new Error('No characters in database for this difficulty');
+
+      if (allCharacters.length === 0) {
+        throw new Error(
+          `No characters in database for universe "${universe}"${difficulty !== undefined ? ` at difficulty ${difficulty}` : ''}`
+        );
+      }
 
       const randomIndex = Math.floor(Math.random() * allCharacters.length);
       const randomId = allCharacters[randomIndex].id;
@@ -53,7 +64,7 @@ export class PrismaCharacterRepository implements ICharacterRepository {
       return CharacterEntity.fromPersistence(character!);
     }
 
-    // Sélection aléatoire
+    // Random selection from available
     const randomIndex = Math.floor(Math.random() * availableCharacters.length);
     const randomId = availableCharacters[randomIndex].id;
 
@@ -63,8 +74,15 @@ export class PrismaCharacterRepository implements ICharacterRepository {
     return CharacterEntity.fromPersistence(character!);
   }
 
-  async findAll(): Promise<CharacterEntity[]> {
-    const characters: Character[] = await this.prisma.character.findMany();
+  async findAll(universe?: string): Promise<CharacterEntity[]> {
+    const where: Prisma.CharacterWhereInput = {};
+    if (universe) {
+      where.universe = universe;
+    }
+
+    const characters: Character[] = await this.prisma.character.findMany({
+      where: Object.keys(where).length > 0 ? where : undefined,
+    });
     return characters.map((c) => CharacterEntity.fromPersistence(c));
   }
 
@@ -76,6 +94,7 @@ export class PrismaCharacterRepository implements ICharacterRepository {
         type: c.type,
         hints: [...c.hints],
         difficulty: c.difficulty,
+        universe: c.universe,
       },
       create: {
         id: c.id,
@@ -83,12 +102,20 @@ export class PrismaCharacterRepository implements ICharacterRepository {
         type: c.type,
         hints: [...c.hints],
         difficulty: c.difficulty,
+        universe: c.universe,
       },
     });
     return CharacterEntity.fromPersistence(d);
   }
 
-  async count(): Promise<number> {
-    return this.prisma.character.count();
+  async count(universe?: string): Promise<number> {
+    const where: Prisma.CharacterWhereInput = {};
+    if (universe) {
+      where.universe = universe;
+    }
+
+    return this.prisma.character.count({
+      where: Object.keys(where).length > 0 ? where : undefined,
+    });
   }
 }

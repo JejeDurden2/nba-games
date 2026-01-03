@@ -3,6 +3,7 @@ export class LeaderboardEntryEntity {
     public readonly id: string,
     public readonly sessionId: string,
     public readonly playerName: string,
+    public readonly universe: string,
     private _score: number,
     private _gamesPlayed: number,
     private _gamesWon: number,
@@ -31,7 +32,11 @@ export class LeaderboardEntryEntity {
     return this._updatedAt;
   }
 
-  static create(sessionId: string, playerName: string): LeaderboardEntryEntity {
+  static create(
+    sessionId: string,
+    playerName: string,
+    universe: string = 'nba'
+  ): LeaderboardEntryEntity {
     if (!sessionId?.trim()) throw new Error('Session ID is required');
     if (!playerName?.trim()) throw new Error('Player name is required');
     const now = new Date();
@@ -39,6 +44,7 @@ export class LeaderboardEntryEntity {
       crypto.randomUUID(), // id
       sessionId.trim(), // sessionId
       playerName.trim(), // playerName
+      universe, // universe
       0, // score
       0, // gamesPlayed
       0, // gamesWon
@@ -53,6 +59,7 @@ export class LeaderboardEntryEntity {
     id: string;
     sessionId: string;
     playerName: string;
+    universe?: string;
     score: number;
     gamesPlayed: number;
     gamesWon: number;
@@ -65,6 +72,7 @@ export class LeaderboardEntryEntity {
       data.id,
       data.sessionId,
       data.playerName,
+      data.universe ?? 'nba',
       data.score,
       data.gamesPlayed,
       data.gamesWon,

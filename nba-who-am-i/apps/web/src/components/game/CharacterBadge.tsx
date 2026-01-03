@@ -1,7 +1,7 @@
 import { CharacterType } from '@/api/game';
-import { characterTypeConfig } from '@/lib/design-system/tokens';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/useMediaQuery';
+import { useCharacterTypes } from '@/contexts/UniverseContext';
 
 export interface CharacterBadgeProps {
   type: CharacterType;
@@ -12,7 +12,8 @@ export interface CharacterBadgeProps {
  */
 export function CharacterBadge({ type }: CharacterBadgeProps) {
   const isMobile = useIsMobile();
-  const config = characterTypeConfig[type];
+  const characterTypes = useCharacterTypes();
+  const config = characterTypes[type] || characterTypes['player'];
 
   return (
     <div

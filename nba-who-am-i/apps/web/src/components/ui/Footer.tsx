@@ -1,11 +1,13 @@
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/useMediaQuery';
+import { useWording } from '@/contexts/UniverseContext';
 
 /**
  * Footer component with copyright, links, and credits
  */
 export function Footer() {
   const isMobile = useIsMobile();
+  const wording = useWording();
   const currentYear = new Date().getFullYear();
 
   return (
@@ -30,14 +32,14 @@ export function Footer() {
             rel="noopener noreferrer"
             className="text-dark-500 hover:text-accent-cyan transition-colors"
           >
-            🐦 Partager sur X
+            {wording.footer.shareOnX}
           </a>
           <span className="text-dark-600">•</span>
           <a
             href="mailto:desmaresjerome@gmail.com?subject=NBA Who Am I - Feedback"
             className="text-dark-500 hover:text-accent-cyan transition-colors"
           >
-            ✉️ Contact
+            {wording.footer.contact}
           </a>
         </div>
 
@@ -50,11 +52,11 @@ export function Footer() {
           )}
         >
           <p>
-            Créé avec{' '}
+            {wording.footer.createdWith}{' '}
             <span className="text-ball-400" aria-label="amour">
               ❤️
             </span>{' '}
-            par{' '}
+            {wording.footer.by}{' '}
             <a
               href="https://www.linkedin.com/in/jeromedesmares/"
               target="_blank"
@@ -68,7 +70,9 @@ export function Footer() {
 
         {/* Copyright */}
         <div className={cn('text-dark-600', isMobile ? 'text-xs' : 'text-sm')}>
-          <p>© {currentYear} Jérôme Desmares. Tous droits réservés.</p>
+          <p>
+            © {currentYear} Jérôme Desmares. {wording.footer.allRightsReserved}
+          </p>
         </div>
       </div>
     </footer>

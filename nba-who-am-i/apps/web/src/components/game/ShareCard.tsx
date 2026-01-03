@@ -19,6 +19,7 @@ import {
 } from '@/lib/share-utils';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/useMediaQuery';
+import { useWording, useUniverseId } from '@/contexts/UniverseContext';
 
 export interface ShareCardProps extends ShareData {
   onClose: () => void;
@@ -40,6 +41,8 @@ export function ShareCard(props: ShareCardProps) {
   } = props;
 
   const isMobile = useIsMobile();
+  const wording = useWording();
+  const universeId = useUniverseId();
   const cardRef = useRef<HTMLDivElement>(null);
   const [copySuccess, setCopySuccess] = useState(false);
   const [imageSuccess, setImageSuccess] = useState(false);
@@ -95,14 +98,14 @@ export function ShareCard(props: ShareCardProps) {
       if (blob) {
         downloadImage(
           blob,
-          `nba-who-am-i-${playerName.toLowerCase().replace(/\s+/g, '-')}.png`
+          `${universeId}-who-am-i-${playerName.toLowerCase().replace(/\s+/g, '-')}.png`
         );
         // Also copy text
         await shareOnInstagram(shareData);
       }
     } catch (error) {
       console.error('Error generating Instagram image:', error);
-      alert("❌ Erreur lors de la génération de l'image.");
+      alert(wording.errors.imageGenerationError);
     } finally {
       setIsGeneratingImage(false);
     }
@@ -122,12 +125,12 @@ export function ShareCard(props: ShareCardProps) {
         } else {
           // Fallback: download image if clipboard fails
           downloadImage(blob);
-          alert('📥 Image téléchargée ! Tu peux maintenant la partager.');
+          alert(wording.share.imageDownloadedMessage);
         }
       }
     } catch (error) {
       console.error('Error copying image:', error);
-      alert("❌ Erreur lors de la copie de l'image.");
+      alert(wording.errors.imageGenerationError);
     } finally {
       setIsGeneratingImage(false);
     }
@@ -179,7 +182,9 @@ export function ShareCard(props: ShareCardProps) {
                 allLevelsCleared ? 'text-accent-yellow' : 'text-white'
               )}
             >
-              {allLevelsCleared ? 'HALL OF FAME ! 👑' : 'MY STATS'}
+              {allLevelsCleared
+                ? wording.gameOver.hallOfFameTitle
+                : wording.share.myStatsTitle}
             </h2>
             <p className={cn('font-bold', isMobile ? 'text-lg' : 'text-xl')}>
               {playerName}
@@ -206,23 +211,31 @@ export function ShareCard(props: ShareCardProps) {
             )}
           >
             <div className="text-center">
-              <div className="text-xs text-dark-500 mb-1">SCORE</div>
+              <div className="text-xs text-dark-500 mb-1">
+                {wording.share.scoreLabel}
+              </div>
               <div className="text-2xl font-black text-accent-cyan">
                 {totalScore}
               </div>
             </div>
             <div className="text-center">
-              <div className="text-xs text-dark-500 mb-1">GAMEBREAKER</div>
+              <div className="text-xs text-dark-500 mb-1">
+                {wording.share.streakLabel}
+              </div>
               <div className="text-2xl font-black text-ball-400">
                 {maxStreak} 🎮
               </div>
             </div>
             <div className="text-center">
-              <div className="text-xs text-dark-500 mb-1">ROUNDS</div>
+              <div className="text-xs text-dark-500 mb-1">
+                {wording.share.roundsLabel}
+              </div>
               <div className="text-2xl font-black text-white">{round}</div>
             </div>
             <div className="text-center">
-              <div className="text-xs text-dark-500 mb-1">NIVEAU</div>
+              <div className="text-xs text-dark-500 mb-1">
+                {wording.share.levelLabel}
+              </div>
               <div className="text-2xl font-black text-accent-green">
                 {highestLevelCleared}/5
               </div>
@@ -234,14 +247,14 @@ export function ShareCard(props: ShareCardProps) {
             {/* Title */}
             <div className="text-center mb-1">
               <p className="text-sm font-bold text-dark-400">
-                PARTAGE TON SCORE ! 📤
+                {wording.share.title}
               </p>
             </div>
 
             {/* Web Share API (mobile only) */}
             {hasWebShare && (
               <Button onClick={handleShare} size="lg" className="w-full mb-2">
-                📤 Partager mes résultats
+                {wording.share.shareButton}
               </Button>
             )}
 
@@ -311,8 +324,8 @@ export function ShareCard(props: ShareCardProps) {
                 {isGeneratingImage
                   ? '⏳'
                   : imageSuccess
-                    ? '✓ Copié !'
-                    : '🖼️ Copier image'}
+                    ? wording.share.copiedMessage
+                    : wording.share.copyImageButton}
               </Button>
 
               {/* Copy Text Button */}
@@ -322,7 +335,9 @@ export function ShareCard(props: ShareCardProps) {
                 variant="secondary"
                 className="w-full"
               >
-                {copySuccess ? '✓ Copié !' : '📋 Copier texte'}
+                {copySuccess
+                  ? wording.share.copiedMessage
+                  : wording.share.copyTextButton}
               </Button>
             </div>
 
@@ -333,7 +348,7 @@ export function ShareCard(props: ShareCardProps) {
               variant="secondary"
               className="w-full mt-2"
             >
-              Fermer
+              {wording.share.closeButton}
             </Button>
           </div>
         </Card>
