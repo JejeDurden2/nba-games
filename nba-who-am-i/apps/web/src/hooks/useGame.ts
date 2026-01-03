@@ -33,6 +33,7 @@ interface UseGameReturn {
   playerPercentile?: number;
   totalPlayers?: number;
   isLeaderboardLoading: boolean;
+  currentHintIndex: number;
 
   // Actions
   setGuess: (guess: string) => void;
@@ -42,7 +43,7 @@ interface UseGameReturn {
   submitGuess: () => Promise<void>;
   resetToMenu: () => void;
   stopGame: () => void;
-  calculatePotentialScore: (time: number) => number;
+  calculatePotentialScore: (time: number, hintIndex?: number) => number;
   refreshLeaderboard: () => Promise<void>;
 }
 
@@ -78,20 +79,26 @@ export function useGame(): UseGameReturn {
     undefined
   );
   const [isLeaderboardLoading, setIsLeaderboardLoading] = useState(false);
+  const [currentHintIndex, setCurrentHintIndex] = useState(0);
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const textIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const startTimeRef = useRef<number>(0);
   const nextCharacterRef = useRef<GameCharacter | null>(null);
 
-  const calculatePotentialScore = useCallback((time: number): number => {
-    if (time > 25) return 1000;
-    if (time > 20) return 800;
-    if (time > 15) return 600;
-    if (time > 10) return 400;
-    if (time > 5) return 200;
-    return 100;
-  }, []);
+  // Hint-based scoring: score decreases as more hints are revealed
+  // Score values: 1000 (hint 1) → 800 (hint 2) → 600 (hint 3) → 400 (hint 4) → 200 (hint 5+)
+  const calculatePotentialScore = useCallback(
+    (_time: number, hintIndex?: number): number => {
+      const idx = hintIndex ?? currentHintIndex;
+      if (idx === 0) return 1000;
+      if (idx === 1) return 800;
+      if (idx === 2) return 600;
+      if (idx === 3) return 400;
+      return 200;
+    },
+    [currentHintIndex]
+  );
 
   const clearTimers = useCallback(() => {
     if (timerRef.current) {
@@ -158,35 +165,79 @@ export function useGame(): UseGameReturn {
     return clearTimers;
   }, [gameState, clearTimers, streak, totalScore, fetchPercentile, character]);
 
-  // Text reveal effect
+  // Text reveal effect with QPUC-style timing
+  // - Faster typing (20ms per character)
+  // - Pause between hints (800ms)
+  // - All hints finish with 5 seconds remaining
   useEffect(() => {
     if (gameState !== 'playing' || !character) return;
+
+    const TOTAL_TIME = 30; // seconds
+    const RESERVE_TIME = 5; // seconds to leave at end
+    const AVAILABLE_TIME = (TOTAL_TIME - RESERVE_TIME) * 1000; // 25 seconds in ms
+    const CHAR_SPEED = 20; // ms per character (faster typing)
+    const HINT_PAUSE = 800; // ms pause between hints
+
+    // Calculate total characters and timing
+    const hints = character.hints;
+    const totalChars = hints.reduce((sum, h) => sum + h.length, 0);
+    const totalPauses = Math.max(0, hints.length - 1);
+    const totalPauseTime = totalPauses * HINT_PAUSE;
+    const totalTypingTime = totalChars * CHAR_SPEED;
+    const totalRevealTime = totalTypingTime + totalPauseTime;
+
+    // Calculate delay before starting (to finish with 5s left)
+    const startDelay = Math.max(0, AVAILABLE_TIME - totalRevealTime);
 
     let fullText = '';
     let hintIdx = 0;
     let charIdx = 0;
+    let isPaused = false;
+    let pauseTimeout: ReturnType<typeof setTimeout> | null = null;
 
     const reveal = () => {
-      if (hintIdx >= character.hints.length) {
+      if (isPaused) return;
+
+      if (hintIdx >= hints.length) {
         if (textIntervalRef.current) clearInterval(textIntervalRef.current);
         return;
       }
 
-      const hint = character.hints[hintIdx];
+      const hint = hints[hintIdx];
       if (charIdx < hint.length) {
         fullText += hint[charIdx];
         setDisplayedText(fullText);
         charIdx++;
       } else {
-        fullText += '\n\n';
-        hintIdx++;
-        charIdx = 0;
+        // Hint complete - update hint index for scoring
+        setCurrentHintIndex(hintIdx + 1);
+
+        // Check if there are more hints
+        if (hintIdx < hints.length - 1) {
+          fullText += '\n\n';
+          hintIdx++;
+          charIdx = 0;
+
+          // Pause before next hint
+          isPaused = true;
+          pauseTimeout = setTimeout(() => {
+            isPaused = false;
+          }, HINT_PAUSE);
+        } else {
+          // All hints revealed
+          if (textIntervalRef.current) clearInterval(textIntervalRef.current);
+        }
       }
     };
 
-    textIntervalRef.current = setInterval(reveal, 40);
+    // Start after calculated delay
+    const startTimeout = setTimeout(() => {
+      textIntervalRef.current = setInterval(reveal, CHAR_SPEED);
+    }, startDelay);
 
     return () => {
+      clearTimeout(startTimeout);
+      if (pauseTimeout) clearTimeout(pauseTimeout);
       if (textIntervalRef.current) clearInterval(textIntervalRef.current);
     };
   }, [gameState, character]);
@@ -213,6 +264,7 @@ export function useGame(): UseGameReturn {
       setRound((r) => r + 1);
       setIsGameOver(false);
       setFailuresThisRound(0);
+      setCurrentHintIndex(0);
       startTimeRef.current = Date.now();
       setGameState('playing');
       return;
@@ -245,6 +297,7 @@ export function useGame(): UseGameReturn {
       setRound((r) => r + 1);
       setIsGameOver(false);
       setFailuresThisRound(0);
+      setCurrentHintIndex(0);
       startTimeRef.current = Date.now();
       setGameState('playing');
     } catch (err) {
@@ -411,6 +464,7 @@ export function useGame(): UseGameReturn {
     setSessionId(null);
     setIsGameOver(false);
     setFailuresThisRound(0);
+    setCurrentHintIndex(0);
     setDifficulty(1);
     setQuestionsAtDifficulty(0);
     setHighestLevelCleared(0);
@@ -456,6 +510,7 @@ export function useGame(): UseGameReturn {
     playerPercentile,
     totalPlayers,
     isLeaderboardLoading,
+    currentHintIndex,
     setGuess,
     setPlayerName,
     setShowLeaderboard,
