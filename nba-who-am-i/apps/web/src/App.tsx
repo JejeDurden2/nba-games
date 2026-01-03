@@ -62,11 +62,15 @@ export default function App() {
   }, [gameState]);
 
   const characterType = character?.type || 'player';
+  const potentialScore = calculatePotentialScore(timeLeft);
 
   return (
     <div className="bg-dark-900 min-h-screen text-white font-sans relative overflow-hidden flex flex-col">
-      {/* Background Effects */}
-      <BackgroundEffects />
+      {/* Background Effects - responds to game state for QPUC tension */}
+      <BackgroundEffects
+        isPlaying={gameState === 'playing'}
+        potentialScore={potentialScore}
+      />
 
       {/* Main Content */}
       <div className="relative z-10 flex-1 flex flex-col">
