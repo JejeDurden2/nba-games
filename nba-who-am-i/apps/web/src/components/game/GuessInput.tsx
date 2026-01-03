@@ -1,8 +1,9 @@
-import { cn } from '../../lib/design-system/utils';
-import { useIsMobile } from '../../hooks/useMediaQuery';
-import { Button } from '../ui/Button';
-import { characterTypeConfig } from '../../lib/design-system/tokens';
-import { CharacterType } from '../../api/game';
+import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/useMediaQuery';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/input';
+import { characterTypeConfig } from '@/lib/design-system/tokens';
+import { CharacterType } from '@/api/game';
 
 export interface GuessInputProps {
   guess: string;
@@ -35,27 +36,24 @@ export function GuessInput({
     }
   };
 
+  // Determine input state based on guess feedback
+  const inputState = wrongGuess
+    ? 'error'
+    : correctGuess
+      ? 'success'
+      : 'default';
+
   return (
     <div className="flex gap-3">
-      <input
+      <Input
         ref={inputRef}
         type="text"
         placeholder="Une idée ?"
         value={guess}
         onChange={(e) => setGuess(e.target.value)}
         onKeyDown={handleKeyDown}
-        className={cn(
-          'flex-1',
-          'bg-dark-800 border-2 rounded-2xl',
-          'text-white placeholder-dark-500',
-          'outline-none transition-all',
-          isMobile ? 'px-4 py-3.5 text-base' : 'px-6 py-4.5 text-lg',
-          wrongGuess
-            ? 'border-rim-500 animate-shake'
-            : correctGuess
-              ? 'border-accent-green bg-accent-green/10'
-              : 'border-dark-600 focus:border-white/20'
-        )}
+        state={inputState}
+        className="flex-1"
       />
       <Button
         onClick={onSubmit}

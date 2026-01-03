@@ -1,5 +1,5 @@
-import { cn } from '../../lib/design-system/utils';
-import { useIsMobile } from '../../hooks/useMediaQuery';
+import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/useMediaQuery';
 
 /**
  * Full-screen loading screen with animated logo

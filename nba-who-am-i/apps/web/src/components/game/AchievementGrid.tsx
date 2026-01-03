@@ -1,6 +1,6 @@
-import { AchievementBadge } from './AchievementBadge';
-import { cn } from '../../lib/design-system/utils';
-import { useIsMobile } from '../../hooks/useMediaQuery';
+import { AchievementBadge } from '@/components/game/AchievementBadge';
+import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/useMediaQuery';
 
 export interface AchievementGridProps {
   highestLevelCleared: number;

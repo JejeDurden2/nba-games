@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
-import { Card } from '../ui/Card';
-import { Button } from '../ui/Button';
-import { cn } from '../../lib/design-system/utils';
-import { useIsMobile } from '../../hooks/useMediaQuery';
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/useMediaQuery';
 
 export interface WonScreenProps {
   answerName: string;

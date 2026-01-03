@@ -1,9 +1,9 @@
-import { LeaderboardEntry } from '../../api/game';
-import { Card } from '../ui/Card';
-import { Button } from '../ui/Button';
-import { Leaderboard } from '../ui/Leaderboard';
-import { cn } from '../../lib/design-system/utils';
-import { useIsMobile } from '../../hooks/useMediaQuery';
+import { LeaderboardEntry } from '@/api/game';
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { Leaderboard } from '@/components/ui/Leaderboard';
+import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/useMediaQuery';
 
 export interface MenuScreenProps {
   playerName: string;

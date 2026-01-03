@@ -2,6 +2,65 @@
 @tailwind components;
 @tailwind utilities;
 
+/* NBA Who Am I - Custom Theme Variables
+ * Colors converted from existing design system to CSS variables
+ * Uses HSL format for shadcn/ui compatibility
+ */
+@layer base {
+  :root {
+    /* App is dark-first, so :root uses dark theme */
+    /* Background: dark-900 (#0A0A0F) */
+    --background: 240 25% 4%;
+    /* Foreground: white text */
+    --foreground: 0 0% 100%;
+
+    /* Card: dark-800 (#13131D) with 80% opacity handled in component */
+    --card: 240 21% 9%;
+    --card-foreground: 0 0% 100%;
+
+    /* Popover: same as card */
+    --popover: 240 21% 9%;
+    --popover-foreground: 0 0% 100%;
+
+    /* Primary: ball-500 (#FF1744) - neon red */
+    --primary: 349 100% 54%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary: dark-700 (#1E1E2E) */
+    --secondary: 240 21% 15%;
+    --secondary-foreground: 0 0% 100%;
+
+    /* Muted: dark-500 (#45455F) */
+    --muted: 240 15% 32%;
+    --muted-foreground: 240 10% 60%;
+
+    /* Accent: accent-cyan (#00E5FF) */
+    --accent: 189 100% 50%;
+    --accent-foreground: 0 0% 0%;
+
+    /* Destructive: rim-500 (#FF0054) */
+    --destructive: 340 100% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Border: dark-600 (#2D2D44) with 50% opacity */
+    --border: 240 21% 22%;
+    /* Input border: dark-600 */
+    --input: 240 21% 22%;
+    /* Ring: white with low opacity for focus */
+    --ring: 0 0% 100%;
+
+    /* Chart colors using accent palette */
+    --chart-1: 349 100% 54%; /* ball-500 */
+    --chart-2: 151 100% 50%; /* accent-green */
+    --chart-3: 189 100% 50%; /* accent-cyan */
+    --chart-4: 50 100% 50%;  /* accent-yellow */
+    --chart-5: 283 100% 65%; /* accent-purple */
+
+    /* Border radius - larger for glassmorphism cards */
+    --radius: 1rem;
+  }
+}
+
 /* Animations for NBA Who Am I game */
 @keyframes pulse {
   0%, 100% {
@@ -34,9 +93,15 @@ html {
   touch-action: manipulation;
 }
 
-body {
-  margin: 0;
-  padding: 0;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    @apply bg-background text-foreground;
+  }
 }

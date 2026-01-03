@@ -1,6 +1,6 @@
-import { achievementLevelConfig } from '../../lib/design-system/tokens';
-import { cn } from '../../lib/design-system/utils';
-import { useIsMobile } from '../../hooks/useMediaQuery';
+import { achievementLevelConfig } from '@/lib/design-system/tokens';
+import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/useMediaQuery';
 
 export interface AchievementBadgeProps {
   level: 1 | 2 | 3 | 4 | 5;

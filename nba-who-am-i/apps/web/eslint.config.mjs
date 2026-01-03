@@ -34,6 +34,12 @@ export default tseslint.config(
   },
   {
     files: ['**/*.{js,jsx,mjs,cjs}'],
+    languageOptions: {
+      globals: {
+        require: 'readonly',
+        module: 'readonly',
+      },
+    },
     rules: {
       '@typescript-eslint/no-require-imports': 'off',
     },

@@ -1,6 +1,6 @@
-import { LeaderboardEntry } from '../../api/game';
-import { cn } from '../../lib/design-system/utils';
-import { useIsMobile } from '../../hooks/useMediaQuery';
+import { LeaderboardEntry } from '@/api/game';
+import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/useMediaQuery';
 
 export interface LeaderboardProps {
   entries: LeaderboardEntry[];

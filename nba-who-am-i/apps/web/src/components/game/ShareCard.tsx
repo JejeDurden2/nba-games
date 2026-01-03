@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
-import { Card } from '../ui/Card';
-import { Button } from '../ui/Button';
-import { AchievementGrid } from './AchievementGrid';
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { AchievementGrid } from '@/components/game/AchievementGrid';
 import {
   ShareData,
   shareResults,
@@ -16,9 +16,9 @@ import {
   downloadImage,
   getGameUrl,
   canUseWebShare,
-} from '../../lib/share-utils';
-import { cn } from '../../lib/design-system/utils';
-import { useIsMobile } from '../../hooks/useMediaQuery';
+} from '@/lib/share-utils';
+import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/useMediaQuery';
 
 export interface ShareCardProps extends ShareData {
   onClose: () => void;
