@@ -1,4 +1,12 @@
-# NBA Who Am I? - Project Guidelines
+# Who Am I? - Multi-Universe Quiz Platform
+
+## Overview
+
+Plateforme de quiz multi-univers supportant différents thèmes (NBA, One Piece, etc.) avec gameplay partagé et contenu spécifique par univers.
+
+**Univers disponibles :**
+- **NBA** (`/nba`) : 226 personnages (joueurs, légendes, coachs, dirigeants)
+- **One Piece** (`/one-piece`) : 140 personnages (pirates, marines, révolutionnaires, civils)
 
 ## Architecture
 
@@ -9,7 +17,7 @@ apps/
   api/          # NestJS backend
   web/          # React frontend
 packages/
-  shared/       # Types & DTOs partagés
+  shared/       # Types, DTOs, Universe configs
   eslint-config/
   tsconfig/
 ```
@@ -44,10 +52,13 @@ src/
     screens/          # Composants full-page (MenuScreen, PlayingScreen, WonScreen, GameOverScreen)
     game/             # Composants spécifiques au jeu (Timer, GuessInput, AchievementBadge, ShareCard)
     ui/               # shadcn/ui components customisés (Button, Card, Input, Leaderboard)
+  contexts/
+    UniverseContext.tsx  # Provider et hooks pour l'univers actif
   hooks/              # Custom hooks (useGame, useMediaQuery)
   lib/
     utils.ts          # shadcn cn() utility (clsx + tailwind-merge)
     design-system/    # Design tokens (tokens.ts) - couleurs, gradients, breakpoints
+    universe/         # Détection d'univers, interpolation de textes
     share-utils.ts    # Utilitaires de partage social
   api/                # Client API REST
 ```
@@ -110,7 +121,12 @@ pnpm build            # Build all
 pnpm test             # Run tests
 pnpm lint             # ESLint + Prettier check
 pnpm db:migrate       # Prisma migrations
-pnpm db:seed          # Seed database
+pnpm db:seed          # Seed database (default: nba)
+
+# Universe-specific seeding
+pnpm db:seed:nba        # Seed NBA characters only
+pnpm db:seed:one-piece  # Seed One Piece characters only
+pnpm db:seed:all        # Seed all universes
 ```
 
 ## Patterns à suivre
@@ -304,3 +320,99 @@ pnpm prisma migrate reset                # Reset complet
 - Percentile ranking (comparaison sociale)
 - Social sharing (Web Share API + fallbacks)
 - Encouraging messages (messages personnalisés par performance)
+
+## Multi-Universe System
+
+### Architecture
+
+Le système multi-univers permet de créer des thèmes de quiz différents tout en partageant :
+- **Partagé** : Gameplay, UI, API structure, domain logic
+- **Spécifique** : Personnages, wording (français), types de personnages, couleurs optionnelles
+
+### Structure des fichiers
+
+```
+packages/shared/src/universe/
+  types.ts              # Interfaces UniverseConfig, UniverseWording, etc.
+  defaults.ts           # Couleurs et gradients par défaut
+  index.ts              # Registry et fonctions utilitaires
+  universes/
+    nba.ts              # Config NBA (226 personnages)
+    one-piece.ts        # Config One Piece (140 personnages)
+
+apps/api/prisma/
+  seed.ts               # Entry point avec CLI args (--universe=nba|one-piece|all)
+  seeds/
+    types.ts            # Interface CharacterSeed
+    one-piece/index.ts  # Données des personnages One Piece
+
+apps/web/src/
+  contexts/UniverseContext.tsx  # Provider React
+  lib/universe/
+    detect-universe.ts  # Détection via URL path
+    interpolate.ts      # Interpolation {playerName}, {percentile}, etc.
+```
+
+### Routing
+
+- `/` → Redirect vers `/nba` (défaut)
+- `/nba/*` → Univers NBA
+- `/one-piece/*` → Univers One Piece
+- `?universe=xxx` → Fallback query param
+
+### Hooks disponibles
+
+```typescript
+import { useUniverse, useWording, useUniverseId, useCharacterTypes } from '@/contexts/UniverseContext';
+
+// Dans un composant
+const universe = useUniverse();           // Config complète
+const wording = useWording();             // Textes traduits
+const universeId = useUniverseId();       // 'nba' | 'one-piece'
+const characterTypes = useCharacterTypes(); // Types avec gradient/emoji
+```
+
+### Interpolation de textes
+
+```typescript
+import { interpolate } from '@/lib/universe';
+
+// Template: "Bravo {playerName} ! Tu es dans le top {percentile}%"
+const message = interpolate(wording.encouragingMessages.top90, {
+  playerName: 'John',
+  percentile: 85
+});
+// → "Bravo John ! Tu es dans le top 85%"
+```
+
+### Ajouter un nouvel univers
+
+1. Créer `packages/shared/src/universe/universes/[universe].ts` avec la config complète
+2. Enregistrer dans `packages/shared/src/universe/index.ts`
+3. Créer `apps/api/prisma/seeds/[universe]/index.ts` avec les personnages
+4. Importer et ajouter dans `apps/api/prisma/seed.ts` → `universeSeeds`
+5. Ajouter le script npm dans `apps/api/package.json`
+
+### Types de personnages par univers
+
+**NBA** : `player`, `legend`, `coach`, `executive`
+**One Piece** : `pirate`, `marine`, `revolutionary`, `shichibukai`, `yonko`, `civilian`
+
+### Database Schema
+
+```prisma
+model Character {
+  name       String
+  universe   String   @default("nba")
+  // ...
+  @@unique([name, universe], name: "name_universe")  // Même nom possible dans différents univers
+  @@index([universe])
+  @@index([universe, difficulty])
+}
+
+model LeaderboardEntry {
+  universe   String   @default("nba")
+  // Leaderboards séparés par univers
+  @@index([universe, score(sort: Desc)])
+}
+```
