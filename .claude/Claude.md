@@ -35,21 +35,24 @@ src/
 
 ### Frontend (apps/web) - Component-Based Architecture
 
-Architecture inspirée des patterns Next.js avec séparation claire des responsabilités :
+Architecture inspirée des patterns Next.js avec séparation claire des responsabilités.
+**UI Components** : Utilise **shadcn/ui** avec `class-variance-authority` pour les variants.
 
 ```
 src/
   components/
     screens/          # Composants full-page (MenuScreen, PlayingScreen, WonScreen, GameOverScreen)
     game/             # Composants spécifiques au jeu (Timer, GuessInput, AchievementBadge, ShareCard)
-    ui/               # Design system primitives (Button, Card, Leaderboard, BackgroundEffects)
+    ui/               # shadcn/ui components customisés (Button, Card, Input, Leaderboard)
   hooks/              # Custom hooks (useGame, useMediaQuery)
   lib/
-    design-system/    # Design tokens et utilitaires (tokens.ts, utils.ts)
-    api/              # API client
-    utils/            # Utilitaires partagés (fuzzy-match, share-utils)
+    utils.ts          # shadcn cn() utility (clsx + tailwind-merge)
+    design-system/    # Design tokens (tokens.ts) - couleurs, gradients, breakpoints
+    share-utils.ts    # Utilitaires de partage social
   api/                # Client API REST
 ```
+
+**Path Alias** : Utiliser `@/` pour tous les imports (ex: `import { Button } from '@/components/ui/Button'`)
 
 **Principes d'architecture :**
 - **Composants Screens** : Orchestration, pas de logique métier, composition de composants
@@ -175,12 +178,23 @@ export function GameCard({ character, onGuess }: GameCardProps) {
 }
 ```
 
-### Design System - Tailwind CSS
+### Design System - shadcn/ui + Tailwind CSS
+
+**shadcn/ui Components** (dans `src/components/ui/`) :
+- `Button` : Variants `primary`, `secondary`, `danger`, `ghost`, `link` + props `gradient`/`glow` pour custom styles
+- `Card` : Glassmorphism style (`bg-dark-800/80 backdrop-blur-xl rounded-3xl`)
+- `Input` : States `default`, `error`, `success` avec animations
+
+**Ajouter un nouveau composant shadcn :**
+```bash
+pnpm dlx shadcn@latest add [component-name]
+```
+Puis customiser dans `src/components/ui/` pour matcher le design system NBA.
 
 **Utilisation des tokens :**
 ```typescript
-import { cn } from '../../lib/design-system/utils';
-import { achievementLevelConfig } from '../../lib/design-system/tokens';
+import { cn } from '@/lib/utils';
+import { achievementLevelConfig } from '@/lib/design-system/tokens';
 
 const config = achievementLevelConfig[level];
 const gradient = unlocked ? config.gradient : config.locked;
