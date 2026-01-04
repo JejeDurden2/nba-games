@@ -12,22 +12,26 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
  * Preserves original NBA Who Am I styling with shadcn/ui architecture
  */
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, clickable, onClick, ...props }, ref) => (
+  ({ className, clickable, onClick, style, ...props }, ref) => (
     <div
       ref={ref}
       className={cn(
-        // Glassmorphism effect - preserved from original design
-        'bg-dark-800/80 backdrop-blur-xl',
+        // Glassmorphism effect with universe-aware background
+        'backdrop-blur-xl',
         // Border and shadows
         'border border-dark-600/50',
         'shadow-2xl',
         // Border radius - larger for glassmorphism cards
         'rounded-3xl',
         // Optional click behavior
-        (clickable || onClick) &&
-          'cursor-pointer hover:bg-dark-800/90 transition-colors',
+        (clickable || onClick) && 'cursor-pointer transition-colors',
         className
       )}
+      style={{
+        backgroundColor:
+          'color-mix(in srgb, var(--universe-bg-card) 80%, transparent)',
+        ...style,
+      }}
       onClick={onClick}
       {...props}
     />

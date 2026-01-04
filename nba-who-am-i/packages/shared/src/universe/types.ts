@@ -138,6 +138,16 @@ export interface GradientOverrides {
   glow: string;
 }
 
+// Background configuration for universe theming
+export interface BackgroundOverrides {
+  /** Main background color (hex) */
+  main: string;
+  /** Card/surface background color (hex) */
+  card: string;
+  /** Subtle background tint for variety (hex with alpha or rgba) */
+  tint?: string;
+}
+
 // Optional color overrides
 export interface ColorOverrides {
   primary: string;
@@ -147,6 +157,8 @@ export interface ColorOverrides {
   light?: string;
   /** Gradient overrides for the universe */
   gradients?: GradientOverrides;
+  /** Background color overrides */
+  backgrounds?: BackgroundOverrides;
 }
 
 // Achievement gradient configuration per level

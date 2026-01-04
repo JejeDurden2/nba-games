@@ -10,7 +10,7 @@ export const nbaUniverse: UniverseConfig = {
   name: 'NBA',
   slug: 'nba',
 
-  // Color theme for NBA - neon basketball aesthetic
+  // Color theme for NBA - neon basketball arena aesthetic
   colors: {
     primary: '#FF1744', // Ball red - neon basketball
     secondary: '#FFD600', // Accent yellow - championship gold
@@ -18,6 +18,11 @@ export const nbaUniverse: UniverseConfig = {
     gradients: {
       primary: 'linear-gradient(135deg, #FF3864 0%, #FF0054 50%, #D6004C 100%)',
       glow: 'rgba(255, 56, 100, 0.4)',
+    },
+    backgrounds: {
+      main: '#0A0A0F', // Deep dark - arena darkness
+      card: '#13131D', // Slightly lighter - scoreboard panels
+      tint: 'rgba(255, 23, 68, 0.03)', // Subtle red tint
     },
   },
 

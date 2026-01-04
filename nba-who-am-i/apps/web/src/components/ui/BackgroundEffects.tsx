@@ -8,8 +8,9 @@ export interface BackgroundEffectsProps {
 }
 
 /**
- * QPUC-inspired background effects with tension building
+ * Universe-aware background effects with tension building
  * Features: Dynamic glow intensity, color shifts based on score, vignette effect
+ * Uses CSS variables for universe-specific colors
  */
 export function BackgroundEffects({
   isPlaying = false,
@@ -18,12 +19,13 @@ export function BackgroundEffects({
   // Calculate tension level (0 = calm, 1 = maximum tension)
   const tensionLevel = isPlaying ? Math.max(0, 1 - potentialScore / 1000) : 0;
 
-  // Dynamic colors based on tension
+  // Dynamic colors based on tension - uses universe CSS variables
   const getAccentColor = () => {
-    if (!isPlaying) return 'rgba(220,38,38,0.03)';
-    if (potentialScore >= 800) return 'rgba(0,255,136,0.06)'; // Green glow
-    if (potentialScore >= 400) return 'rgba(255,214,0,0.08)'; // Yellow/orange glow
-    return 'rgba(255,0,84,0.12)'; // Red glow - urgent
+    if (!isPlaying) return 'var(--universe-bg-tint)';
+    if (potentialScore >= 800) return 'rgb(var(--universe-accent-rgb) / 0.08)'; // Accent glow
+    if (potentialScore >= 400)
+      return 'rgb(var(--universe-secondary-rgb) / 0.1)'; // Secondary glow
+    return 'rgb(var(--universe-primary-rgb) / 0.12)'; // Primary glow - urgent
   };
 
   // Vignette intensity increases with tension
@@ -31,7 +33,7 @@ export function BackgroundEffects({
 
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden">
-      {/* Top-left orange glow */}
+      {/* Top-left warm glow - uses secondary color */}
       <div
         className={cn(
           'absolute -top-20 -left-10 w-[500px] h-[500px]',
@@ -40,11 +42,11 @@ export function BackgroundEffects({
         style={{
           background: isPlaying
             ? `radial-gradient(circle, ${getAccentColor()} 0%, transparent 70%)`
-            : 'radial-gradient(circle, rgba(255,107,53,0.08) 0%, transparent 70%)',
+            : 'radial-gradient(circle, rgb(var(--universe-secondary-rgb) / 0.06) 0%, transparent 70%)',
         }}
       />
 
-      {/* Bottom-right blue glow */}
+      {/* Bottom-right cool glow - uses accent color */}
       <div
         className={cn(
           'absolute -bottom-20 -right-10 w-[600px] h-[600px]',
@@ -52,7 +54,7 @@ export function BackgroundEffects({
         )}
         style={{
           background:
-            'radial-gradient(circle, rgba(29,66,138,0.06) 0%, transparent 70%)',
+            'radial-gradient(circle, rgb(var(--universe-accent-rgb) / 0.04) 0%, transparent 70%)',
         }}
       />
 
@@ -68,25 +70,24 @@ export function BackgroundEffects({
         }}
       />
 
-      {/* QPUC-style edge vignette - increases tension */}
+      {/* Edge vignette - increases tension during play */}
       {isPlaying && (
         <div
           className="absolute inset-0 transition-opacity duration-1000"
           style={{
             opacity: vignetteOpacity,
-            background:
-              'radial-gradient(ellipse at center, transparent 40%, rgba(10,10,15,0.8) 100%)',
+            background: `radial-gradient(ellipse at center, transparent 40%, color-mix(in srgb, var(--universe-bg-main) 80%, black) 100%)`,
           }}
         />
       )}
 
-      {/* Pulsing red overlay for critical moments */}
+      {/* Pulsing primary overlay for critical moments */}
       {isPlaying && potentialScore <= 200 && (
         <div
           className="absolute inset-0 animate-pulse"
           style={{
             background:
-              'radial-gradient(circle at center, transparent 50%, rgba(255,0,84,0.08) 100%)',
+              'radial-gradient(circle at center, transparent 50%, rgb(var(--universe-primary-rgb) / 0.08) 100%)',
           }}
         />
       )}

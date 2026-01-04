@@ -69,6 +69,11 @@
     /* Universe-specific gradients (defaults to NBA theme) */
     --universe-gradient-primary: linear-gradient(135deg, #FF3864 0%, #FF0054 50%, #D6004C 100%);
     --universe-gradient-glow: rgba(255, 56, 100, 0.4);
+
+    /* Universe-specific backgrounds (defaults to NBA theme) */
+    --universe-bg-main: #0A0A0F;    /* Deep dark - arena darkness */
+    --universe-bg-card: #13131D;    /* Slightly lighter - scoreboard panels */
+    --universe-bg-tint: rgba(255, 23, 68, 0.03); /* Subtle red tint */
   }
 }
 
@@ -113,6 +118,7 @@ html {
     padding: 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    @apply bg-background text-foreground;
+    background-color: var(--universe-bg-main);
+    @apply text-foreground;
   }
 }

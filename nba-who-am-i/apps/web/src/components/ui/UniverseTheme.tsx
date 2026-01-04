@@ -19,6 +19,15 @@ const DEFAULT_GRADIENTS = {
 };
 
 /**
+ * Default backgrounds for NBA universe (fallback)
+ */
+const DEFAULT_BACKGROUNDS = {
+  main: '#0A0A0F', // Deep dark - arena darkness
+  card: '#13131D', // Slightly lighter - scoreboard panels
+  tint: 'rgba(255, 23, 68, 0.03)', // Subtle red tint
+};
+
+/**
  * Convert hex color to RGB values string (e.g., "#FF1744" -> "255 23 68")
  */
 function hexToRgb(hex: string): string {
@@ -48,6 +57,14 @@ export function UniverseTheme({ children }: { children: React.ReactNode }) {
     const gradientGlow =
       universe.colors?.gradients?.glow ?? DEFAULT_GRADIENTS.glow;
 
+    // Get backgrounds from universe config, falling back to defaults
+    const bgMain =
+      universe.colors?.backgrounds?.main ?? DEFAULT_BACKGROUNDS.main;
+    const bgCard =
+      universe.colors?.backgrounds?.card ?? DEFAULT_BACKGROUNDS.card;
+    const bgTint =
+      universe.colors?.backgrounds?.tint ?? DEFAULT_BACKGROUNDS.tint;
+
     // Set CSS variables as RGB values for Tailwind opacity support
     root.style.setProperty('--universe-primary-rgb', hexToRgb(primary));
     root.style.setProperty('--universe-secondary-rgb', hexToRgb(secondary));
@@ -56,6 +73,11 @@ export function UniverseTheme({ children }: { children: React.ReactNode }) {
     // Set gradient CSS variables
     root.style.setProperty('--universe-gradient-primary', gradientPrimary);
     root.style.setProperty('--universe-gradient-glow', gradientGlow);
+
+    // Set background CSS variables
+    root.style.setProperty('--universe-bg-main', bgMain);
+    root.style.setProperty('--universe-bg-card', bgCard);
+    root.style.setProperty('--universe-bg-tint', bgTint);
 
     // Cleanup on unmount or universe change
     return () => {
@@ -79,6 +101,9 @@ export function UniverseTheme({ children }: { children: React.ReactNode }) {
         '--universe-gradient-glow',
         DEFAULT_GRADIENTS.glow
       );
+      root.style.setProperty('--universe-bg-main', DEFAULT_BACKGROUNDS.main);
+      root.style.setProperty('--universe-bg-card', DEFAULT_BACKGROUNDS.card);
+      root.style.setProperty('--universe-bg-tint', DEFAULT_BACKGROUNDS.tint);
     };
   }, [universe]);
 

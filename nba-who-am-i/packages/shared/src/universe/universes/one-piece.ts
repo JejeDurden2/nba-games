@@ -56,6 +56,11 @@ export const onePieceUniverse: UniverseConfig = {
       primary: 'linear-gradient(135deg, #FFB700 0%, #FF8C00 50%, #E63946 100%)',
       glow: 'rgba(255, 183, 0, 0.5)',
     },
+    backgrounds: {
+      main: '#0A1628', // Deep navy - ocean at night
+      card: '#0F1E32', // Navy blue - ship deck at twilight
+      tint: 'rgba(0, 119, 182, 0.05)', // Subtle ocean blue tint
+    },
   },
 
   characterTypes: {
