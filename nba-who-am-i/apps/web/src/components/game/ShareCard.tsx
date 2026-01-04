@@ -1,9 +1,10 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { AchievementGrid } from '@/components/game/AchievementGrid';
 import {
   ShareData,
+  ShareContext,
   shareResults,
   shareOnTwitter,
   shareOnWhatsApp,
@@ -59,8 +60,18 @@ export function ShareCard(props: ShareCardProps) {
     allLevelsCleared,
   };
 
+  // Memoize share context to avoid recreating on each render
+  const shareContext: ShareContext = useMemo(
+    () => ({
+      universeId,
+      shareTextWording: wording.shareText,
+      appTitle: wording.appTitle,
+    }),
+    [universeId, wording.shareText, wording.appTitle]
+  );
+
   const handleShare = async () => {
-    const success = await shareResults(shareData);
+    const success = await shareResults(shareData, shareContext);
     if (!hasWebShare && success) {
       setCopySuccess(true);
       setTimeout(() => setCopySuccess(false), 2000);
@@ -68,7 +79,10 @@ export function ShareCard(props: ShareCardProps) {
   };
 
   const handleCopy = async () => {
-    const text = generateShareText(shareData) + '\n\n' + getGameUrl();
+    const text =
+      generateShareText(shareData, shareContext) +
+      '\n\n' +
+      getGameUrl(universeId);
     const success = await copyShareText(text);
     if (success) {
       setCopySuccess(true);
@@ -77,15 +91,15 @@ export function ShareCard(props: ShareCardProps) {
   };
 
   const handleTwitter = () => {
-    shareOnTwitter(shareData);
+    shareOnTwitter(shareData, shareContext);
   };
 
   const handleWhatsApp = () => {
-    shareOnWhatsApp(shareData);
+    shareOnWhatsApp(shareData, shareContext);
   };
 
   const handleFacebook = () => {
-    shareOnFacebook(shareData);
+    shareOnFacebook(shareData, shareContext);
   };
 
   const handleInstagram = async () => {
@@ -101,7 +115,7 @@ export function ShareCard(props: ShareCardProps) {
           `${universeId}-who-am-i-${playerName.toLowerCase().replace(/\s+/g, '-')}.png`
         );
         // Also copy text
-        await shareOnInstagram(shareData);
+        await shareOnInstagram(shareData, shareContext);
       }
     } catch (error) {
       console.error('Error generating Instagram image:', error);

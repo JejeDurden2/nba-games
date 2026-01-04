@@ -1,3 +1,6 @@
+import { ShareTextWording } from '@nba-who-am-i/shared';
+import { t } from './universe/interpolate';
+
 export interface ShareData {
   playerName: string;
   totalScore: number;
@@ -8,10 +11,19 @@ export interface ShareData {
   allLevelsCleared: boolean;
 }
 
+export interface ShareContext {
+  universeId: string;
+  shareTextWording: ShareTextWording;
+  appTitle: string;
+}
+
 /**
- * Generate share text based on game results (with basketball trash talk)
+ * Generate share text based on game results using universe-specific wording
  */
-export function generateShareText(data: ShareData): string {
+export function generateShareText(
+  data: ShareData,
+  context?: ShareContext
+): string {
   const {
     playerName,
     totalScore,
@@ -21,6 +33,22 @@ export function generateShareText(data: ShareData): string {
     allLevelsCleared,
   } = data;
 
+  // Use universe-specific templates if context provided
+  if (context) {
+    const template = allLevelsCleared
+      ? context.shareTextWording.allCleared
+      : context.shareTextWording.default;
+
+    return t(template, {
+      playerName,
+      totalScore,
+      maxStreak,
+      round,
+      level: highestLevelCleared,
+    });
+  }
+
+  // Fallback to hardcoded NBA text (backwards compatibility)
   if (allLevelsCleared) {
     return `*${playerName}* vient de DOMINER NBA Who Am I ! 🏆
 
@@ -43,24 +71,35 @@ Tu penses avoir le niveau ? 💪`;
 }
 
 /**
- * Get the game URL to share
+ * Get the game URL to share (includes universe path)
  */
-export function getGameUrl(): string {
-  return window.location.origin;
+export function getGameUrl(universeId?: string): string {
+  const origin = window.location.origin;
+  if (universeId) {
+    return `${origin}/${universeId}`;
+  }
+  // Fall back to current path if no universe specified
+  return window.location.href.split('?')[0];
 }
 
 /**
  * Share results using Web Share API with fallback
  */
-export async function shareResults(data: ShareData): Promise<boolean> {
-  const text = generateShareText(data);
-  const url = getGameUrl();
+export async function shareResults(
+  data: ShareData,
+  context?: ShareContext
+): Promise<boolean> {
+  const text = generateShareText(data, context);
+  const url = getGameUrl(context?.universeId);
+  const title = context?.appTitle
+    ? `${context.appTitle} - Mes Résultats`
+    : 'NBA Who Am I - Mes Résultats';
 
   // Check if Web Share API is available
   if (navigator.share) {
     try {
       await navigator.share({
-        title: 'NBA Who Am I - Mes Résultats',
+        title,
         text,
         url,
       });
@@ -110,9 +149,9 @@ export async function copyShareText(text: string): Promise<boolean> {
 /**
  * Share on Twitter/X
  */
-export function shareOnTwitter(data: ShareData): void {
-  const text = generateShareText(data);
-  const url = getGameUrl();
+export function shareOnTwitter(data: ShareData, context?: ShareContext): void {
+  const text = generateShareText(data, context);
+  const url = getGameUrl(context?.universeId);
   const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
   window.open(twitterUrl, '_blank', 'width=550,height=420');
 }
@@ -127,9 +166,9 @@ export function canUseWebShare(): boolean {
 /**
  * Share on WhatsApp
  */
-export function shareOnWhatsApp(data: ShareData): void {
-  const text = generateShareText(data);
-  const url = getGameUrl();
+export function shareOnWhatsApp(data: ShareData, context?: ShareContext): void {
+  const text = generateShareText(data, context);
+  const url = getGameUrl(context?.universeId);
   const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text + '\n\n' + url)}`;
   window.open(whatsappUrl, '_blank');
 }
@@ -137,8 +176,11 @@ export function shareOnWhatsApp(data: ShareData): void {
 /**
  * Share on Facebook
  */
-export function shareOnFacebook(_data: ShareData): void {
-  const url = getGameUrl();
+export function shareOnFacebook(
+  _data: ShareData,
+  context?: ShareContext
+): void {
+  const url = getGameUrl(context?.universeId);
   const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
   window.open(facebookUrl, '_blank', 'width=555,height=400');
 }
@@ -147,9 +189,12 @@ export function shareOnFacebook(_data: ShareData): void {
  * Share on Instagram (copy text and prompt user)
  * Instagram doesn't have direct web share, so we copy text and guide user
  */
-export async function shareOnInstagram(data: ShareData): Promise<boolean> {
-  const text = generateShareText(data);
-  const url = getGameUrl();
+export async function shareOnInstagram(
+  data: ShareData,
+  context?: ShareContext
+): Promise<boolean> {
+  const text = generateShareText(data, context);
+  const url = getGameUrl(context?.universeId);
   const fullText = `${text}\n\n${url}`;
 
   // Copy to clipboard first
