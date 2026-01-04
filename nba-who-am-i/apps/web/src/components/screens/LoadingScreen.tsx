@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/useMediaQuery';
 import { useWording, useUniverse } from '@/contexts/UniverseContext';
+import { Logo } from '@/components/ui/Logo';
 
 /**
  * Full-screen loading screen with animated logo
@@ -13,21 +14,17 @@ export function LoadingScreen() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] gap-8">
-      {/* Animated Logo */}
+      {/* Animated Logo - universe-aware colors */}
       <div
         className={cn(
           'relative animate-pulse',
           isMobile ? 'w-40 h-40' : 'w-52 h-52'
         )}
+        style={{
+          filter: `drop-shadow(0 0 30px var(--universe-gradient-glow)) drop-shadow(0 0 60px var(--universe-gradient-glow))`,
+        }}
       >
-        <img
-          src="/logo.svg"
-          alt={wording.appTitle}
-          className="w-full h-full"
-          style={{
-            filter: `drop-shadow(0 0 30px var(--universe-gradient-glow)) drop-shadow(0 0 60px var(--universe-gradient-glow))`,
-          }}
-        />
+        <Logo className="w-full h-full" />
       </div>
 
       {/* Loading text */}

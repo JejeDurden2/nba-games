@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/useMediaQuery';
-import { useWording, useUniverse } from '@/contexts/UniverseContext';
+import { useUniverse } from '@/contexts/UniverseContext';
+import { Logo } from './Logo';
 
 export interface HeaderProps {
   onClick?: () => void;
@@ -18,7 +19,6 @@ export function Header({
   compact = false,
 }: HeaderProps) {
   const isMobile = useIsMobile();
-  const wording = useWording();
   const universe = useUniverse();
 
   return (
@@ -32,7 +32,7 @@ export function Header({
             'cursor-pointer group transition-all duration-300 hover:scale-[1.02]'
         )}
       >
-        {/* Logo */}
+        {/* Logo - universe-aware colors */}
         <div
           className={cn(
             'relative transition-transform duration-300',
@@ -45,17 +45,15 @@ export function Header({
                 ? 'w-28 h-28'
                 : 'w-36 h-36'
           )}
+          style={{
+            filter: `drop-shadow(0 0 25px var(--universe-gradient-glow)) drop-shadow(0 0 50px var(--universe-gradient-glow))`,
+          }}
         >
-          <img
-            src="/logo.svg"
-            alt={wording.appTitle}
+          <Logo
             className={cn(
               'w-full h-full transition-all duration-300',
               clickable && 'group-hover:brightness-110'
             )}
-            style={{
-              filter: `drop-shadow(0 0 25px var(--universe-gradient-glow)) drop-shadow(0 0 50px var(--universe-gradient-glow))`,
-            }}
           />
         </div>
 

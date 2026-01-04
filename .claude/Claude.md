@@ -323,6 +323,8 @@ pnpm prisma migrate reset                # Reset complet
 
 ## Multi-Universe System
 
+> **Documentation complète du theming :** Voir [THEMING.md](./THEMING.md) pour le guide détaillé des CSS variables, composants universe-aware, et migration.
+
 ### Architecture
 
 Le système multi-univers permet de créer des thèmes de quiz différents tout en partageant :
