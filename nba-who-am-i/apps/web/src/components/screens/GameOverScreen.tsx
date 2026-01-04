@@ -31,18 +31,19 @@ import type { EncouragingMessagesWording } from '@nba-who-am-i/shared';
  */
 function getEncouragingMessage(
   messages: EncouragingMessagesWording,
+  playerName: string,
   percentile?: number,
   allLevelsCleared?: boolean
 ): string {
   if (allLevelsCleared) {
-    return messages.allCleared;
+    return t(messages.allCleared, { playerName });
   }
-  if (!percentile) return messages.default;
-  if (percentile >= 90) return t(messages.top90, { percentile });
-  if (percentile >= 75) return t(messages.top75, { percentile });
-  if (percentile >= 50) return t(messages.top50, { percentile });
-  if (percentile >= 25) return t(messages.top25, { percentile });
-  return t(messages.default, { percentile });
+  if (!percentile) return t(messages.noPercentile, { playerName });
+  if (percentile >= 90) return t(messages.top90, { playerName, percentile });
+  if (percentile >= 75) return t(messages.top75, { playerName, percentile });
+  if (percentile >= 50) return t(messages.top50, { playerName, percentile });
+  if (percentile >= 25) return t(messages.top25, { playerName, percentile });
+  return t(messages.default, { playerName, percentile });
 }
 
 /**
@@ -69,6 +70,7 @@ export function GameOverScreen({
 
   const encouragingMessage = getEncouragingMessage(
     wording.encouragingMessages,
+    playerName,
     playerPercentile,
     allLevelsCleared
   );
@@ -115,7 +117,9 @@ export function GameOverScreen({
           className={cn(
             'font-black mb-4',
             isMobile ? 'text-xl' : 'text-2xl',
-            allLevelsCleared ? 'text-accent-yellow' : 'text-rim-500'
+            allLevelsCleared
+              ? 'text-universe-secondary'
+              : 'text-universe-primary'
           )}
         >
           {allLevelsCleared
@@ -142,7 +146,7 @@ export function GameOverScreen({
             'mb-6 px-4 py-3 rounded-2xl',
             'bg-dark-700/50 border border-dark-600/50',
             isMobile ? 'text-sm' : 'text-base',
-            allLevelsCleared ? 'text-accent-yellow' : 'text-white'
+            allLevelsCleared ? 'text-universe-secondary' : 'text-white'
           )}
         >
           {encouragingMessage}
@@ -178,7 +182,7 @@ export function GameOverScreen({
             <div className="text-xs text-dark-500 mb-1">
               {wording.gameOver.finalScoreLabel}
             </div>
-            <div className="text-3xl font-black text-accent-cyan">
+            <div className="text-3xl font-black text-universe-accent">
               {totalScore}
             </div>
           </div>
@@ -192,7 +196,7 @@ export function GameOverScreen({
             <div className="text-xs text-dark-500 mb-1">
               {wording.gameOver.maxStreakLabel}
             </div>
-            <div className="text-3xl font-black text-ball-400">
+            <div className="text-3xl font-black text-universe-primary">
               {maxStreak} 🎮
             </div>
           </div>

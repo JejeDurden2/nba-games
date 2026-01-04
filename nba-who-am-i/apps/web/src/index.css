@@ -58,6 +58,13 @@
 
     /* Border radius - larger for glassmorphism cards */
     --radius: 1rem;
+
+    /* Universe-specific colors (defaults to NBA theme) */
+    /* These are set dynamically by UniverseTheme component */
+    /* RGB format for Tailwind opacity support */
+    --universe-primary-rgb: 255 23 68;    /* NBA: ball-500 #FF1744 */
+    --universe-secondary-rgb: 255 214 0;  /* NBA: accent-yellow #FFD600 */
+    --universe-accent-rgb: 0 229 255;     /* NBA: accent-cyan #00E5FF */
   }
 }
 

@@ -32,8 +32,8 @@ export function StatsBar({
     failuresThisRound === 0
       ? 'text-accent-green'
       : failuresThisRound === 1
-        ? 'text-accent-yellow'
-        : 'text-rim-500';
+        ? 'text-universe-secondary'
+        : 'text-universe-primary';
 
   return (
     <div
@@ -51,15 +51,16 @@ export function StatsBar({
           {wording.playing.round} <b className="text-white">{round}</b>
         </span>
         <span className="text-dark-500">
-          {wording.playing.streak} <b className="text-ball-400">{streak}🎮</b>
+          {wording.playing.streak}{' '}
+          <b className="text-universe-primary">{streak}🎮</b>
         </span>
         <span className="text-dark-500">
           {wording.playing.score}{' '}
-          <b className="text-accent-cyan">{totalScore}</b>
+          <b className="text-universe-accent">{totalScore}</b>
         </span>
         <span className="text-dark-500">
           {wording.playing.level}{' '}
-          <b className="text-accent-yellow">{difficulty}</b>{' '}
+          <b className="text-universe-secondary">{difficulty}</b>{' '}
           <span className="text-xs text-dark-500">
             ({questionsAtDifficulty}/5)
           </span>

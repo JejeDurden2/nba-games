@@ -131,7 +131,7 @@ export function Leaderboard({
                 className={cn(
                   'font-bold',
                   isMobile ? 'text-sm' : 'text-base',
-                  isTopThree ? 'text-accent-cyan' : 'text-dark-400'
+                  isTopThree ? 'text-universe-accent' : 'text-dark-400'
                 )}
               >
                 {entry.score.toLocaleString()}
@@ -140,7 +140,7 @@ export function Leaderboard({
                 <span
                   className={cn(
                     'text-xs',
-                    isTopThree ? 'text-ball-400' : 'text-dark-500'
+                    isTopThree ? 'text-universe-primary' : 'text-dark-500'
                   )}
                 >
                   {entry.maxStreak} 🎮

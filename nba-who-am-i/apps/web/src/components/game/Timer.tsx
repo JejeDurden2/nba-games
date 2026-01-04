@@ -22,14 +22,14 @@ export function Timer({
   // Score-based color zones (QPUC style: green → orange → red)
   const getScoreColor = () => {
     if (potentialScore >= 800) return 'text-accent-green';
-    if (potentialScore >= 400) return 'text-accent-yellow';
-    return 'text-rim-500';
+    if (potentialScore >= 400) return 'text-universe-secondary';
+    return 'text-universe-primary';
   };
 
   const getProgressColor = () => {
     if (potentialScore >= 800) return 'bg-accent-green';
-    if (potentialScore >= 400) return 'bg-accent-yellow';
-    return 'bg-rim-500';
+    if (potentialScore >= 400) return 'bg-universe-secondary';
+    return 'bg-universe-primary';
   };
 
   const getGlowColor = () => {

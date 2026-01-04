@@ -83,7 +83,7 @@ export function HintsDisplay({ displayedText }: HintsDisplayProps) {
                   'transition-all duration-500',
                   isMobile ? 'w-5 h-5 text-[10px]' : 'w-6 h-6 text-xs',
                   hint.isCurrent
-                    ? 'bg-ball-500/30 text-ball-400 shadow-[0_0_10px_rgba(255,56,100,0.3)]'
+                    ? 'bg-universe-primary/30 text-universe-primary shadow-[0_0_10px_rgba(255,56,100,0.3)]'
                     : 'bg-dark-600/80 text-dark-400'
                 )}
               >
@@ -104,7 +104,7 @@ export function HintsDisplay({ displayedText }: HintsDisplayProps) {
                 {hint.text}
                 {/* Blinking cursor only on current hint */}
                 {hint.isCurrent && (
-                  <span className="inline-block w-2 h-5 bg-ball-400 ml-1 animate-blink align-middle" />
+                  <span className="inline-block w-2 h-5 bg-universe-primary ml-1 animate-blink align-middle" />
                 )}
               </p>
             </div>
@@ -117,14 +117,14 @@ export function HintsDisplay({ displayedText }: HintsDisplayProps) {
             <span
               className={cn(
                 'shrink-0 inline-flex items-center justify-center',
-                'rounded-full bg-ball-500/30 text-ball-400',
+                'rounded-full bg-universe-primary/30 text-universe-primary',
                 'font-bold tabular-nums',
                 isMobile ? 'w-5 h-5 text-[10px]' : 'w-6 h-6 text-xs'
               )}
             >
               1
             </span>
-            <span className="inline-block w-2 h-5 bg-ball-400 animate-blink" />
+            <span className="inline-block w-2 h-5 bg-universe-primary animate-blink" />
           </div>
         )}
       </div>

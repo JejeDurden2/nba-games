@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import App from './App';
 import { UniverseProvider } from './contexts/UniverseContext';
+import { UniverseTheme } from './components/ui/UniverseTheme';
 import { detectUniverse } from './lib/universe';
 import './index.css';
 
@@ -24,7 +25,9 @@ function UniverseRoutes() {
         path="/:universe/*"
         element={
           <UniverseProvider>
-            <App />
+            <UniverseTheme>
+              <App />
+            </UniverseTheme>
           </UniverseProvider>
         }
       />

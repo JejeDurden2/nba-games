@@ -6,6 +6,14 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Universe-aware colors (set via CSS variables)
+        // Uses rgb() format with <alpha-value> placeholder for opacity support
+        universe: {
+          primary: 'rgb(var(--universe-primary-rgb) / <alpha-value>)',
+          secondary: 'rgb(var(--universe-secondary-rgb) / <alpha-value>)',
+          accent: 'rgb(var(--universe-accent-rgb) / <alpha-value>)',
+        },
+        // Legacy NBA colors (kept for backwards compatibility)
         ball: {
           400: '#FF3864',
           500: '#FF1744',

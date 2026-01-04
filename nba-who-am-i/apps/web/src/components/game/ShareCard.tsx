@@ -193,7 +193,7 @@ export function ShareCard(props: ShareCardProps) {
               className={cn(
                 'font-black mb-2',
                 isMobile ? 'text-xl' : 'text-2xl',
-                allLevelsCleared ? 'text-accent-yellow' : 'text-white'
+                allLevelsCleared ? 'text-universe-secondary' : 'text-white'
               )}
             >
               {allLevelsCleared
@@ -228,7 +228,7 @@ export function ShareCard(props: ShareCardProps) {
               <div className="text-xs text-dark-500 mb-1">
                 {wording.share.scoreLabel}
               </div>
-              <div className="text-2xl font-black text-accent-cyan">
+              <div className="text-2xl font-black text-universe-accent">
                 {totalScore}
               </div>
             </div>
@@ -236,7 +236,7 @@ export function ShareCard(props: ShareCardProps) {
               <div className="text-xs text-dark-500 mb-1">
                 {wording.share.streakLabel}
               </div>
-              <div className="text-2xl font-black text-ball-400">
+              <div className="text-2xl font-black text-universe-primary">
                 {maxStreak} 🎮
               </div>
             </div>
@@ -250,7 +250,7 @@ export function ShareCard(props: ShareCardProps) {
               <div className="text-xs text-dark-500 mb-1">
                 {wording.share.levelLabel}
               </div>
-              <div className="text-2xl font-black text-accent-green">
+              <div className="text-2xl font-black text-universe-secondary">
                 {highestLevelCleared}/5
               </div>
             </div>

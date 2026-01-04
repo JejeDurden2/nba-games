@@ -63,7 +63,7 @@ export function WonScreen({
       {/* Title */}
       <h2
         className={cn(
-          'font-black text-accent-green mb-2',
+          'font-black text-universe-secondary mb-2',
           isMobile ? 'text-2xl' : 'text-3xl'
         )}
       >
@@ -99,7 +99,7 @@ export function WonScreen({
             </div>
             <div
               className={cn(
-                'font-black text-accent-cyan',
+                'font-black text-universe-accent',
                 isMobile ? 'text-2xl' : 'text-3xl'
               )}
             >
@@ -112,7 +112,7 @@ export function WonScreen({
             </div>
             <div
               className={cn(
-                'font-black text-ball-400',
+                'font-black text-universe-primary',
                 isMobile ? 'text-2xl' : 'text-3xl'
               )}
             >

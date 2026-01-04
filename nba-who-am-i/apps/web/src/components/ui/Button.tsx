@@ -33,7 +33,7 @@ const buttonVariants = cva(
         outline:
           'border-2 border-dark-600 bg-transparent text-white hover:bg-dark-700',
         ghost: 'bg-transparent text-white hover:bg-dark-700/50',
-        link: 'text-accent-cyan underline-offset-4 hover:underline bg-transparent',
+        link: 'text-universe-accent underline-offset-4 hover:underline bg-transparent',
       },
       // Desktop sizes - mobile sizes handled via responsive prop
       size: {

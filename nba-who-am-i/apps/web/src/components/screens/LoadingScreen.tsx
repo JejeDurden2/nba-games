@@ -46,7 +46,7 @@ export function LoadingScreen() {
             {universe.name}
           </span>
           <span className="text-white"> WHO AM I</span>
-          <span className="text-ball-400"> ?</span>
+          <span className="text-universe-primary"> ?</span>
         </h2>
         <p className="text-dark-500 text-sm animate-pulse">{wording.loading}</p>
       </div>
@@ -56,7 +56,7 @@ export function LoadingScreen() {
         {[0, 1, 2].map((i) => (
           <div
             key={i}
-            className="w-3 h-3 rounded-full bg-ball-400"
+            className="w-3 h-3 rounded-full bg-universe-primary"
             style={{
               animation: `bounce 1.4s infinite ease-in-out both`,
               animationDelay: `${i * 0.16}s`,

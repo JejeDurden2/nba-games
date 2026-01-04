@@ -80,7 +80,7 @@ export function Header({
             {universe.name}
           </span>
           <span className="text-white"> WHO AM I</span>
-          <span className="text-ball-400"> ?</span>
+          <span className="text-universe-primary"> ?</span>
         </h1>
       </div>
     </header>
