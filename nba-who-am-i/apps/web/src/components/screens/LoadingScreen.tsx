@@ -25,8 +25,7 @@ export function LoadingScreen() {
           alt={wording.appTitle}
           className="w-full h-full"
           style={{
-            filter:
-              'drop-shadow(0 0 30px rgba(255, 56, 100, 0.5)) drop-shadow(0 0 60px rgba(255, 0, 84, 0.3))',
+            filter: `drop-shadow(0 0 30px var(--universe-gradient-glow)) drop-shadow(0 0 60px var(--universe-gradient-glow))`,
           }}
         />
       </div>
@@ -40,8 +39,11 @@ export function LoadingScreen() {
           )}
         >
           <span
-            className="bg-gradient-fire bg-clip-text"
-            style={{ WebkitTextFillColor: 'transparent' }}
+            className="bg-clip-text"
+            style={{
+              backgroundImage: 'var(--universe-gradient-primary)',
+              WebkitTextFillColor: 'transparent',
+            }}
           >
             {universe.name}
           </span>

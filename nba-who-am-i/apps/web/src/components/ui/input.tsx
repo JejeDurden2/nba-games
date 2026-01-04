@@ -20,8 +20,8 @@ const inputVariants = cva(
     variants: {
       state: {
         default: 'border-dark-600 focus:border-white/20',
-        error: 'border-rim-500 animate-shake',
-        success: 'border-accent-green bg-accent-green/10',
+        error: 'border-universe-primary animate-shake',
+        success: 'border-universe-accent bg-universe-accent/10',
       },
       // Desktop sizes - mobile sizes handled via responsive prop
       size: {

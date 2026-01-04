@@ -23,13 +23,13 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        // Original variants with exact same colors
-        primary: 'bg-gradient-fire text-white',
+        // Universe-aware primary button - gradient set via CSS variable
+        primary: 'text-white [background:var(--universe-gradient-primary)]',
         secondary: 'bg-dark-700 text-white hover:bg-dark-600',
-        danger: 'bg-rim-500 text-white hover:bg-rim-600',
+        danger: 'bg-universe-primary text-white hover:opacity-90',
         // shadcn standard variants mapped to design system
-        default: 'bg-gradient-fire text-white',
-        destructive: 'bg-rim-500 text-white hover:bg-rim-600',
+        default: 'text-white [background:var(--universe-gradient-primary)]',
+        destructive: 'bg-universe-primary text-white hover:opacity-90',
         outline:
           'border-2 border-dark-600 bg-transparent text-white hover:bg-dark-700',
         ghost: 'bg-transparent text-white hover:bg-dark-700/50',

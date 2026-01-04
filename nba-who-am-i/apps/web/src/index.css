@@ -65,6 +65,10 @@
     --universe-primary-rgb: 255 23 68;    /* NBA: ball-500 #FF1744 */
     --universe-secondary-rgb: 255 214 0;  /* NBA: accent-yellow #FFD600 */
     --universe-accent-rgb: 0 229 255;     /* NBA: accent-cyan #00E5FF */
+
+    /* Universe-specific gradients (defaults to NBA theme) */
+    --universe-gradient-primary: linear-gradient(135deg, #FF3864 0%, #FF0054 50%, #D6004C 100%);
+    --universe-gradient-glow: rgba(255, 56, 100, 0.4);
   }
 }
 

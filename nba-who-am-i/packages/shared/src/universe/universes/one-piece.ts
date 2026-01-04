@@ -46,11 +46,16 @@ export const onePieceUniverse: UniverseConfig = {
   name: 'ONE PIECE',
   slug: 'one-piece',
 
-  // Color overrides for One Piece theme
+  // Color overrides for One Piece theme - Adventure on the seas
   colors: {
-    primary: '#E63946', // Luffy Red
-    secondary: '#FFB700', // Treasure Gold
-    accent: '#00B4D8', // Ocean Cyan
+    primary: '#E63946', // Luffy Red - Straw Hat passion
+    secondary: '#FFB700', // Treasure Gold - One Piece treasure
+    accent: '#0077B6', // Deep Ocean Blue - Grand Line waters
+    gradients: {
+      // Sunset at sea - gold to red adventure gradient
+      primary: 'linear-gradient(135deg, #FFB700 0%, #FF8C00 50%, #E63946 100%)',
+      glow: 'rgba(255, 183, 0, 0.5)',
+    },
   },
 
   characterTypes: {

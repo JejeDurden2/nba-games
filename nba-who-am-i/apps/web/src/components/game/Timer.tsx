@@ -19,23 +19,26 @@ export function Timer({
   const isMobile = useIsMobile();
   const potentialScore = calculatePotentialScore(timeLeft);
 
-  // Score-based color zones (QPUC style: green → orange → red)
+  // Score-based color zones (good → warning → danger)
+  // Uses universe accent for good, secondary for warning, primary for danger
   const getScoreColor = () => {
-    if (potentialScore >= 800) return 'text-accent-green';
+    if (potentialScore >= 800) return 'text-universe-accent';
     if (potentialScore >= 400) return 'text-universe-secondary';
     return 'text-universe-primary';
   };
 
   const getProgressColor = () => {
-    if (potentialScore >= 800) return 'bg-accent-green';
+    if (potentialScore >= 800) return 'bg-universe-accent';
     if (potentialScore >= 400) return 'bg-universe-secondary';
     return 'bg-universe-primary';
   };
 
+  // Glow colors are set via CSS variables
   const getGlowColor = () => {
-    if (potentialScore >= 800) return 'rgba(0,255,136,0.4)';
-    if (potentialScore >= 400) return 'rgba(255,214,0,0.4)';
-    return 'rgba(255,0,84,0.5)';
+    if (potentialScore >= 800) return 'rgb(var(--universe-accent-rgb) / 0.4)';
+    if (potentialScore >= 400)
+      return 'rgb(var(--universe-secondary-rgb) / 0.4)';
+    return 'rgb(var(--universe-primary-rgb) / 0.5)';
   };
 
   const progressPercent = (timeLeft / totalTime) * 100;

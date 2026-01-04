@@ -74,8 +74,8 @@ export function MenuScreen({
 
           {/* Error message */}
           {error && (
-            <div className="mb-6 p-4 bg-rim-500/20 border border-rim-500/40 rounded-xl">
-              <p className="text-red-300 text-sm">{error}</p>
+            <div className="mb-6 p-4 bg-universe-primary/20 border border-universe-primary/40 rounded-xl">
+              <p className="text-universe-primary text-sm">{error}</p>
             </div>
           )}
 

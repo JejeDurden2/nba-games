@@ -15,6 +15,10 @@ export const nbaUniverse: UniverseConfig = {
     primary: '#FF1744', // Ball red - neon basketball
     secondary: '#FFD600', // Accent yellow - championship gold
     accent: '#00E5FF', // Accent cyan - arena lights
+    gradients: {
+      primary: 'linear-gradient(135deg, #FF3864 0%, #FF0054 50%, #D6004C 100%)',
+      glow: 'rgba(255, 56, 100, 0.4)',
+    },
   },
 
   // Character types specific to NBA

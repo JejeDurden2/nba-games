@@ -54,8 +54,7 @@ export function Header({
               clickable && 'group-hover:brightness-110'
             )}
             style={{
-              filter:
-                'drop-shadow(0 0 25px rgba(255, 56, 100, 0.4)) drop-shadow(0 0 50px rgba(255, 0, 84, 0.2))',
+              filter: `drop-shadow(0 0 25px var(--universe-gradient-glow)) drop-shadow(0 0 50px var(--universe-gradient-glow))`,
             }}
           />
         </div>
@@ -74,8 +73,11 @@ export function Header({
           )}
         >
           <span
-            className="bg-gradient-fire bg-clip-text"
-            style={{ WebkitTextFillColor: 'transparent' }}
+            className="bg-clip-text"
+            style={{
+              backgroundImage: 'var(--universe-gradient-primary)',
+              WebkitTextFillColor: 'transparent',
+            }}
           >
             {universe.name}
           </span>

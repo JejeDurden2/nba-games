@@ -11,6 +11,14 @@ const DEFAULT_COLORS = {
 };
 
 /**
+ * Default gradients for NBA universe (fallback)
+ */
+const DEFAULT_GRADIENTS = {
+  primary: 'linear-gradient(135deg, #FF3864 0%, #FF0054 50%, #D6004C 100%)',
+  glow: 'rgba(255, 56, 100, 0.4)',
+};
+
+/**
  * Convert hex color to RGB values string (e.g., "#FF1744" -> "255 23 68")
  */
 function hexToRgb(hex: string): string {
@@ -34,10 +42,20 @@ export function UniverseTheme({ children }: { children: React.ReactNode }) {
     const secondary = universe.colors?.secondary ?? DEFAULT_COLORS.secondary;
     const accent = universe.colors?.accent ?? DEFAULT_COLORS.accent;
 
+    // Get gradients from universe config, falling back to defaults
+    const gradientPrimary =
+      universe.colors?.gradients?.primary ?? DEFAULT_GRADIENTS.primary;
+    const gradientGlow =
+      universe.colors?.gradients?.glow ?? DEFAULT_GRADIENTS.glow;
+
     // Set CSS variables as RGB values for Tailwind opacity support
     root.style.setProperty('--universe-primary-rgb', hexToRgb(primary));
     root.style.setProperty('--universe-secondary-rgb', hexToRgb(secondary));
     root.style.setProperty('--universe-accent-rgb', hexToRgb(accent));
+
+    // Set gradient CSS variables
+    root.style.setProperty('--universe-gradient-primary', gradientPrimary);
+    root.style.setProperty('--universe-gradient-glow', gradientGlow);
 
     // Cleanup on unmount or universe change
     return () => {
@@ -52,6 +70,14 @@ export function UniverseTheme({ children }: { children: React.ReactNode }) {
       root.style.setProperty(
         '--universe-accent-rgb',
         hexToRgb(DEFAULT_COLORS.accent)
+      );
+      root.style.setProperty(
+        '--universe-gradient-primary',
+        DEFAULT_GRADIENTS.primary
+      );
+      root.style.setProperty(
+        '--universe-gradient-glow',
+        DEFAULT_GRADIENTS.glow
       );
     };
   }, [universe]);

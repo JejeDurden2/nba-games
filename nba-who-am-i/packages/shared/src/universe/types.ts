@@ -130,6 +130,14 @@ export interface UniverseWording {
   footer: FooterWording;
 }
 
+// Gradient configuration for universe theming
+export interface GradientOverrides {
+  /** Main gradient for buttons, titles, etc. */
+  primary: string;
+  /** Glow effect color (rgba) */
+  glow: string;
+}
+
 // Optional color overrides
 export interface ColorOverrides {
   primary: string;
@@ -137,6 +145,8 @@ export interface ColorOverrides {
   accent: string;
   dark?: string;
   light?: string;
+  /** Gradient overrides for the universe */
+  gradients?: GradientOverrides;
 }
 
 // Achievement gradient configuration per level

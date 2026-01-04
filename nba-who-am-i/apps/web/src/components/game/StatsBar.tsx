@@ -30,7 +30,7 @@ export function StatsBar({
   const attemptsLeft = 3 - failuresThisRound;
   const attemptsColor =
     failuresThisRound === 0
-      ? 'text-accent-green'
+      ? 'text-universe-accent'
       : failuresThisRound === 1
         ? 'text-universe-secondary'
         : 'text-universe-primary';
@@ -75,10 +75,10 @@ export function StatsBar({
       <button
         onClick={onQuit}
         className={cn(
-          'bg-rim-500/20 border border-rim-500/40',
-          'rounded-md text-red-300',
+          'bg-universe-primary/20 border border-universe-primary/40',
+          'rounded-md text-universe-primary',
           'font-semibold whitespace-nowrap',
-          'hover:bg-rim-500/30 transition-colors',
+          'hover:bg-universe-primary/30 transition-colors',
           isMobile ? 'px-2.5 py-1.5 text-xs' : 'px-3 py-1.5 text-xs'
         )}
       >
