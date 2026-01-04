@@ -10,6 +10,13 @@ export const nbaUniverse: UniverseConfig = {
   name: 'NBA',
   slug: 'nba',
 
+  // Color theme for NBA - neon basketball aesthetic
+  colors: {
+    primary: '#FF1744', // Ball red - neon basketball
+    secondary: '#FFD600', // Accent yellow - championship gold
+    accent: '#00E5FF', // Accent cyan - arena lights
+  },
+
   // Character types specific to NBA
   characterTypes: {
     player: {
