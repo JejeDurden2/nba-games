@@ -69,3 +69,43 @@ export const ACHIEVEMENT_GLOWS = {
   level4: 'rgba(255,73,192,0.6)',
   level5: 'rgba(255,214,0,0.8)',
 } as const;
+
+// ============================================
+// One Piece Universe Theme
+// ============================================
+
+// One Piece color palette
+export const ONE_PIECE_COLORS = {
+  primary: '#E63946', // Luffy Red - vibrant, energetic
+  secondary: '#FFB700', // Treasure Gold - adventure reward
+  accent: '#00B4D8', // Ocean Cyan - Grand Line waters
+  dark: '#0A1628', // Deep Navy - deep ocean at night
+  light: '#F1FAEE', // Sail White - cream white
+} as const;
+
+// One Piece achievement gradients - adventure progression
+export const ONE_PIECE_ACHIEVEMENT_GRADIENTS = {
+  // East Blue (starter) - calm waters
+  level1: 'linear-gradient(135deg, #0A1628 0%, #16213E 100%)',
+  // Grand Line (intermediate) - ocean adventure
+  level2: 'linear-gradient(135deg, #0077B6 0%, #00B4D8 100%)',
+  // New World (advanced) - fire/battle
+  level3: 'linear-gradient(135deg, #E63946 0%, #FF6B6B 100%)',
+  // Yonko level (expert) - treasure gold
+  level4: 'linear-gradient(135deg, #FFB700 0%, #FFC300 100%)',
+  // Pirate King (GOAT) - red to gold glory
+  level5: 'linear-gradient(135deg, #E63946 0%, #FFB700 100%)',
+} as const;
+
+// One Piece achievement glows
+export const ONE_PIECE_ACHIEVEMENT_GLOWS = {
+  level1: 'rgba(22, 33, 62, 0.6)', // Deep navy glow
+  level2: 'rgba(0, 180, 216, 0.6)', // Ocean cyan glow
+  level3: 'rgba(230, 57, 70, 0.6)', // Luffy red glow
+  level4: 'rgba(255, 183, 0, 0.6)', // Gold glow
+  level5: 'rgba(255, 183, 0, 0.8)', // Stronger gold glow
+} as const;
+
+// One Piece locked gradient (darker ocean theme)
+export const ONE_PIECE_LOCKED_GRADIENT =
+  'linear-gradient(135deg, #1A1A2E 0%, #0A1628 100%)';

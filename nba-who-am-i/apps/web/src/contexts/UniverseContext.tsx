@@ -5,10 +5,12 @@ import {
   UniverseWording,
   CharacterTypeConfig,
   AchievementLabels,
+  AchievementGradientConfig,
   getUniverse,
   hasUniverse,
 } from '@nba-who-am-i/shared';
 import { detectUniverse } from '@/lib/universe';
+import { achievementGradientConfig as defaultAchievementGradients } from '@/lib/design-system/tokens';
 
 /**
  * Context value interface
@@ -19,6 +21,7 @@ interface UniverseContextValue {
   wording: UniverseWording;
   characterTypes: Record<string, CharacterTypeConfig>;
   achievementLabels: AchievementLabels;
+  achievementGradients: Record<1 | 2 | 3 | 4 | 5, AchievementGradientConfig>;
 }
 
 const UniverseContext = createContext<UniverseContextValue | null>(null);
@@ -62,12 +65,17 @@ export function UniverseProvider({
 
     const universe = getUniverse(detectedId);
 
+    // Use universe-specific achievement gradients if available, otherwise use defaults
+    const achievementGradients =
+      universe.achievementGradients ?? defaultAchievementGradients;
+
     return {
       universe,
       universeId: detectedId,
       wording: universe.wording,
       characterTypes: universe.characterTypes,
       achievementLabels: universe.achievementLabels,
+      achievementGradients,
     };
   }, [params.universe, overrideId]);
 
@@ -142,4 +150,20 @@ export function useAchievementLabels(): AchievementLabels {
     );
   }
   return context.achievementLabels;
+}
+
+/**
+ * Hook to access achievement gradients (universe-specific or default)
+ */
+export function useAchievementGradients(): Record<
+  1 | 2 | 3 | 4 | 5,
+  AchievementGradientConfig
+> {
+  const context = useContext(UniverseContext);
+  if (!context) {
+    throw new Error(
+      'useAchievementGradients must be used within UniverseProvider'
+    );
+  }
+  return context.achievementGradients;
 }

@@ -135,6 +135,15 @@ export interface ColorOverrides {
   primary: string;
   secondary: string;
   accent: string;
+  dark?: string;
+  light?: string;
+}
+
+// Achievement gradient configuration per level
+export interface AchievementGradientConfig {
+  gradient: string;
+  glow: string;
+  locked: string;
 }
 
 // Full universe configuration
@@ -146,4 +155,5 @@ export interface UniverseConfig {
   achievementLabels: AchievementLabels;
   wording: UniverseWording;
   colors?: Partial<ColorOverrides>;
+  achievementGradients?: Record<1 | 2 | 3 | 4 | 5, AchievementGradientConfig>;
 }

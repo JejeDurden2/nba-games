@@ -1,7 +1,9 @@
-import { achievementGradientConfig } from '@/lib/design-system/tokens';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/useMediaQuery';
-import { useAchievementLabels } from '@/contexts/UniverseContext';
+import {
+  useAchievementLabels,
+  useAchievementGradients,
+} from '@/contexts/UniverseContext';
 
 export interface AchievementBadgeProps {
   level: 1 | 2 | 3 | 4 | 5;
@@ -12,6 +14,7 @@ export interface AchievementBadgeProps {
 /**
  * Individual achievement badge for difficulty levels
  * Shows unlocked state with gradient or locked state in grayscale
+ * Uses universe-specific gradients when available
  */
 export function AchievementBadge({
   level,
@@ -20,7 +23,8 @@ export function AchievementBadge({
 }: AchievementBadgeProps) {
   const isMobile = useIsMobile();
   const achievementLabels = useAchievementLabels();
-  const config = achievementGradientConfig[level];
+  const achievementGradients = useAchievementGradients();
+  const config = achievementGradients[level];
 
   const sizeClasses = {
     sm: isMobile ? 'w-12 h-12' : 'w-14 h-14',

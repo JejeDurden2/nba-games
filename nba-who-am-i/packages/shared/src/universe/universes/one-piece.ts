@@ -1,63 +1,100 @@
 /**
  * One Piece Universe Configuration
  * Complete French wording for the One Piece themed quiz game
+ *
+ * Color Theme:
+ * - Primary: Luffy Red (#E63946) - vibrant, energetic
+ * - Secondary: Treasure Gold (#FFB700) - adventure reward
+ * - Accent: Ocean Cyan (#00B4D8) - Grand Line waters
+ * - Dark: Deep Navy (#0A1628) - deep ocean at night
  */
 
 import { UniverseConfig } from '../types';
+
+// One Piece specific gradients
+export const ONE_PIECE_GRADIENTS = {
+  // Luffy's determination - red to gold fire
+  fire: 'linear-gradient(135deg, #E63946 0%, #FF6B6B 50%, #FFB700 100%)',
+  // Grand Line ocean - tropical sea
+  ocean: 'linear-gradient(135deg, #0077B6 0%, #00B4D8 50%, #48CAE4 100%)',
+  // Treasure/victory - rich gold
+  gold: 'linear-gradient(135deg, #FFB700 0%, #FFC300 50%, #FFD60A 100%)',
+  // Night sea/mystery - dangerous waters
+  night: 'linear-gradient(135deg, #0A1628 0%, #1A1A2E 50%, #16213E 100%)',
+  // New World battles - epic green
+  green: 'linear-gradient(135deg, #2D6A4F 0%, #40916C 50%, #52B788 100%)',
+  // Straw Hat sunset - Thousand Sunny vibes
+  sunset: 'linear-gradient(135deg, #FF6B6B 0%, #FFB700 50%, #FFC300 100%)',
+  // Revolutionary army - dramatic purple
+  revolutionary:
+    'linear-gradient(135deg, #7B2D8E 0%, #9D4EDD 50%, #C77DFF 100%)',
+} as const;
+
+// One Piece specific glows
+export const ONE_PIECE_GLOWS = {
+  fire: 'rgba(230, 57, 70, 0.5)',
+  ocean: 'rgba(0, 180, 216, 0.5)',
+  gold: 'rgba(255, 183, 0, 0.5)',
+  night: 'rgba(26, 26, 46, 0.5)',
+  green: 'rgba(82, 183, 136, 0.5)',
+  sunset: 'rgba(255, 107, 107, 0.5)',
+  revolutionary: 'rgba(157, 78, 221, 0.5)',
+} as const;
 
 export const onePieceUniverse: UniverseConfig = {
   id: 'one-piece',
   name: 'ONE PIECE',
   slug: 'one-piece',
 
+  // Color overrides for One Piece theme
+  colors: {
+    primary: '#E63946', // Luffy Red
+    secondary: '#FFB700', // Treasure Gold
+    accent: '#00B4D8', // Ocean Cyan
+  },
+
   characterTypes: {
     pirate: {
       id: 'pirate',
       label: 'PIRATE',
       emoji: '🏴‍☠️',
-      gradient:
-        'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
-      glow: 'rgba(15, 52, 96, 0.4)',
+      gradient: ONE_PIECE_GRADIENTS.fire,
+      glow: ONE_PIECE_GLOWS.fire,
     },
     marine: {
       id: 'marine',
       label: 'MARINE',
       emoji: '⚓',
-      gradient:
-        'linear-gradient(135deg, #1e3a5f 0%, #2e5d8b 50%, #3d7ab8 100%)',
-      glow: 'rgba(61, 122, 184, 0.4)',
+      gradient: ONE_PIECE_GRADIENTS.ocean,
+      glow: ONE_PIECE_GLOWS.ocean,
     },
     revolutionary: {
       id: 'revolutionary',
       label: 'RÉVOLUTIONNAIRE',
       emoji: '✊',
-      gradient:
-        'linear-gradient(135deg, #4a1942 0%, #6b2d5b 50%, #8c3d74 100%)',
-      glow: 'rgba(140, 61, 116, 0.4)',
+      gradient: ONE_PIECE_GRADIENTS.revolutionary,
+      glow: ONE_PIECE_GLOWS.revolutionary,
     },
     shichibukai: {
       id: 'shichibukai',
       label: 'SHICHIBUKAI',
       emoji: '🗡️',
-      gradient:
-        'linear-gradient(135deg, #2d2d2d 0%, #4a4a4a 50%, #666666 100%)',
-      glow: 'rgba(102, 102, 102, 0.4)',
+      gradient: ONE_PIECE_GRADIENTS.night,
+      glow: ONE_PIECE_GLOWS.night,
     },
     yonko: {
       id: 'yonko',
       label: 'YONKO',
       emoji: '👑',
-      gradient:
-        'linear-gradient(135deg, #8b6914 0%, #c9a227 50%, #f4d03f 100%)',
-      glow: 'rgba(244, 208, 63, 0.4)',
+      gradient: ONE_PIECE_GRADIENTS.gold,
+      glow: ONE_PIECE_GLOWS.gold,
     },
     civilian: {
       id: 'civilian',
       label: 'CIVIL',
       emoji: '🏠',
-      gradient:
-        'linear-gradient(135deg, #2d5016 0%, #4a7c23 50%, #67a830 100%)',
-      glow: 'rgba(103, 168, 48, 0.4)',
+      gradient: ONE_PIECE_GRADIENTS.green,
+      glow: ONE_PIECE_GLOWS.green,
     },
   },
 
@@ -67,6 +104,40 @@ export const onePieceUniverse: UniverseConfig = {
     3: 'CAPITAINE',
     4: 'SUPERNOVA',
     5: 'ROI DES PIRATES',
+  },
+
+  // One Piece achievement gradients - adventure progression through the seas
+  achievementGradients: {
+    1: {
+      // East Blue (starter) - calm waters, beginning of journey
+      gradient: 'linear-gradient(135deg, #0A1628 0%, #16213E 100%)',
+      glow: 'rgba(22, 33, 62, 0.6)',
+      locked: 'linear-gradient(135deg, #1A1A2E 0%, #0A1628 100%)',
+    },
+    2: {
+      // Grand Line (intermediate) - ocean adventure
+      gradient: 'linear-gradient(135deg, #0077B6 0%, #00B4D8 100%)',
+      glow: 'rgba(0, 180, 216, 0.6)',
+      locked: 'linear-gradient(135deg, #1A1A2E 0%, #0A1628 100%)',
+    },
+    3: {
+      // New World (advanced) - fire/battle intensity
+      gradient: 'linear-gradient(135deg, #E63946 0%, #FF6B6B 100%)',
+      glow: 'rgba(230, 57, 70, 0.6)',
+      locked: 'linear-gradient(135deg, #1A1A2E 0%, #0A1628 100%)',
+    },
+    4: {
+      // Yonko level (expert) - treasure gold
+      gradient: 'linear-gradient(135deg, #FFB700 0%, #FFC300 100%)',
+      glow: 'rgba(255, 183, 0, 0.6)',
+      locked: 'linear-gradient(135deg, #1A1A2E 0%, #0A1628 100%)',
+    },
+    5: {
+      // Pirate King (GOAT) - red to gold glory, ultimate achievement
+      gradient: 'linear-gradient(135deg, #E63946 0%, #FFB700 100%)',
+      glow: 'rgba(255, 183, 0, 0.8)',
+      locked: 'linear-gradient(135deg, #1A1A2E 0%, #0A1628 100%)',
+    },
   },
 
   wording: {
